@@ -1,0 +1,21 @@
+<div class='carousel-container' style="border: 1px solid #CCC;">
+    uid = {{uid}}
+    <div class="carousel">
+        <ng-content></ng-content>
+    </div>
+    <div class="row clearfix">
+        <div class="col-sm-6 text-left"><a class="btn btn-small" (click)="prev()">Prev</a></div>
+        <div class="col-sm-6 text-right"><a class="btn btn-small" (click)="next()">Next</a></div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-sm-12 text-center">
+            Showing {{currIndex + 1}} of {{carouselItems.length}}
+        </div>
+        <!--<ul class="carousel-list" style="width: 50%; margin: 0px auto;">
+            <li *ngFor="item in carouselController.elems track by $index"
+                class="{{$index === activeIndex ? 'active' : ''}}"
+                ng-click="carouselController.goTo($index)">
+            </li>
+        </ul>-->
+    </div>
+</div>

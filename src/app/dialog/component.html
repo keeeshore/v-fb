@@ -1,0 +1,48 @@
+<style type="text/css">
+    .modal-overlay {
+        display: none;
+    }
+
+    .modal-dialog.open .modal-overlay {
+        display: block;
+        position: fixed;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.8);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+    }
+
+    .modal-dialog.open .modal-container {
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .modal-dialog.open .modal-content {
+        position: relative;
+        background: #FFF;
+        padding: 10px;
+        width: 64%;
+        margin: 20px auto;
+    }
+</style>
+
+
+<div class="modal-dialog {{className}} {{isModalOpen ? 'open' : 'hide'}}">
+    isModalOpen = {{isModalOpen}} ; className = {{className}}
+    <div class="modal-container">
+        <div class="modal-content">
+            <a (click)="onCloseDialog()" style="float: right; color: #CC0000; display: block" >X</a>
+            <div class="modal-placeholder">
+                <h2>Dialog Component</h2>
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay"></div>
+</div>
