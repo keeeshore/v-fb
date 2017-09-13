@@ -5,8 +5,8 @@ import {Component,  ViewChildren, QueryList} from '@angular/core';
 import {ApiService} from './../ApiService';
 import {EventsCollection, EventModel, EventParams} from './EventsCollection';
 import {PagingData, Cursors} from '../model/PagingData';
-import { Observable }     from 'rxjs/Observable';
 import * as moment from 'moment';
+import {Subject, Observable} from "rxjs";
 
 @Component({
 	selector: 'app-events',
@@ -16,7 +16,8 @@ import * as moment from 'moment';
 
 export class Events {
 
-	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100)
+	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
+	//VimonishaExhibitions?fields=albums.id(178838325568799){photos}
 
 	public DATE_TIME_FORMAT:string = 'DD-MM-YYYY HH:mm';
 
@@ -45,7 +46,7 @@ export class Events {
 			delete model.end_time;
 			delete model.start_time;
 			let eventModel = new EventModel(model);
-			console.log(collectionModel.events.length, ':setEvents:::eventModel->', eventModel);
+			console.log(collectionModel.events.length, ':setEvents:::NEW eventModel->', eventModel);
 			collectionModel.events.push(eventModel);
 			return eventModel;
 		});
@@ -58,7 +59,7 @@ export class Events {
 		this.getEvents(this.eventParams, false);
 	}
 
-	public getEvents (eventParams:EventParams, repeat:Boolean) {
+	public getEvents (eventParams:EventParams, repeat:Boolean):Subscription {
 		console.log('getEvents....called with eventParams:', eventParams);
 		this.message = 'In progress...';
 		
@@ -75,7 +76,7 @@ export class Events {
 		let url = 'https://graph.facebook.com/v2.10/175166319269333/events';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
-		params.append('access_token', 'EAAG6qlC4FlIBAK8ME19CJ1mSUhyCLS16ihheZAEfUWXGxZBXZAWj5RmJWzZB1fakzZCu9np48ZBWallUZB9MlfeTFK3FrjZAY1FSPMOvkMXUTQTV8wvrTWvEZCgm0I4wF6twEzuXgYKOcDQ6H8hB6VKhPFqax6uWntk6Ufkrf1tdWPWXTnBvCCxKk3u3w2Pmyhd0ZD')
+		params.append('access_token', 'EAACEdEose0cBAH74aIYjADmAerc9krS4pZCjZCpWZCxbs33G06BxqJ0TzMywtE9Nu8sZApynVWx9Ci2Mn7k5COhZBVyZCuJxap6KlLRzN83HicjJDuTKfaUtrmQoILusW8FI13OZCgaZAmIGpk47Upee7cjuSW1Y9ZCVDKDAFosnmMSV7Tav2SYQKbGPDphNiTq0ZD')
 		params.append('since', since.toString());
 		params.append('until', until.toString());
 		params.append('fields', eventParams.fields);
@@ -90,7 +91,7 @@ export class Events {
 		url = url + '?' + params.toString();
 		console.log('url->', url);		
 
-		this.apiService.fetch(url).subscribe(
+		return this.apiService.fetch(url).subscribe(
 			(response: any) => {
 				console.log('getEvents RESPONSE ->', response);
 				if (response.data && response.data.length > 0) {
@@ -121,15 +122,28 @@ export class Events {
 
 	}
 
-	public submitEvents () {
+	public onSubmitEvents1 () {
+		console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
+		this.submitEvents(this.fbCollection);
+	}
+
+	public submitEvents (collection:EventsCollection) {
+		console.log('SUBMIT eventsCollection...', collection);
 		let url = 'http://localhost/vimonisha/api/events_post.php';
-		this.apiService.post(url, this.fbCollection).subscribe((response:any) => {
+		this.apiService.post(url, collection).subscribe((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
 				this.fbCollection = new EventsCollection();
 				this.getEventsFromTable();
 			}
 		});
+	}
+
+	public addEventModel (eventModel:EventModel) {
+		let eventsCollection = new EventsCollection();
+		eventsCollection.events.push(eventModel);
+		console.log('SUBMIT addEventModel...', eventsCollection);
+		this.submitEvents(eventsCollection);
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
@@ -149,9 +163,9 @@ export class Events {
 	public onUpdateEvent (eventModel:EventModel) {
 		let url = 'http://localhost/vimonisha/api/events_update.php';
 		console.log('UPDATE eventModel...', eventModel);
-		this.apiService.post(url, eventModel).subscribe((response:any) => {
+		/*this.apiService.post(url, eventModel).subscribe((response:any) => {
 			console.log('eventModel UPDATE:POST response recieved....', response);
-		});
+		});*/
 	}
 
 	public getEventsFromTable () {
