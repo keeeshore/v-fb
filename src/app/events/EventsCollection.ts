@@ -65,10 +65,16 @@ export class EventModel  {
     public DATE_TIME_FORMAT:string = 'DD-MM-YYYY  HH:mm';
 
     constructor (eventModel:any) {
+        let desc = '';
         this.name = eventModel.name;
-        this.id = eventModel.id;
-        this.description = eventModel.description || '';
+        this.id = eventModel.id;       
         this.uid = eventModel.uid;
+
+        if (eventModel.description) {
+            desc = eventModel.description.replace(/'/g, "");
+        }
+
+         this.description = desc;
 
         this.startTime = moment(eventModel.startTime || '').format(this.DATE_TIME_FORMAT);
         this.endTime = moment(eventModel.endTime || '').format(this.DATE_TIME_FORMAT);

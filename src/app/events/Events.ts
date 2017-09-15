@@ -38,15 +38,15 @@ export class Events {
 		this.getEventsFromTable();
 	}
 
-	public setEvents (eventsArray:Array<any>, collectionModel:EventsCollection):Boolean {
-		console.log('setEvents:::');
+	public setEvents (collectionModel:EventsCollection, eventsArray:Array<any>):Boolean {
+		console.log('setEvents:::-------------------------------------------------------------------------------------');
 		let events:Array<EventModel> = eventsArray.map((model:any) => {			
 			model.endTime = model.end_time || model.endTime;
 			model.startTime = model.start_time || model.startTime;
 			delete model.end_time;
 			delete model.start_time;
 			let eventModel = new EventModel(model);
-			console.log(collectionModel.events.length, ':setEvents:::NEW eventModel->', eventModel);
+			console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
 			collectionModel.events.push(eventModel);
 			return eventModel;
 		});
@@ -54,12 +54,21 @@ export class Events {
 	}
 
 	public onGetEventClick ():void {
-		this.fbCollection.events = new Array<EventModel>();
+		let events = new Array<EventModel>();
 		this.eventParams = new EventParams();
-		this.getEvents(this.eventParams, false);
+		this.getEvents(this.eventParams, events).subscribe(
+			(response) => { 
+				console.log('getEvents success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+				this.setEvents(this.fbCollection, response.data);
+			},
+			(err) => { console.log('getEvents err:::', err)},
+			() => {console.log('getEvents final:::')}
+		);
 	}
 
-	public getEvents (eventParams:EventParams, repeat:Boolean):Subscription {
+	private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
+
+	public getEvents (eventParams:EventParams, collection:Array<any>):Observable<DataEvent> {
 		console.log('getEvents....called with eventParams:', eventParams);
 		this.message = 'In progress...';
 		
@@ -76,7 +85,7 @@ export class Events {
 		let url = 'https://graph.facebook.com/v2.10/175166319269333/events';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
-		params.append('access_token', 'EAACEdEose0cBAH74aIYjADmAerc9krS4pZCjZCpWZCxbs33G06BxqJ0TzMywtE9Nu8sZApynVWx9Ci2Mn7k5COhZBVyZCuJxap6KlLRzN83HicjJDuTKfaUtrmQoILusW8FI13OZCgaZAmIGpk47Upee7cjuSW1Y9ZCVDKDAFosnmMSV7Tav2SYQKbGPDphNiTq0ZD')
+		params.append('access_token', 'EAACEdEose0cBAFhjakYANX7M5vAD2iPQ2uYrnSuWWOujy4oinHDD7gVvKHcHwtDI9r1oZCqqOAPeczQ8Sj5NOTEziMIqCfpactyxKG77qKcLyEwS8jfTf92tncVHiCZCLPrZCp6FY6uTSQhrTXlRfxuAdGjHhZCUldU93G7HsmYCnLPyMfzUKB9a7M7ZAasyPk7VfGVpKfAZDZD')
 		params.append('since', since.toString());
 		params.append('until', until.toString());
 		params.append('fields', eventParams.fields);
@@ -91,35 +100,35 @@ export class Events {
 		url = url + '?' + params.toString();
 		console.log('url->', url);		
 
-		return this.apiService.fetch(url).subscribe(
+		this.apiService.fetch(url).subscribe(
 			(response: any) => {
 				console.log('getEvents RESPONSE ->', response);
 				if (response.data && response.data.length > 0) {
 					let pagingData:PagingData = new PagingData(response.paging);
-					let isSet:Boolean = this.setEvents(response.data, this.fbCollection);
-					
-					if (isSet) {
-						if (pagingData.cursors.after !== '') {
-							console.log('pagingData.cursor.after PRESENT');
-							this.eventParams.after = pagingData.cursors.after;
-							this.getEvents(this.eventParams, true);
-						} else {
-							this.eventParams.after = '';
-							console.log('pagingData.cursor.after NOT PRESENT------ALL DONE!!');
-						}
+					//let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
+					response.data.filter((dataModel:any)=>{ collection.push(dataModel)});
+
+					if (pagingData.cursors.after !== '') {
+						console.log('pagingData.cursor.after PRESENT');
+						this.eventParams.after = pagingData.cursors.after;
+						return this.getEvents(this.eventParams, collection);
 					} else {
-						console.log('------isSet is FALSE!!');
+						this.eventParams.after = '';
+						console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
+						this.dialogSubject.next({data: collection});
 					}
 					
 				} else {
 					this.message = 'Complete!';
-					console.log('------ALL DONE!!');
+					console.log('-------------------------------------------ALL DONE!!');
+					this.dialogSubject.next({data: collection});
 				}
 			},
 			(err) => { 
 				this.message = JSON.stringify(err);
 			});
 
+		return this.dialogSubject;
 	}
 
 	public onSubmitEvents1 () {
@@ -153,10 +162,10 @@ export class Events {
 			console.log('eventModel DELETE:POST response recieved....', response);
 			if (response && response.success) {
 				console.log('Deleted successfully....');
-				this.getEventsFromTable();
 			} else {
 				console.log('Delete UNSUCCESSFUL');
-			}			
+			}	
+			this.getEventsFromTable();		
 		});
 	}
 
@@ -175,7 +184,7 @@ export class Events {
 		return this.apiService.fetch(url).subscribe(
 			(response: any) => {
 				console.log('getEventsFromTable response ->', response);
-				let isSet:Boolean = this.setEvents(response.events, this.eventsCollection);
+				let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 				this.setLastEndTime();
 			},
 			(err) => { 
@@ -202,5 +211,12 @@ export class Events {
         }
 		return false;
 	}
+
+}
+
+
+export interface DataEvent {
+
+    data:any;
 
 }
