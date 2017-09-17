@@ -1,2 +1,42 @@
 @import url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
 
+.photo-container {
+	vertical-align: top;
+}
+
+.photo-container li {
+	position: relative;
+	vertical-align: top;
+	width: 25%;
+	height: 300px;
+	overflow: hidden;
+	border: 1px solid #CCC;
+}
+
+.photo-container li img {
+	height: 100%;
+}
+
+.photo-container li h4 {
+	font-size: 11px;
+}
+
+.photo-container li .name {
+	font-size: 10px;
+}
+
+.photo-container li .btn-container {
+	margin: 10px 0px;
+}
+
+ul.album-container {
+	vertical-align: top;
+}
+
+ul.album-container li {
+	vertical-align: top;
+	width: 25%;
+	border: 1px solid #CCC;
+	
+}
+

@@ -20,9 +20,10 @@ export class PagingData {
 
 	public cursors:Cursors;
 
-	constructor (pagingData: PagingData) {
+	constructor (pagingData:PagingData) {
 		this.next = pagingData.next || 'none';
 		this.previous = pagingData.previous || 'none';
+
 		if (pagingData.cursors) {
 			this.cursors = pagingData.cursors;
 		} else {

@@ -17,7 +17,7 @@ import {Subject, Observable} from "rxjs";
 export class Events {
 
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
-	//VimonishaExhibitions?fields=albums.id(178838325568799){photos}
+
 
 	public DATE_TIME_FORMAT:string = 'DD-MM-YYYY HH:mm';
 

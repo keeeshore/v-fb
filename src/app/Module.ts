@@ -10,6 +10,9 @@ import { AppPostsComponent } from './posts/Posts';
 import { SchoolComponent } from "./school/SchoolComponent";
 import { CarouselComponent } from "./carousel/CarouselComponent";
 import { Events } from "./events/Events";
+import { Photos } from "./photos/Photos";
+import { Albums } from "./albums/Albums";
+import { Login } from "./login/Login";
 import { CarouselItem } from "./carousel/CarouselItem";
 import {DialogComponent} from "./dialog/DialogComponent";
 import {DialogService} from "./dialog/DialogService";
@@ -19,6 +22,15 @@ const appRoutes: Routes = [
     {
         path: 'events',
         component: Events
+    },
+    {
+        path: 'albums',
+        component: Albums
+    },
+    {
+        path: 'photos/:albumId',
+        component: Photos,
+        data: { albumId: 'albumId' }
     },
     {
         path: 'posts',
@@ -49,11 +61,11 @@ const appRoutes: Routes = [
     },
     {
         path: '',
-        component: CarouselComponent
+        component: Login
     },
     {
         path: '**',
-        component: AppComponent
+        component: Login
     }
 ];
 
@@ -73,7 +85,10 @@ const appRoutes: Routes = [
         CarouselItem,
         CarouselComponent,
         DialogComponent,
-        Events
+        Photos,
+        Albums,
+        Events,
+        Login
 	],
 	bootstrap: [ AppComponent ],
 	providers: [ApiService, DialogService]
