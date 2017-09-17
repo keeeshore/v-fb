@@ -39,6 +39,8 @@ export class Photos {
 
 	private fromDate: string = 'NONE';
 
+	public accessToken: string = '';
+
     private toDate: string = moment().format(this.DATE_TIME_FORMAT);
 
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
@@ -173,7 +175,7 @@ export class Photos {
 		let url = 'https://graph.facebook.com/v2.10/' + photoParams.albumId + '/photos';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 		
-		params.append('access_token', 'EAACEdEose0cBAKhwWbczhFlXk8SGOyfXGswWxZAUjU9Ewl6hNFV2VpnZAwx1CXQZCuOLwzNrjFJ0lTsBodeZA080wrVhXQNhtPR8ZA88ZBZA1WK98ZCgBAnarRovVFA8SVNJu0lxyJeq6d3WVSlTWI5ZAvyOxirJBZBJ1Qd0kYCM6LvnZA5zOt2NX0a5ifgwz8Y2u0ZD')
+		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
 		params.append('fields', photoParams.fields);

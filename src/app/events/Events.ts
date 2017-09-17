@@ -33,6 +33,8 @@ export class Events {
 
     private toDate: string = moment().format(this.DATE_TIME_FORMAT);
 
+    public accessToken: string = '';
+
 	constructor(private apiService: ApiService) {
 		console.log('Events component init');
 		this.getEventsFromTable();
@@ -85,7 +87,7 @@ export class Events {
 		let url = 'https://graph.facebook.com/v2.10/175166319269333/events';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
-		params.append('access_token', 'EAACEdEose0cBAFhjakYANX7M5vAD2iPQ2uYrnSuWWOujy4oinHDD7gVvKHcHwtDI9r1oZCqqOAPeczQ8Sj5NOTEziMIqCfpactyxKG77qKcLyEwS8jfTf92tncVHiCZCLPrZCp6FY6uTSQhrTXlRfxuAdGjHhZCUldU93G7HsmYCnLPyMfzUKB9a7M7ZAasyPk7VfGVpKfAZDZD')
+		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
 		params.append('fields', eventParams.fields);

@@ -22,8 +22,6 @@ export class Albums {
 	constructor(private apiService: ApiService) {
 		console.log('Albums component init');
 	}
-
-	
 	
 
 }
