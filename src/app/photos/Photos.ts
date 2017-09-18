@@ -3,11 +3,13 @@
  */
 import {Component,  ViewChildren, QueryList} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../ApiService';
 import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from './PhotoCollection';
 import {PagingData, Cursors} from '../model/PagingData';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
+import {ENV} from '../environments/environment';
 
 @Component({
 	selector: 'app-photos',
@@ -20,8 +22,6 @@ export class Photos {
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
 	//VimonishaExhibitions?fields=albums.id(178838325568799){photos}
 	//178838325568799?fields=photos{id, source,name}
-
-	public DATE_TIME_FORMAT:string = 'DD-MM-YYYY HH:mm';
 
 	public message:string = '';
 
@@ -41,7 +41,7 @@ export class Photos {
 
 	public accessToken: string = '';
 
-    private toDate: string = moment().format(this.DATE_TIME_FORMAT);
+    private toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
 
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
@@ -101,7 +101,7 @@ export class Photos {
 
 	public getPhotosFromTable (albumId:string) {
 		console.log('getEventsFromTable...');
-		let url = 'http://localhost/vimonisha/api/photos_get.php?albumId=' + albumId;
+		let url = ENV.HOST_API_URL + '/api/photos_get.php?albumId=' + albumId;
 		this.photoCollection.photos = new Array<PhotoModel>();
 		return this.apiService.fetch(url).subscribe(
 			(response: any) => {
@@ -117,7 +117,7 @@ export class Photos {
 	}
 
 	public onDeletePhotoModel(photoModel:PhotoModel):void {
-		let url = 'http://localhost/vimonisha/api/photos_delete.php';
+		let url = ENV.HOST_API_URL + '/api/photos_delete.php';
 		console.log('onDeletePhotoModel POST ->', photoModel);
 		this.apiService.post(url, photoModel).subscribe(
 			(response: any) => {
@@ -147,7 +147,7 @@ export class Photos {
 
 	public submitPhotos (collection:PhotoCollection) {
 		console.log('SUBMIT PhotoCollection...', collection);
-		let url = 'http://localhost/vimonisha/api/photos_post.php';
+		let url = ENV.HOST_API_URL + '/api/photos_post.php';
 		this.apiService.post(url, collection).subscribe((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
@@ -167,12 +167,12 @@ export class Photos {
         }
 
         console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
-        let since = moment(this.fromDate, this.DATE_TIME_FORMAT).unix();
-        let until = moment(this.toDate, this.DATE_TIME_FORMAT).unix();
+        let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
+        let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 		console.log('is valid date range', since + ' : to : ' + until);
 
 
-		let url = 'https://graph.facebook.com/v2.10/' + photoParams.albumId + '/photos';
+		let url = ENV.FB_GRAPH_URL + photoParams.albumId + '/photos';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 		
 		params.append('access_token', this.accessToken);
@@ -235,8 +235,8 @@ export class Photos {
 	}
 
 	public isValidDateRange (fromDate:string, toDate:string):Boolean {		
-        if (moment(this.fromDate, this.DATE_TIME_FORMAT).isValid() && moment(this.toDate, this.DATE_TIME_FORMAT).isValid()
-            && (moment(this.fromDate, this.DATE_TIME_FORMAT).isBefore(moment(this.toDate, this.DATE_TIME_FORMAT)))) {
+        if (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isValid() && moment(this.toDate, ENV.DATE_TIME_FORMAT).isValid()
+            && (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isBefore(moment(this.toDate, ENV.DATE_TIME_FORMAT)))) {
             console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
             return true;
         }

@@ -2,11 +2,13 @@
  * Created by balank on 8/09/2017.
  */
 import {Component,  ViewChildren, QueryList} from '@angular/core';
+import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../ApiService';
 import {EventsCollection, EventModel, EventParams} from './EventsCollection';
 import {PagingData, Cursors} from '../model/PagingData';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
+import {ENV} from '../environments/environment';
 
 @Component({
 	selector: 'app-events',
@@ -18,9 +20,6 @@ export class Events {
 
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
 
-
-	public DATE_TIME_FORMAT:string = 'DD-MM-YYYY HH:mm';
-
 	public message:string = '';
 
 	public eventsCollection:EventsCollection = new EventsCollection();	
@@ -31,7 +30,7 @@ export class Events {
 
 	private fromDate: string = 'NONE';
 
-    private toDate: string = moment().format(this.DATE_TIME_FORMAT);
+    private toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
 
     public accessToken: string = '';
 
@@ -81,10 +80,10 @@ export class Events {
         }
 
         console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
-        let since = moment(this.fromDate, this.DATE_TIME_FORMAT).unix();
-        let until = moment(this.toDate, this.DATE_TIME_FORMAT).unix();
+        let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
+        let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 
-		let url = 'https://graph.facebook.com/v2.10/175166319269333/events';
+		let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/events';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
 		params.append('access_token', this.accessToken);
@@ -140,7 +139,7 @@ export class Events {
 
 	public submitEvents (collection:EventsCollection) {
 		console.log('SUBMIT eventsCollection...', collection);
-		let url = 'http://localhost/vimonisha/api/events_post.php';
+		let url = ENV.HOST_API_URL + '/api/events_post.php';
 		this.apiService.post(url, collection).subscribe((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
@@ -158,7 +157,7 @@ export class Events {
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
-		let url = 'http://localhost/vimonisha/api/events_delete.php';
+		let url = ENV.HOST_API_URL + '/api/events_delete.php';
 		console.log('DELETE eventModel...', eventModel);
 		this.apiService.post(url, eventModel).subscribe((response:any) => {
 			console.log('eventModel DELETE:POST response recieved....', response);
@@ -172,7 +171,7 @@ export class Events {
 	}
 
 	public onUpdateEvent (eventModel:EventModel) {
-		let url = 'http://localhost/vimonisha/api/events_update.php';
+		let url = ENV.HOST_API_URL +  '/api/events_update.php';
 		console.log('UPDATE eventModel...', eventModel);
 		/*this.apiService.post(url, eventModel).subscribe((response:any) => {
 			console.log('eventModel UPDATE:POST response recieved....', response);
@@ -181,7 +180,7 @@ export class Events {
 
 	public getEventsFromTable () {
 		console.log('getEventsFromTable...');
-		let url = 'http://localhost/vimonisha/api/events_get.php';
+		let url = ENV.HOST_API_URL + '/api/events_get.php';
 		this.eventsCollection.events = new Array<EventModel>();
 		return this.apiService.fetch(url).subscribe(
 			(response: any) => {
@@ -206,8 +205,8 @@ export class Events {
 	}
 
 	public isValidDateRange (fromDate:string, toDate:string):Boolean {		
-        if (moment(this.fromDate, this.DATE_TIME_FORMAT).isValid() && moment(this.toDate, this.DATE_TIME_FORMAT).isValid()
-            && (moment(this.fromDate, this.DATE_TIME_FORMAT).isBefore(moment(this.toDate, this.DATE_TIME_FORMAT)))) {
+        if (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isValid() && moment(this.toDate, ENV.DATE_TIME_FORMAT).isValid()
+            && (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isBefore(moment(this.toDate, ENV.DATE_TIME_FORMAT)))) {
             console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
             return true;
         }

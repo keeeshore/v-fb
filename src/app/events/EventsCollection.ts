@@ -3,6 +3,7 @@
  */
 import {PagingData} from '../model/PagingData';
 import * as moment from 'moment';
+import {ENV} from '../environments/environment';
 
 
 export class EventParams  {
@@ -62,8 +63,6 @@ export class EventModel  {
 
     public endTime:string;
 
-    public DATE_TIME_FORMAT:string = 'DD-MM-YYYY  HH:mm';
-
     constructor (eventModel:any) {
         let desc = '';
         this.name = eventModel.name;
@@ -76,8 +75,8 @@ export class EventModel  {
 
          this.description = desc;
 
-        this.startTime = moment(eventModel.startTime || '').format(this.DATE_TIME_FORMAT);
-        this.endTime = moment(eventModel.endTime || '').format(this.DATE_TIME_FORMAT);
+        this.startTime = moment(eventModel.startTime || '').format(ENV.DATE_TIME_FORMAT);
+        this.endTime = moment(eventModel.endTime || '').format(ENV.DATE_TIME_FORMAT);
 
         if (eventModel.cover) {
             this.cover = new Cover(eventModel.cover.source, eventModel.cover.id);

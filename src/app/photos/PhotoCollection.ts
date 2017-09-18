@@ -3,6 +3,7 @@
  */
 import {PagingData} from '../model/PagingData';
 import * as moment from 'moment';
+import {ENV} from '../environments/environment';
 
 export class PhotoParams  {
 
@@ -25,10 +26,8 @@ export class PhotoParams  {
         //fields=albums.id(178838325568799){photos{source,name,id,created_time}}
         //178838325568799?fields=photos{id,name,created_time},count
         //https://developers.facebook.com/tools/explorer/145634995501895/?method=GET&path=178838325568799%3Ffields%3Dphotos.limit(2)%7Bid%2Cname%2Ccreated_time%7D%2Ccount&version=v2.10#
-
-           //178838325568799/photos?pretty=0&fields=id,name,created_time&limit=2&after=MTM1ODYzNTczNzU4OTA0NgZDZD
-
-           //correct:178838325568799/photos?fields=id,name,created_time,source&limit=100&since=1500221700&until=1505578500
+        //178838325568799/photos?pretty=0&fields=id,name,created_time&limit=2&after=MTM1ODYzNTczNzU4OTA0NgZDZD
+        //correct:178838325568799/photos?fields=id,name,created_time,source&limit=100&since=1500221700&until=1505578500
 
         this.albumId = albumId;
     }
@@ -61,14 +60,12 @@ export class PhotoModel  {
 
     public source:string;
 
-    public DATE_TIME_FORMAT:string = 'DD-MM-YYYY  HH:mm';
-
     constructor (photoModel:any) {
         this.name = photoModel.name || '';      
         this.uid = photoModel.uid || '';
         this.id = photoModel.id;
         this.source = photoModel.source;
-        this.createdTime = moment(photoModel.createdTime || '').format(this.DATE_TIME_FORMAT);
+        this.createdTime = moment(photoModel.createdTime || '').format(ENV.DATE_TIME_FORMAT);
     }
 
 }
