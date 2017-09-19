@@ -20,11 +20,14 @@ export class Login implements OnInit {
 
 	public password:string;
 
+
 	constructor(private apiService: ApiService) {
-		console.log('Login component init:URL:', ENV.HOST_URL);
+		console.log('Login component init:URL:', ENV);
 	}
 
 	ngOnInit () {
+		console.log('process::', process);
+		//console.log('__IN_DEBUG__::', API_URL);
 		if (isDevMode()) {
 	      console.log('MODE: Development!');
 	    } else {
@@ -52,6 +55,8 @@ export class Login implements OnInit {
 	
 
 }
+
+const apiUrl = process.env.API_URL;
 
 export class LoginModel {
 

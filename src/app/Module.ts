@@ -18,6 +18,16 @@ import {DialogComponent} from "./dialog/DialogComponent";
 import {DialogService} from "./dialog/DialogService";
 import {ApiService} from "./ApiService";
 
+
+/*declare var __IN_DEBUG__: boolean;
+declare var __VERSION__: string;
+declare var API_URL: string;
+
+
+export default function(app) {
+  app.constant('config', {apiUrl: API_URL});
+};
+*/
 const appRoutes: Routes = [
     {
         path: 'events',

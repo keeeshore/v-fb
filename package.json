@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "A webpack starter for Angular",
   "scripts": {
-    "start": "webpack-dev-server --inline --progress --port 3131",
+    "start1": "webpack-dev-server --inline --progress --port 3131",
+    "start": "rimraf dist && webpack-dev-server --inline --config config/webpack.dev.js --progress --environment=development --port 3131",
     "test": "karma start",
-    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail --env=production"
+    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail --environment=production"
   },
   "license": "MIT",
   "dependencies": {

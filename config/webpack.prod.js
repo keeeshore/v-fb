@@ -4,9 +4,9 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonConfig = require('./webpack.common.js');
 var helpers = require('./helpers');
 
-console.log('calling PROD scripts...');
-
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+
+console.log('calling PROD scripts...ENV=', ENV);
 
 module.exports = webpackMerge(commonConfig, {
 
