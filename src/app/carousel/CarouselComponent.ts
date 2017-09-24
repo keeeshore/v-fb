@@ -91,7 +91,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     public next () {
-        console.log('next called...' + this.carouselItems.length , ',currIndex=' + this.currIndex);
+        console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;

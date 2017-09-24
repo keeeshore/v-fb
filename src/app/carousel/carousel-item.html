@@ -2,14 +2,17 @@
     .carousel-item {
         display: none;
     }
+    .carousel-item.hidden {
+        display: none;
+    }
+    .carousel-item.show {
+        display: block;
+    }
     .carousel-item.true {
        background: #CCC;
         display: block;
     }
 </style>
-<div class="carousel-item {{isActive ? 'show1': 'hidden1'}}"
-     style="border: 1px solid #CCC; margin: 5px;">
-    isActive = {{isActive}} : active = {{active}}
+<div class="carousel-item {{isActive ? 'show': 'hidden'}}">
     <ng-content ></ng-content>
-    <input type="button" class="btn btn-xs btn-primary" value="Emit Load" (click)="emitLoad()">
 </div>

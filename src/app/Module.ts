@@ -5,14 +5,18 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './component/Component';
-import { AppHeaderComponent } from './header/Header';
-import { AppPostsComponent } from './posts/Posts';
-import { SchoolComponent } from "./school/SchoolComponent";
+import { AdminHeader } from './admin/header/Header';
+import { Posts } from './admin/posts/Posts';
 import { CarouselComponent } from "./carousel/CarouselComponent";
-import { Events } from "./events/Events";
-import { Photos } from "./photos/Photos";
-import { Albums } from "./albums/Albums";
-import { Login } from "./login/Login";
+
+import { Home } from "./home/Home";
+import { MainHeader } from "./header/Header";
+
+
+import { Events } from "./admin/events/Events";
+import { Photos } from "./admin/photos/Photos";
+import { Albums } from "./admin/albums/Albums";
+import { Login } from "./admin/login/Login";
 import { CarouselItem } from "./carousel/CarouselItem";
 import {DialogComponent} from "./dialog/DialogComponent";
 import {DialogService} from "./dialog/DialogService";
@@ -20,25 +24,25 @@ import {ApiService} from "./ApiService";
 
 const appRoutes: Routes = [
     {
-        path: 'events',
+        path: 'admin/events',
         component: Events
     },
     {
-        path: 'albums',
+        path: 'admin/albums',
         component: Albums
     },
     {
-        path: 'photos/:albumId',
+        path: 'admin/photos/:albumId',
         component: Photos,
         data: { albumId: 'albumId' }
     },
     {
-        path: 'posts',
-        component: AppPostsComponent
+        path: 'admin/posts',
+        component: Posts
     },
     {
-        path: 'school',
-        component: SchoolComponent,
+        path: 'admin/school',
+        component: Posts,
         data: { title: 'Heroes List' }
     },
     {
@@ -55,16 +59,20 @@ const appRoutes: Routes = [
         }
     },
     {
-        path: 'login/:reason',
+        path: 'admin/login',
+        component: Login
+    },
+    {
+        path: 'admin/login/:reason',
         component: Login
     },
     {
         path: '',
-        component: Login
+        component: Home
     },
     {
         path: '**',
-        component: Login
+        component: Home
     }
 ];
 
@@ -78,16 +86,17 @@ const appRoutes: Routes = [
 	],
 	declarations: [
 		AppComponent,
-        AppHeaderComponent,
-        AppPostsComponent,
-        SchoolComponent,
+        AdminHeader,
+        MainHeader,
+        Posts,
         CarouselItem,
         CarouselComponent,
         DialogComponent,
         Photos,
         Albums,
         Events,
-        Login
+        Login,
+        Home
 	],
 	bootstrap: [ AppComponent ],
 	providers: [ApiService, DialogService]

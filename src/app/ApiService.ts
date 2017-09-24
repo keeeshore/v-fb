@@ -48,7 +48,7 @@ export class ApiService {
 		console.log('Error caught', error);
 		if (error.status === 403) {
 			console.log('Error caught and redirecting to Login page');
-			this.router.navigate(['/login', 'expired']);
+			this.router.navigate(['/admin/login', 'expired']);
 		}
 		let errMsg: string;
 		if (error instanceof Response) {
