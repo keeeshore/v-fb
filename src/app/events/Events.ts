@@ -139,7 +139,7 @@ export class Events {
 
 	public submitEvents (collection:EventsCollection) {
 		console.log('SUBMIT eventsCollection...', collection);
-		let url = ENV.HOST_API_URL + '/api/events_post.php';
+		let url = ENV.HOST_API_URL + '/events_post.php';
 		this.apiService.post(url, collection).subscribe((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
@@ -157,7 +157,7 @@ export class Events {
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
-		let url = ENV.HOST_API_URL + '/api/events_delete.php';
+		let url = ENV.HOST_API_URL + '/events_delete.php';
 		console.log('DELETE eventModel...', eventModel);
 		this.apiService.post(url, eventModel).subscribe((response:any) => {
 			console.log('eventModel DELETE:POST response recieved....', response);
@@ -171,7 +171,7 @@ export class Events {
 	}
 
 	public onUpdateEvent (eventModel:EventModel) {
-		let url = ENV.HOST_API_URL +  '/api/events_update.php';
+		let url = ENV.HOST_API_URL +  '/events_update.php';
 		console.log('UPDATE eventModel...', eventModel);
 		/*this.apiService.post(url, eventModel).subscribe((response:any) => {
 			console.log('eventModel UPDATE:POST response recieved....', response);
@@ -180,7 +180,7 @@ export class Events {
 
 	public getEventsFromTable () {
 		console.log('getEventsFromTable...');
-		let url = ENV.HOST_API_URL + '/api/events_get.php';
+		let url = ENV.HOST_API_URL + '/events_get.php';
 		this.eventsCollection.events = new Array<EventModel>();
 		return this.apiService.fetch(url).subscribe(
 			(response: any) => {

@@ -45,6 +45,8 @@ export class Photos {
 
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
+    public imageHostPath:string = ENV.HOST_API_URL;
+
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('Photos component init');
 	}
@@ -101,7 +103,7 @@ export class Photos {
 
 	public getPhotosFromTable (albumId:string) {
 		console.log('getEventsFromTable...');
-		let url = ENV.HOST_API_URL + '/api/photos_get.php?albumId=' + albumId;
+		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
 		this.photoCollection.photos = new Array<PhotoModel>();
 		return this.apiService.fetch(url).subscribe(
 			(response: any) => {
@@ -117,7 +119,7 @@ export class Photos {
 	}
 
 	public onDeletePhotoModel(photoModel:PhotoModel):void {
-		let url = ENV.HOST_API_URL + '/api/photos_delete.php';
+		let url = ENV.HOST_API_URL + '/photos_delete.php';
 		console.log('onDeletePhotoModel POST ->', photoModel);
 		this.apiService.post(url, photoModel).subscribe(
 			(response: any) => {
@@ -147,7 +149,7 @@ export class Photos {
 
 	public submitPhotos (collection:PhotoCollection) {
 		console.log('SUBMIT PhotoCollection...', collection);
-		let url = ENV.HOST_API_URL + '/api/photos_post.php';
+		let url = ENV.HOST_API_URL + '/photos_post.php';
 		this.apiService.post(url, collection).subscribe((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {

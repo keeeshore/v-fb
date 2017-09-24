@@ -1,3 +1,4 @@
+<app-header></app-header>
 <section>
     <div class="row">
         <form class="form-horizontal">
@@ -64,7 +65,7 @@
                 <input type="button" class="btn btn-xs btn-warning" value="Delete" (click)="onDeletePhotoModel(photoModel)">
                 <input type="button" class="btn btn-xs btn-warning" value="Update" (click)="onUpdatePhotoModel(photoModel)">
             </div>
-            <img class="img img-responsive" src="//localhost/vimonisha/api/{{photoModel.source}}">
+            <img class="img img-responsive" src="{{imageHostPath}}{{photoModel.source}}">
             <div class="name">{{photoModel.name}}</div>            
           </li>
         </ul>

@@ -7,6 +7,7 @@ import {PagingData, Cursors} from '../model/PagingData';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
 import { ENV } from '../environments/environment';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
 	selector: 'app-login',
@@ -20,19 +21,24 @@ export class Login implements OnInit {
 
 	public password:string;
 
+	public hostApi:string = ENV.HOST_API_URL;
 
-	constructor(private apiService: ApiService) {
-		console.log('Login component init:URL:', ENV);
+	public _REASON:string = 'Session Expired. Please login again.';
+
+	public reason:string = '';
+
+	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
+		console.log('Photos component init');
 	}
 
 	ngOnInit () {
-		console.log('process::', process);
-		//console.log('__IN_DEBUG__::', API_URL);
-		if (isDevMode()) {
-	      console.log('MODE: Development!');
-	    } else {
-	      console.log('MODE: Production!');
-	    }
+		console.log( process.env.ENV, ' ::: ENV VARS::', ENV);
+		this.reason = '';
+		this.router.params.forEach((params: Params) => {
+	    	if (params['reason']) {
+	    		this.reason = this._REASON;
+	    	}
+	    });
 	}
 
 	public onLoginClick () {
@@ -43,7 +49,7 @@ export class Login implements OnInit {
 
 	public onLoginTest () {
 		console.log('onLoginTest');
-		let url = ENV.HOST_URL + '/api/events_get.php';
+		let url = ENV.HOST_URL + '/events_get.php';
 		let loginModel = new LoginModel(this.userName, this.password);
 		this.apiService.fetch(url).subscribe((response:any) => {
 			console.log('events_get get  response recieved....', response);

@@ -34,7 +34,7 @@ export class AppPostsComponent {
     }
 
     public updatePosts() {
-        let url: string = 'http://localhost:4000/api/vimonisha/update/posts';
+        let url: string = 'api/vimonisha/update/posts';
         let fromDate = moment().format(this.DATE_TIME_FORMAT);
         let toDate = moment().add(1, 'month').format(this.DATE_TIME_FORMAT);
 
@@ -68,7 +68,7 @@ export class AppPostsComponent {
     }
 
     public getPosts(repeat: boolean) {
-        var url = 'http://localhost:4000/api/vimonisha/get/posts';
+        var url = '/vimonisha/get/posts';
 
         this.message = '';
         this.apiService.fetch(url).subscribe((res: PostCollection) => {

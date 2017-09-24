@@ -1,15 +1,14 @@
 import { Injectable }     from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable }     from 'rxjs/Observable';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Injectable()
 export class ApiService {
 
-	public hostUrl:string = 'http://kishorebalan.com/';
-
-	constructor (private http: Http) {
-		
-	}
+	constructor (private http: Http,
+		private route: ActivatedRoute,
+    	private router: Router) {}
 
 	public fetch (url: string) {
 		return this.http.get(url)
@@ -17,7 +16,7 @@ export class ApiService {
 				//console.log('res from get service:' + JSON.stringify(res.json()));
 				return res.json();
 			})
-			.catch(this.handleError);
+			.catch(this.handleError.bind(this));
 	}
 
 	public post (url: string, data: any) {
@@ -26,7 +25,7 @@ export class ApiService {
 				//console.log('res from post service:' + JSON.stringify(res.json()));
 				return res.json();
 			})
-			.catch(this.handleError);
+			.catch(this.handleError.bind(this));
 	}
 
 	private fromQueryParams (obj: any) {
@@ -47,6 +46,10 @@ export class ApiService {
 	private handleError (error: Response | any) {
 		// In a real world app, we might use a remote logging infrastructure
 		console.log('Error caught', error);
+		if (error.status === 403) {
+			console.log('Error caught and redirecting to Login page');
+			this.router.navigate(['/login', 'expired']);
+		}
 		let errMsg: string;
 		if (error instanceof Response) {
 			const body = error.json() || '';

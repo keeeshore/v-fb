@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 console.log('loaded webpack COMMON scripts...');
 
@@ -18,7 +19,7 @@ module.exports = {
     },
 
     module: {
-        loaders: [
+        loaders: [      
             {
                 test: /\.ts$/,
                 loaders: ['awesome-typescript-loader', 'angular2-template-loader']
@@ -61,7 +62,16 @@ module.exports = {
             jQuery: 'jquery',
             $: 'jquery',
             jquery: 'jquery'
-        })
+        }),
+
+        new CopyWebpackPlugin([
+            { 
+                from: 'C:/xampp/htdocs/vimonisha/api',
+                to: 'api',
+                ignore: [ '*.jpg' ],
+                copyUnmodified: true
+            } 
+        ])
 
     ]
 };
