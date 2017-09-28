@@ -1,0 +1,91 @@
+<app-header></app-header>
+<section>
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group">
+               <label class="col-sm-2 control-label">Access token</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="accessToken" [(ngModel)]="accessToken" name="accessToken">
+                </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-2 control-label">From</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="fromDate" [(ngModel)]="fromDate" name="fromDate">
+                </div>
+                <label class="col-sm-1 control-label">To</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="toDate" [(ngModel)]="toDate" name="toDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="button" class="btn btn-xs btn-success" value="Get Events from Facebook" (click)="onGetEventClick()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Add Events to DB" (click)="onSubmitEvents1()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Get Events from DB" (click)="getEventsFromTable()">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <h2 class="text-danger">{{message}}</h2>
+    </div>
+
+    <div class="row">
+        <h4 class="text-danger">Events from Facebook</h4>
+    </div>
+    <div class="row">
+        <table class="table table-responsive table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-2">Start Time <br/> End Time</th>
+                <th>Name</th>
+                <th class="col-sm-2">URL : {{fbCollection.events.length}}</th>
+                <th class="col-sm-2">Actions</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr *ngFor="let eventModel of fbCollection.events;">
+                <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
+                <td>{{eventModel.name}}</td>
+                <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
+                <td class="text-center">
+                    <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="addEventModel(eventModel)">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="row">
+        <h4 class="text-danger">Events from Table</h4>
+    </div>
+    <div class="row">
+        <table class="table table-responsive table-striped">
+            <thead>
+            <tr>
+                <th class="col-sm-2">Start Time <br/> End Time</th>
+                <th>Name</th>
+                <th class="col-sm-2">URL : {{eventsCollection.events.length}}</th>
+                <th class="col-sm-2">Actions</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr *ngFor="let eventModel of eventsCollection.events;">
+                <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
+                <td>
+                    <h4>{{eventModel.name}}</h4>
+                    <h4>{{eventModel.name}}</h4>
+                </td>
+                <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
+                <td class="text-center">
+                    <input type="button" class="btn btn-xs btn-warning" value="Update" (click)="onUpdateEvent(eventModel)">
+                    <input type="button" class="btn btn-xs btn-warning" value="Delete" (click)="onDeleteEvent(eventModel)">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>

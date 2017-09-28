@@ -1,0 +1,74 @@
+<app-header></app-header>
+<section>
+    <div class="row">
+        <form class="form-horizontal">
+        <h3>{{albumName}}</h3>
+            
+            <div class="form-group">
+               <label class="col-sm-2 control-label">Access token</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="accessToken" [(ngModel)]="accessToken" name="accessToken">
+                </div>
+            </div>
+
+            <div class="form-group">
+               <label class="col-sm-2 control-label">From</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="fromDate" [(ngModel)]="fromDate" name="fromDate">
+                </div>
+                <label class="col-sm-1 control-label">To</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="toDate" [(ngModel)]="toDate" name="toDate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="button" class="btn btn-xs btn-success" value="Get Photos from Facebook" (click)="onGetPhotosClick()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Add ALL Photos to DB" (click)="onSubmitPhotos()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Get Photos from DB" (click)="getPhotosFromTable('178838325568799')">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <h2 class="text-danger">{{message}}</h2>
+    </div>
+
+    <div class="row">
+        <h4 class="text-danger">Events from Facebook</h4>
+    </div>
+    <div class="row" *ngIf="fbCollection.photos">
+        Total: {{fbCollection.photos.length}}
+        <ul class="list-inline photo-container">
+            <li *ngFor="let photoModel of fbCollection.photos;">
+                <h4>#{{photoModel.id}}</h4>
+                <div class="btn-container">
+                    <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="onAddPhotoModel(photoModel)">
+                </div>                 
+                <img class="img img-responsive" src="{{photoModel.source}}">
+                <div class="name">{{photoModel.name}}</div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="row">
+        <h4 class="text-danger">Photos from Table</h4>
+    </div>
+    <div class="row" *ngIf="photoCollection.photos">
+        Total: {{photoCollection.photos.length}}
+        <ul class="list-inline photo-container">
+          <li *ngFor="let photoModel of photoCollection.photos;">
+            <h4>{{photoModel.uid}}</h4>
+            <div class="btn-container">
+                <input type="button" class="btn btn-xs btn-warning" value="Delete" (click)="onDeletePhotoModel(photoModel)">
+                <input type="button" class="btn btn-xs btn-warning" value="Update" (click)="onUpdatePhotoModel(photoModel)">
+            </div>
+            <img class="img img-responsive" src="{{imageHostPath}}{{photoModel.source}}">
+            <div class="name">{{photoModel.name}}</div>            
+          </li>
+        </ul>
+    </div>
+
+</section>

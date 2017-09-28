@@ -22,12 +22,12 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     public animCss:any = 'inactive';
 
     constructor (private carouselService:CarouselService) {
-        console.log('CarouselItem:::constructor', carouselService.id);
+        //console.log('CarouselItem:::constructor', carouselService.id);
         this.carouselService = carouselService;
     }
 
     ngOnInit () {
-        console.log('CarouselItem::ngOnInit:::active=', this.active);
+        //console.log('CarouselItem::ngOnInit:::active=', this.active);
         if (this.active == 'true') {
             console.log('CarouselItem::setting ---------carousel-item-----to active');
             this.isActive = true;
@@ -35,22 +35,22 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     }
 
     ngAfterViewInit () {
-        console.log('CarouselItem::ngAfterViewInit:::active', this.active);
+        //console.log('CarouselItem::ngAfterViewInit:::active', this.active);
         this.carouselService.broadcast({uid: 2, currIndex: 2, isActive: this.isActive});
     }
 
     ngDoCheck () {
-        console.log('CarouselItem::ngOnChanges::ngDoCheck------------------------------------------------:', this.isActive);
+        //console.log('CarouselItem::ngOnChanges::ngDoCheck------------------------------------------------:', this.isActive);
     }
 
     emitLoad () {
-        console.log('CarouselItem::btn clicked::emitLoad:::');
+        //console.log('CarouselItem::btn clicked::emitLoad:::');
         //this.carouselService.broadcast({uid: 2, currIndex: 2, isActive: this.isActive});
         //this.onItemInit.emit(this);
     }
 
     toggleActive () {
-        console.log('CarouselItem::toggleActive:::');
+        //console.log('CarouselItem::toggleActive:::');
         this.isActive = !this.isActive;
     }
 

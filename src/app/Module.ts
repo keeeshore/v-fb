@@ -12,6 +12,8 @@ import { CarouselComponent } from "./carousel/CarouselComponent";
 import { Home } from "./home/Home";
 import { MainHeader } from "./header/Header";
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {trigger,state,style,animate,transition}from '@angular/animations';
 
 import { Events } from "./admin/events/Events";
 import { Photos } from "./admin/photos/Photos";
@@ -82,6 +84,8 @@ const appRoutes: Routes = [
 		HttpModule,
     	JsonpModule,
     	FormsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes)
 	],
 	declarations: [

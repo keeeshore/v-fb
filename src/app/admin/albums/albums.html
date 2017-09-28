@@ -1,0 +1,18 @@
+<app-header></app-header>
+<section>
+    <div class="row">
+        <h3>Albums</h3>
+
+        Total: {{albumCollection.albums.length}}
+        <ul class="list-inline album-container">
+            <li *ngFor="let albumModel of albumCollection.albums;">
+                <a href="admin/photos/{{albumModel.id}}">
+                    <h4>{{albumModel.name}}</h4>
+                    <div class="name">#{{albumModel.id}}</div>
+                </a>
+            </li>
+        </ul>
+
+    </div>   
+
+</section>

@@ -16,7 +16,7 @@ if (process.env.NODE_ENV == 'development') {
 }*/
 
 module.exports = webpackMerge(commonConfig, {
-  
+
     devtool: 'cheap-module-eval-source-map',
 
     output: {
@@ -29,8 +29,7 @@ module.exports = webpackMerge(commonConfig, {
     plugins: [
         new ExtractTextPlugin('[name].css'),
         new webpack.DefinePlugin({
-            'process.env': { 'ENV': JSON.stringify(ENV) },
-            'API_URL': JSON.stringify('https://llllllllllll:8080')
+            'process.env': { 'ENV': JSON.stringify(ENV) }
         })
     ],
 

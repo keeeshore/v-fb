@@ -38,27 +38,27 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     @Input() uid:string = 'default-uid';
 
     constructor (private carouselService:CarouselService) {
-        console.log('CarouselComponent::constructor:::uid=', this.uid, 'items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::constructor:::uid=', this.uid, 'items= ', this.carouselItems.length);
     }
 
     ngOnInit () {
-        console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
+       //console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
     }
 
     ngOnChanges (changes: SimpleChanges) {
-        console.log('CarouselComponent::ngOnChange::>uid=', this.uid, ':items = ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngOnChange::>uid=', this.uid, ':items = ', this.carouselItems.length);
     }
 
     ngAfterContentInit () {
-        console.log('CarouselComponent::ngAfterContentInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngAfterContentInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
     }
 
     ngAfterContentChecked () {
-        console.log('CarouselComponent::ngAfterContentChecked::>uid=', this.uid, 'items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngAfterContentChecked::>uid=', this.uid, 'items= ', this.carouselItems.length);
     }
 
     ngAfterViewInit () {
-        console.log('CarouselComponent::ngAfterViewInit::>uid=', this.uid);
+        //console.log('CarouselComponent::ngAfterViewInit::>uid=', this.uid);
         var self = this;
         this.carouselSubscription = this.carouselService.onEventBroadcast().subscribe(
             (carouselEvent:CarouselEvent) => {
@@ -83,15 +83,15 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     ngDoCheck () {
-        console.log('CarouselComponent::ngDoCheck::>uid=', this.uid, 'items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngDoCheck::>uid=', this.uid, 'items= ', this.carouselItems.length);
     }
 
     onItemLoaded (args:any) {
-        console.log('CarouselComponent::onItemLoaded::items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::onItemLoaded::items= ', this.carouselItems.length);
     }
 
     public next () {
-        console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
+       // console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
@@ -110,7 +110,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     public next_orig () {
-        console.log('next called...' + this.carouselItems.length , ',uid=' + this.uid);
+        ///console.log('next called...' + this.carouselItems.length , ',uid=' + this.uid);
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
@@ -129,7 +129,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     public prev () {
-        console.log('prev called...');
+        //console.log('prev called...');
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex - 1 < 0 ? total - 1 : currIndex - 1;
