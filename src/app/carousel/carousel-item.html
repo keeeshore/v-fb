@@ -1,18 +1,14 @@
 <style type="text/css">
     .carousel-item {
-        display: none;
+        border: 1px solid red;
     }
     .carousel-item.hidden {
-        display: none;
+        /*display: none;*/
     }
     .carousel-item.show {
-        display: block;
-    }
-    .carousel-item.true {
-       background: #CCC;
-        display: block;
+        /*display: block;*/
     }
 </style>
-<div class="carousel-item {{isActive ? 'show': 'hidden'}}">
+<div class="carousel-item {{isActive ? 'show1': 'hidden1'}}" [@itemState]="state">
     <ng-content ></ng-content>
 </div>

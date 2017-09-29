@@ -99,32 +99,13 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
                 console.log('setting item:', indexId,'to false');
-                item.setActive(false);
+                item.setActive(false, 'left');
             }
             if (indexId === newIndex) {
                 console.log('setting item:', indexId,'to true');
-                item.setActive(true);
+                item.setActive(true, 'right');
             }
         });
-        this.currIndex = newIndex;
-    }
-
-    public next_orig () {
-        ///console.log('next called...' + this.carouselItems.length , ',uid=' + this.uid);
-        let total:number = this.carouselItems.length;
-        let currIndex:number = this.currIndex;
-        let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
-
-        let currItem:CarouselItem = this.carouselItems[currIndex];
-        if (currItem) {
-            currItem.toggleActive();
-        }
-
-        let newItem:CarouselItem = this.carouselItems[newIndex];
-        if (newItem) {
-            newItem.toggleActive();
-            this.currIndex = newIndex;
-        }
         this.currIndex = newIndex;
     }
 
@@ -138,11 +119,11 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
                 console.log('setting item:', indexId,'to false');
-                item.setActive(false);
+                item.setActive(false, 'right');
             }
             if (indexId === newIndex) {
                 console.log('setting item:', indexId,'to true');
-                item.setActive(true);
+                item.setActive(true, 'left');
             }
         });
         this.currIndex = newIndex;

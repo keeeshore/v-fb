@@ -28,23 +28,23 @@ import {CarouselService} from "./CarouselService";
     animations: [
       trigger('itemState', [
         state('active', style({ position: 'relative', display: 'block' })),
-        state('right', style({  opacity: 1,  position: 'absolute', left: '100%', top: 0  })),
-        state('left', style({  opacity: 1,  position: 'absolute', right: '100%', top: 0 })),
+        state('right', style({  opacity: 1, transform: 'translateX(100%)', position: 'absolute', right: 0, top: 0, display: 'none' })),
+        state('left', style({  opacity: 1, transform: 'translateX(-100%)',  position: 'absolute', left: 0, top: 0, display: 'none'})),
         transition('active => left', animate(500, keyframes([
-            style({opacity: 1, right: 0 }),
-            style({opacity: 1, right: '100%' })
+            style({opacity: 1, transform: 'translateX(0)', offset: 0 }),
+            style({opacity: 1, transform: 'translateX(-100%)', offset: 1.0 })
           ]))),
         transition('left => active', animate(500, keyframes([
-            style({opacity: 1, right: '100%' }),
-            style({opacity: 1, right: 0 })
+            style({opacity: 1, transform: 'translateX(-100%)', offset: 0 }),
+            style({opacity: 1, transform: 'translateX(0)', offset: 1.0 })
           ]))),
         transition('active => right', animate(500, keyframes([
-            style({opacity: 1, left: 0 }),
-            style({opacity: 1, left: '100%'})
+            style({opacity: 1, transform: 'translateX(0)', offset: 0 }),
+            style({opacity: 1, transform: 'translateX(100%)', offset: 1.0 })
           ]))),
         transition('right => active', animate(500, keyframes([
-            style({opacity: 1, left: '100%' }),
-            style({opacity: 1, left: 0 })
+            style({opacity: 1, transform: 'translateX(100%)', offset: 0 }),
+            style({opacity: 1, transform: 'translateX(0)', offset: 1.0})
           ])))
       ])
     ]

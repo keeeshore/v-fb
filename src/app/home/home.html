@@ -1,4 +1,78 @@
-<main-header></main-header>
+
+ <!-- <div style="text-align: center">
+
+     <carousel-component 
+        uid="photo-component"
+        activeIndex="2"
+        style="display: block; width: 500px; margin: 0px auto; height: 200px;">
+
+            <carousel-item>
+
+                <div class="border: 1px solid red;">
+                    index = 1
+                </div>
+
+            </carousel-item>
+
+             <carousel-item>
+
+                <div class="border: 1px solid red;">
+                    index = 2
+                </div>
+
+            </carousel-item>
+
+             <carousel-item>
+
+                <div class="border: 1px solid red;">
+                    index = 3
+                    <br/>
+                    index = 3
+                    <br/>
+                    index = 3
+                </div>
+
+            </carousel-item>
+
+             <carousel-item>
+
+                <div class="border: 1px solid red;">
+                    index = 4
+                    <br/>
+                    index = 4
+                </div>
+
+            </carousel-item>
+
+             <carousel-item>
+
+                <div class="border: 1px solid red;">
+                    index = 5
+                </div>
+
+            </carousel-item>
+
+        </carousel-component>
+</div>   -->
+
+<!--  <carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
+
+        <carousel-item
+            *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
+            (onItemInit)="onItemLoaded()"
+            active="{{myIndex === 5}}">
+
+            <div class="photo-model-container text-center">
+                <h2>{{photoModel.name}} </h2>
+                <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" />
+            </div>
+
+        </carousel-item>
+
+    </carousel-component> -->
+
+
+ <main-header></main-header>
     
 <section class="col-sm-6" id="main-left">    
 
@@ -24,9 +98,7 @@
  <section class="col-sm-6" id="main-right">
     
     <ul class="exhibitions-list">
-        <li *ngFor="let eventModel of eventsCollection.events;"
-            [@heroState]="hero.state"
-            (click)="toggleState()">
+        <li *ngFor="let eventModel of eventsCollection.events;">
                 <h1>{{eventModel.name}}</h1>
                 <div class="dates">From : <span>{{eventModel.startTime}}</span>  to : <span>{{eventModel.endTime}}</span></div>
                 <img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
