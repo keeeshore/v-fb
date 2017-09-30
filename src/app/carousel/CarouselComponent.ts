@@ -90,6 +90,22 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         //console.log('CarouselComponent::onItemLoaded::items= ', this.carouselItems.length);
     }
 
+    public onNext (event:Event):void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        this.next();
+    }
+
+    public onPrev (event:Event):void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        this.prev();
+    }
+
     public next () {
        // console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
         let total:number = this.carouselItems.length;
@@ -99,11 +115,11 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
                 console.log('setting item:', indexId,'to false');
-                item.setActive(false, 'left');
+                item.setActive(false, 'left', 'NEXT');
             }
             if (indexId === newIndex) {
                 console.log('setting item:', indexId,'to true');
-                item.setActive(true, 'right');
+                item.setActive(true,  'right', 'NEXT');
             }
         });
         this.currIndex = newIndex;
@@ -118,12 +134,12 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
 
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
-                console.log('setting item:', indexId,'to false');
-                item.setActive(false, 'right');
+                console.log('setting item:', indexId, 'to false');
+                item.setActive(false, 'right', 'PREV');
             }
             if (indexId === newIndex) {
                 console.log('setting item:', indexId,'to true');
-                item.setActive(true, 'left');
+                item.setActive(true,  'left', 'PREV');
             }
         });
         this.currIndex = newIndex;

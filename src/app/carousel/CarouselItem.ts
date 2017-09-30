@@ -30,19 +30,19 @@ import {CarouselService} from "./CarouselService";
         state('active', style({ position: 'relative', display: 'block' })),
         state('right', style({  opacity: 1,  position: 'absolute', left: '100%', top: 0  })),
         state('left', style({  opacity: 1,  position: 'absolute', right: '100%', top: 0 })),
-        transition('active => left', animate(500, keyframes([
+        transition('active => left', animate('500ms ease-in', keyframes([
             style({opacity: 1, right: 0 }),
             style({opacity: 1, right: '100%' })
           ]))),
-        transition('left => active', animate(500, keyframes([
+        transition('left => active', animate('500ms ease-in', keyframes([
             style({opacity: 1, right: '100%' }),
             style({opacity: 1, right: 0 })
           ]))),
-        transition('active => right', animate(500, keyframes([
+        transition('active => right', animate('500ms ease-in', keyframes([
             style({opacity: 1, left: 0 }),
             style({opacity: 1, left: '100%'})
           ]))),
-        transition('right => active', animate(500, keyframes([
+        transition('right => active', animate('500ms ease-in', keyframes([
             style({opacity: 1, left: '100%' }),
             style({opacity: 1, left: 0 })
           ])))
@@ -55,6 +55,8 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     public isActive:boolean = false;
 
     public state:string = 'right';
+
+    public startPos:string = 'none';
 
     @Input() active:string = 'false';
 
@@ -96,14 +98,15 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
         this.isActive = !this.isActive;
     }
 
-    setActive (active:boolean, direction:string) {
+    setActive (active:boolean, direction:string, action:string) {
         this.isActive = active;
         if (this.isActive) {
-            this.state = 'active';
+            console.log('ACTIVE: moving new elems state from ', this.state, ' : to -> active');        
+            this.state = 'active';            
         } else {
+            console.log('NOT ACTIVE: moving current elems state from ', this.state, ' : to -> ', direction);
             this.state = direction;
         }
-
     }
 
 }

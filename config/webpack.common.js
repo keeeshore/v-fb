@@ -6,7 +6,7 @@ var helpers = require('./helpers');
 console.log('loaded webpack COMMON scripts...');
 
 module.exports = {
-
+    
     entry: {
         'polyfills': './src/polyfills.ts',
         'vendor': './src/vendor.ts',

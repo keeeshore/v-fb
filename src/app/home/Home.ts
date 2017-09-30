@@ -83,7 +83,7 @@ export class Home {
 						this.photoCollection.photos.push(photoModel);
 					});
 					window.setTimeout(function () {
-						//self.startAutoPlay();
+						self.startAutoPlay();
 					}, 5000);
 				}
 			},
@@ -120,6 +120,5 @@ export class Home {
 			}
 		);
 	}
-
 
 }

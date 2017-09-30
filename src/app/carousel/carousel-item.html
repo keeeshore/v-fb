@@ -1,14 +1,10 @@
 <style type="text/css">
     .carousel-item {
-        border: 1px solid red;
-    }
-    .carousel-item.hidden {
-        /*display: none;*/
-    }
-    .carousel-item.show {
-        /*display: block;*/
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 </style>
-<div class="carousel-item {{isActive ? 'show1': 'hidden1'}}" [@itemState]="state">
+<div class="carousel-item {{isActive ? 'show': ''}}" [@itemState]="state">
     <ng-content ></ng-content>
 </div>
