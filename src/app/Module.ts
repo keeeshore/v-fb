@@ -11,6 +11,8 @@ import { CarouselComponent } from "./carousel/CarouselComponent";
 
 import { Home } from "./home/Home";
 import { MainHeader } from "./header/Header";
+import { About } from "./about/About";
+import { Footer } from "./footer/Footer";
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {trigger,state,style,animate,transition}from '@angular/animations';
@@ -21,7 +23,9 @@ import { Albums } from "./admin/albums/Albums";
 import { Login } from "./admin/login/Login";
 import { CarouselItem } from "./carousel/CarouselItem";
 import {DialogComponent} from "./dialog/DialogComponent";
-import {DialogService} from "./dialog/DialogService";
+import {ScrollerService} from "./services/ScrollerService";
+import {ScrollerComponent} from "./common/ScrollerComponent";
+import {AutoPositionDirective} from "./directives/AutoPositionDirective";
 import {ApiService} from "./ApiService";
 
 const appRoutes: Routes = [
@@ -93,17 +97,21 @@ const appRoutes: Routes = [
         AdminHeader,
         MainHeader,
         Posts,
+        ScrollerComponent,
         CarouselItem,
         CarouselComponent,
         DialogComponent,
+        AutoPositionDirective,
         Photos,
         Albums,
         Events,
         Login,
-        Home
+        Home,
+        About,
+        Footer
 	],
 	bootstrap: [ AppComponent ],
-	providers: [ApiService, DialogService]
+	providers: [ApiService, ScrollerService]
 })
 
 export class AppModule { }

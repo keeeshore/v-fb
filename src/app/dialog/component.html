@@ -3,6 +3,10 @@
         display: none;
     }
 
+    .modal-dialog.close {
+        display: none;
+    }
+
     .modal-dialog.open .modal-overlay {
         display: block;
         position: fixed;
@@ -27,21 +31,23 @@
         position: relative;
         background: #FFF;
         padding: 10px;
-        width: 64%;
-        margin: 20px auto;
+        /*width: 64%;
+        margin: 20px auto;*/
     }
 </style>
 
 
-<div class="modal-dialog {{className}} {{isModalOpen ? 'open' : 'hide'}}">
+<div class="modal-dialog {{className}} {{isModalOpen ? 'open' : 'close'}}">
     isModalOpen = {{isModalOpen}} ; className = {{className}}
     <div class="modal-container">
-        <div class="modal-content">
-            <a (click)="onCloseDialog()" style="float: right; color: #CC0000; display: block" >X</a>
-            <div class="modal-placeholder">
-                <h2>Dialog Component</h2>
-                <ng-content></ng-content>
-            </div>
+        <div class="modal-content" 
+            [@dialogState]="state"
+            (@dialogState.start)="animationStarted($event)"
+            (@dialogState.done)="animationDone($event)">
+                <a (click)="close()" style="float: right; color: #CC0000; display: block" >X</a>
+                <div class="modal-placeholder">
+                    <ng-content></ng-content>
+                </div>
         </div>
     </div>
     <div class="modal-overlay"></div>

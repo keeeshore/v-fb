@@ -1,6 +1,35 @@
 #main-header {
-	/*position: fixed;*/
-	max-width: 1000px;
+	position: fixed;
+	left:0;
+	right:0;
 	margin: 0px auto;
-	border-radius: 0px 0px 8px 8px;
+	color: #FFF;
+	z-index: 10;
+}
+
+#main-header .menu-bg {
+	background: #FFF;
+	opacity: 0.5;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	z-index: -1;
+}
+
+#main-header ul#menu-list {
+	max-width: 540px;
+	float: none;
+	margin: 0px auto;
+}
+
+#main-header ul#menu-list li a {
+	color: black;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 90%;
+}
+
+#main-header ul#menu-list ul {
+	float: left;
 }

@@ -3,37 +3,51 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {DialogService} from "./DialogService";
-import {DialogEvent} from "./DialogEvent";
+import { trigger,  state,  style, animate, transition, keyframes } from '@angular/animations';
 
 @Component({
     selector: 'dialog-component',
-    templateUrl: 'component.html'
+    templateUrl: 'component.html',
+    animations: [
+      trigger('dialogState', [
+        state('open', style({ width: '70%', margin: '20px auto' })),
+        state('close', style({ width: '0px', margin: '10% auto' })),
+        transition('* => *', animate('500ms ease-out'))
+      ])
+    ]
 })
 
-export class DialogComponent implements OnInit{
+export class DialogComponent implements OnInit {
 
     @Input() id:string = 'dialog-default';
 
+    private state:string = 'close';
+
     private isModalOpen:boolean = false;
 
-    public constructor (private dialogService:DialogService) {
+    public constructor () {
         console.log('DialogComponent:::constructor...');
     }
 
-    public onCloseDialog ():void {
-        console.log('DialogComponent:::onCloseDialog...');
-        this.dialogService.closeModal(this.id);
+    public open():void {
+        this.state = 'open';
+        this.isModalOpen = true;
+    }
+
+    public close():void {
+        this.state = 'close';
+    }
+
+    public animationStarted(event:Event) {
+    }
+
+    public animationDone(event:Event) {
+        if (this.state === 'close') {
+            this.isModalOpen = false;
+        }
     }
 
     ngOnInit ():void {
         console.log('DialogComponent:::ngOnInit...', this.id);
-        this.dialogService.on(this.id).subscribe( (dEvt:DialogEvent)=> {
-                console.log('DialogComponent:subscriber next', JSON.stringify(dEvt));
-                this.isModalOpen = dEvt.open;
-            },
-            (e)=> console.log('DialogComponent:subscriber error'),
-            ()=> console.log('DialogComponent:subscriber complete')
-        );
     }
 }

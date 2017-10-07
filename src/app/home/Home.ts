@@ -5,10 +5,13 @@ import {Component,  ViewChildren, QueryList, ContentChildren} from '@angular/cor
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../ApiService';
+import {ScrollerService} from './../services/ScrollerService';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
 import {ENV} from '../environments/environment';
 import {CarouselComponent} from "../carousel/CarouselComponent";
+import {DialogComponent} from "../dialog/DialogComponent";
+
 import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../admin/photos/PhotoCollection';
 import {EventsCollection, EventModel} from '../admin/events/EventsCollection';
 
@@ -49,6 +52,10 @@ export class Home {
 
     public hero:any =  { state: 'active' };
 
+    public DATE_FORMAT:string = 'Do  ddd, MMM  YY';
+
+    public viewPortHeight:string = '100px';
+
     public toggleState():void {
     	this.hero.state = this.hero.state === 'inactive' ? 'active' : 'inactive';
     }
@@ -59,8 +66,20 @@ export class Home {
 
     @ViewChildren(CarouselComponent) carouselComponents:QueryList<CarouselComponent> =  new QueryList<CarouselComponent>();
 
-	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
+    @ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
+
+	constructor(
+		private apiService: ApiService, 
+		private router: ActivatedRoute,
+		private scrollerService: ScrollerService) {
 		console.log('Home component init');
+		this.viewPortHeight = (window.innerHeight - 50) + 'px';
+        console.log('viewPortHeight', this.viewPortHeight);
+	}
+
+	public getDate (dateStr:string):string {
+		let date:string = moment(dateStr, ENV.DATE_TIME_FORMAT).format(this.DATE_FORMAT);
+		return date;
 	}
 
 	public ngOnInit(): void {
@@ -68,6 +87,11 @@ export class Home {
 		this.getPhotosFromTable(this.albumId);
 		this.getExhibitionsFromTable();
   	}
+
+    ngAfterViewInit () {
+        //console.log('CarouselItem::ngAfterViewInit:::active', this.active);
+        
+    }
 
   	public getPhotosFromTable (albumId:string) {
 		console.log('getEventsFromTable...');
@@ -79,11 +103,11 @@ export class Home {
 				if (response.photos.length > 0) {
 					response.photos.filter((photo:any) => {
 						let photoModel:PhotoModel = new PhotoModel(photo);
-						console.log('set photo ->', photoModel);
+						//console.log('set photo ->', photoModel);
 						this.photoCollection.photos.push(photoModel);
 					});
 					window.setTimeout(function () {
-						self.startAutoPlay();
+						//self.startAutoPlay();
 					}, 5000);
 				}
 			},
@@ -110,7 +134,7 @@ export class Home {
 				if (response.events.length > 0) {
 					response.events.filter((event:any) => {
 						let eventModel:EventModel = new EventModel(event);
-						console.log('set EventModel ->', eventModel);
+						//console.log('set EventModel ->', eventModel);
 						this.eventsCollection.events.push(eventModel);
 					});
 				}
@@ -119,6 +143,21 @@ export class Home {
 				console.log('getEventsFromTable ERR ->', err);
 			}
 		);
+	}
+
+	public isUpcomingEvent(startTime:string):boolean {
+		let eventDate:any = moment(startTime, ENV.DATE_TIME_FORMAT);
+		let currentDate:any = moment();
+
+		if (eventDate.isAfter(currentDate)) {
+			return true;
+		}
+		return false;
+	}
+
+	public openDialog ():void {
+		console.log('openDialog clicked....');
+		this.dialogComponents.first.open();
 	}
 
 }

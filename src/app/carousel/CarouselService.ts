@@ -18,7 +18,7 @@ export class CarouselService {
     }
 
     broadcast (eventObj:CarouselEvent) {
-        console.log('CarouselService::broadcast called... firing carEventBus now', this.id);
+        //console.log('CarouselService::broadcast called... firing carEventBus now', this.id);
         this.id = this.id + 1;
         this.carouselSubject.next(eventObj);
     }

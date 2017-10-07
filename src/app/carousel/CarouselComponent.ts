@@ -62,7 +62,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         var self = this;
         this.carouselSubscription = this.carouselService.onEventBroadcast().subscribe(
             (carouselEvent:CarouselEvent) => {
-                console.log('onNext------------------------------------------------------ items.length:', self.carouselItems.length);
+                //console.log('onNext------------------------------------------------------ items.length:', self.carouselItems.length);
                 if (carouselEvent.isActive) {
                     self.currIndex = self.count;
                 }
@@ -114,11 +114,11 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
 
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
-                console.log('setting item:', indexId,'to false');
+                //console.log('setting item:', indexId,'to false');
                 item.setActive(false, 'left', 'NEXT');
             }
             if (indexId === newIndex) {
-                console.log('setting item:', indexId,'to true');
+                //console.log('setting item:', indexId,'to true');
                 item.setActive(true,  'right', 'NEXT');
             }
         });
@@ -134,11 +134,11 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
 
         this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
-                console.log('setting item:', indexId, 'to false');
+                //console.log('setting item:', indexId, 'to false');
                 item.setActive(false, 'right', 'PREV');
             }
             if (indexId === newIndex) {
-                console.log('setting item:', indexId,'to true');
+                //console.log('setting item:', indexId,'to true');
                 item.setActive(true,  'left', 'PREV');
             }
         });

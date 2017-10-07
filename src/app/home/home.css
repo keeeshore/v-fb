@@ -1,57 +1,44 @@
-section#main-left,
-section#main-right {
-	margin: 0px;
+#home-container {
+	margin-top: 50px;
+	padding: 10px 0px;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#bf392c+1,9d4188+100 */
+	background: #bf392c; /* Old browsers */
+	background: -moz-linear-gradient(left, #bf392c 1%, #9d4188 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, #bf392c 1%,#9d4188 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, #bf392c 1%,#9d4188 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf392c', endColorstr='#9d4188',GradientType=1 ); /* IE6-9 */
+}
+
+#home-container .container {
 	height: 100%;
-	padding: 51px 0px 0px 0px;
+	overflow: hidden;
 }
 
-section#main-right {
-	overflow-y: scroll;
-}
-
-.exhibitions-list {
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-}
-	
-.exhibitions-list li {
-	margin: 0px;
-	padding: 10px;
-}
-
-.exhibitions-list li h1 {
-	font-size: 18px;
-	margin: 0px;
-	padding: 5px 0px;
-	display: block;
-	border-bottom: 1px solid #CCC;
-	color: #CC0000;
-}
-
-.exhibitions-list li .dates {
-	font-size: 11px;
-	padding: 5px 0px;
-	color: blue;
-}
-
-.exhibitions-list li .dates span {
-	font-size: 11px;
-	font-weight: bold;
-}
-
-.exhibitions-list li img {
-	width: 50%;
-}
-
-
-#home-photo-component {
+#home-container .container #home {	
+	overflow: hidden;
 	height: 100%;
-	display: block;
+}
+
+
+#home #main-left,
+#home #main-left #home-photo-component {
+	height: 100%;
+}
+
+.exhibition-list {
+	margin: 0px 0px 30px 0px;
+}
+
+.exhibition-list img.exhibition-pic {
+	margin-left: 15px;
+}
+
+.exhibition-list h2 {
+	margin-top: 0px;	
 }
 
 #home-photo-component /deep/ #photo-component.carousel-container {
-	/*overflow: hidden;*/
+	overflow: hidden;
 	min-height: 100%;
 	height: 100%;
 }
@@ -107,3 +94,4 @@ section#main-right {
 	margin: 0px auto;
 	height: 100%;
 }
+

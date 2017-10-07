@@ -30,20 +30,20 @@ import {CarouselService} from "./CarouselService";
         state('active', style({ position: 'relative', display: 'block' })),
         state('right', style({  opacity: 1,  position: 'absolute', left: '100%', top: 0  })),
         state('left', style({  opacity: 1,  position: 'absolute', right: '100%', top: 0 })),
-        transition('active => left', animate('500ms ease-in', keyframes([
+        transition('active => left', animate('250ms ease-out', keyframes([
             style({opacity: 1, right: 0 }),
-            style({opacity: 1, right: '100%' })
+            style({opacity: 0, right: '100%' })
           ]))),
-        transition('left => active', animate('500ms ease-in', keyframes([
-            style({opacity: 1, right: '100%' }),
+        transition('left => active', animate('250ms ease-out', keyframes([
+            style({opacity: 0, right: '100%' }),
             style({opacity: 1, right: 0 })
           ]))),
-        transition('active => right', animate('500ms ease-in', keyframes([
+        transition('active => right', animate('250ms ease-out', keyframes([
             style({opacity: 1, left: 0 }),
-            style({opacity: 1, left: '100%'})
+            style({opacity: 0, left: '100%'})
           ]))),
-        transition('right => active', animate('500ms ease-in', keyframes([
-            style({opacity: 1, left: '100%' }),
+        transition('right => active', animate('250ms ease-out', keyframes([
+            style({opacity: 0, left: '100%' }),
             style({opacity: 1, left: 0 })
           ])))
       ])
@@ -72,7 +72,7 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     ngOnInit () {
         //console.log('CarouselItem::ngOnInit:::active=', this.active);
         if (this.active == 'true') {
-            console.log('CarouselItem::setting ---------carousel-item-----to active');
+            //console.log('CarouselItem::setting ---------carousel-item-----to active');
             this.isActive = true;
             this.state = 'active';
         }
@@ -101,10 +101,10 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     setActive (active:boolean, direction:string, action:string) {
         this.isActive = active;
         if (this.isActive) {
-            console.log('ACTIVE: moving new elems state from ', this.state, ' : to -> active');        
+            //console.log('ACTIVE: moving new elems state from ', this.state, ' : to -> active');        
             this.state = 'active';            
         } else {
-            console.log('NOT ACTIVE: moving current elems state from ', this.state, ' : to -> ', direction);
+            //console.log('NOT ACTIVE: moving current elems state from ', this.state, ' : to -> ', direction);
             this.state = direction;
         }
     }

@@ -1,88 +1,62 @@
+<div id="home-container" [ngStyle]="{ 'height': viewPortHeight }">
+	
+	<div class="container">
 
-<!--  <div style="text-align: center">
+		<div class="row" id="home">
 
-     <carousel-component 
-        uid="photo-component"
-        activeIndex="2"
-        style="display: block; width: 500px; margin: 0px auto; height: 200px;">
+			<div class="col-sm-6" id="main-left">
+<input type="button" class="btn btn-xs event-btn" value="Test" (click)="openDialog()" />
+				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
 
-            <carousel-item>
+						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
+						(onItemInit)="onItemLoaded()" active="{{myIndex === 5}}" >
 
-                <div class="border: 1px solid red;">
-                    index = 1
-                </div>
+							<div class="photo-model-container text-center" >
+								<!-- <h2>{{photoModel.name}} </h2>
+								<p>{{photoModel.description}} </p> -->
+								<!-- <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" [ngStyle]="{ 'height': viewPortHeight }" /> -->
+								<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
+							</div>
 
-            </carousel-item>
+						</carousel-item>
 
-             <carousel-item>
+				</carousel-component>
 
-                <div class="border: 1px solid red;">
-                    index = 2
-                </div>
+			</div>
 
-            </carousel-item>
+			<div class="col-sm-6" id="main-right">
 
-             <carousel-item>
-
-                <div class="border: 1px solid red;">
-                    index = 3
-                </div>
-
-            </carousel-item>
-
-            
-
-        </carousel-component>
-</div>   -->
-
-<!--  <carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
-
-        <carousel-item
-            *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
-            (onItemInit)="onItemLoaded()"
-            active="{{myIndex === 5}}">
-
-            <div class="photo-model-container text-center">
-                <h2>{{photoModel.name}} </h2>
-                <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" />
-            </div>
-
-        </carousel-item>
-
-    </carousel-component> -->
+			
+			
+			<dialog-component id="test-1">
+				<div> This is inside a dialog component</div>
+			</dialog-component>
 
 
-<main-header></main-header>
-    
-<section class="col-sm-6" id="main-left">    
+				<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
+					<div class="row">
+						<h2>{{eventModel.name}}</h2>
+						<div class="col-xs-7">
+							<img class="img img-responsive exhibition-pic" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+						</div>
+						<div class="col-xs-5 text-center">                
+							<div class="date-cover date-from">{{getDate(eventModel.startTime)}}</div>
+							<div class="date-cover date-to">{{getDate(eventModel.endTime)}}</div>
+							<div *ngIf="isUpcomingEvent(eventModel.startTime)">
+								<input type="button" class="btn btn-xs event-btn" value="Book Now" />
+							</div>
+							<input type="button" class="btn btn-xs event-btn" value="View Details" />
+						</div>
+					</div>
+				</div>
 
-    <carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
+			</div>
 
-        <carousel-item
-            *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
-            (onItemInit)="onItemLoaded()"
-            active="{{myIndex === 5}}">
+		</div>
+	</div>
 
-            <div class="photo-model-container text-center">
-                <h2>{{photoModel.name}} </h2>
-                <p>{{photoModel.description}} </p>
-                <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" />
-            </div>
+</div>
+<about-component></about-component>
 
-        </carousel-item>
+	
 
-    </carousel-component>
-
-</section>
-
- <section class="col-sm-6" id="main-right">
-    
-    <ul class="exhibitions-list">
-        <li *ngFor="let eventModel of eventsCollection.events;">
-                <h1>{{eventModel.name}}</h1>
-                <div class="dates">From : <span>{{eventModel.startTime}}</span>  to : <span>{{eventModel.endTime}}</span></div>
-                <img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
-        </li>
-    </ul>
-
- </section>
