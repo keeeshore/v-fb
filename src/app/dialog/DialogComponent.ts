@@ -10,8 +10,8 @@ import { trigger,  state,  style, animate, transition, keyframes } from '@angula
     templateUrl: 'component.html',
     animations: [
       trigger('dialogState', [
-        state('open', style({ width: '70%', margin: '20px auto' })),
-        state('close', style({ width: '0px', margin: '10% auto' })),
+        state('open', style({ width: '70%', margin: '20px auto', height: '90%' })),
+        state('close', style({ width: '0px', margin: '10% auto', height: '0px' })),
         transition('* => *', animate('500ms ease-out'))
       ])
     ]

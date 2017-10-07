@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
 import {ENV} from '../environments/environment';
 import {CarouselComponent} from "../carousel/CarouselComponent";
+import {DialogComponent} from "../dialog/DialogComponent";
 import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../admin/photos/PhotoCollection';
 import {EventsCollection, EventModel} from '../admin/events/EventsCollection';
 
@@ -30,6 +31,7 @@ import {
 
 export class About {
 
+	@ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
 
 	constructor(
 		private apiService: ApiService, 
@@ -40,6 +42,11 @@ export class About {
 
 	public ngOnInit(): void {
 		console.log('ngOnInit::');
+  	}
+
+  	public showDetails():void {
+  		console.log('showDetails');
+  		this.dialogComponents.first.open();
   	}
 
 }

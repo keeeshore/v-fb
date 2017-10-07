@@ -5,7 +5,7 @@
 		<div class="row" id="home">
 
 			<div class="col-sm-6" id="main-left">
-<input type="button" class="btn btn-xs event-btn" value="Test" (click)="openDialog()" />
+
 				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
 
 						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
@@ -25,13 +25,6 @@
 			</div>
 
 			<div class="col-sm-6" id="main-right">
-
-			
-			
-			<dialog-component id="test-1">
-				<div> This is inside a dialog component</div>
-			</dialog-component>
-
 
 				<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
 					<div class="row">
