@@ -54,6 +54,7 @@ h2 {
 	position: relative;
 	padding: 8px 0px 8px 10px;
 	border: 1px solid #eaeaea;
+	/*border-radius: 10px 0px 17px 0px;*/
 }
 
 h3 {
@@ -125,4 +126,14 @@ h2::after {
 	text-align: center;
 	margin: 30px auto;
 	border-bottom: 1px solid #CCC;
+}
+
+
+.btn-click {
+	padding: 3px 20px;
+    border: 1px solid #00344e;
+    color: #184257;
+    font-size: 16px;
+    border-radius: 19px;
+    font-weight: bold;
 }

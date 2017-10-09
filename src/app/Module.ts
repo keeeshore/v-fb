@@ -10,9 +10,11 @@ import { Posts } from './admin/posts/Posts';
 import { CarouselComponent } from "./carousel/CarouselComponent";
 
 import { Home } from "./home/Home";
+import { Exhibition } from "./exhibition/Exhibition";
 import { MainHeader } from "./header/Header";
 import { About } from "./about/About";
 import { Footer } from "./footer/Footer";
+import { Slider } from "./slider/Slider";
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {trigger,state,style,animate,transition}from '@angular/animations';
@@ -73,9 +75,22 @@ const appRoutes: Routes = [
         component: Login
     },
     {
+        path: 'about',
+        component: About
+    },
+    {
+        path: 'shows',
+        component: Exhibition
+    },
+    {
+        path: 'shows/:id',
+        component: Exhibition
+    },
+    {
         path: '',
         component: Home
     },
+    
     {
         path: '**',
         component: Home
@@ -107,8 +122,10 @@ const appRoutes: Routes = [
         Events,
         Login,
         Home,
+        Exhibition,
         About,
-        Footer
+        Footer,
+        Slider
 	],
 	bootstrap: [ AppComponent ],
 	providers: [ApiService, ScrollerService]

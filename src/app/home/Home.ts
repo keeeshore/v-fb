@@ -52,8 +52,6 @@ export class Home {
 
     public hero:any =  { state: 'active' };
 
-    public DATE_FORMAT:string = 'Do  ddd, MMM  YY';
-
     public viewPortHeight:string = '100px';
 
     public toggleState():void {
@@ -78,7 +76,7 @@ export class Home {
 	}
 
 	public getDate (dateStr:string):string {
-		let date:string = moment(dateStr, ENV.DATE_TIME_FORMAT).format(this.DATE_FORMAT);
+		let date:string = moment(dateStr, ENV.DATE_TIME_FORMAT).format(ENV.USER_DATE_FORMAT);
 		return date;
 	}
 
@@ -156,6 +154,11 @@ export class Home {
 	}
 
 	public openDialog ():void {
+		console.log('openDialog clicked....');
+		this.dialogComponents.first.open();
+	}
+
+	public showGallery ():void {
 		console.log('openDialog clicked....');
 		this.dialogComponents.first.open();
 	}

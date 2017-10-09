@@ -1,0 +1,53 @@
+ .modal-overlay {
+        display: none;
+}
+
+.modal-dialog.close {
+    display: none;
+}
+
+.modal-dialog.open .modal-content .close-btn {
+    float: right;
+    color: #CC0000;
+    display: block;
+    /*border: 1px solid black;*/
+    border-radius: 0px 4px 0px 0px;
+    margin: 5px;
+    width: 19px;
+    height: 25px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.modal-dialog.open .modal-overlay {
+    display: block;
+    position: fixed;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.8);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.modal-dialog.open .modal-container {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.modal-dialog.open .modal-content {
+    position: relative;
+    background: #FFF;
+    padding: 0px; 
+}
+
+.modal-dialog.open .modal-content .modal-placeholder {
+    height: 85%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 20px 20px 10px 20px;
+}

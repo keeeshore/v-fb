@@ -5,6 +5,8 @@ import {Component,  ViewChildren, QueryList, ContentChildren} from '@angular/cor
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../ApiService';
+import {Slider} from './../slider/Slider';
+import {Direction} from '../Enums';
 import {ScrollerService} from './../services/ScrollerService';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
@@ -33,6 +35,8 @@ export class About {
 
 	@ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
 
+	@ViewChildren(Slider) sliders:QueryList<Slider> =  new QueryList<Slider>();
+
 	constructor(
 		private apiService: ApiService, 
 		private router: ActivatedRoute,
@@ -44,9 +48,14 @@ export class About {
 		console.log('ngOnInit::');
   	}
 
-  	public showDetails():void {
-  		console.log('showDetails');
-  		this.dialogComponents.first.open();
+  	public showDetails(sliderId:string):void {
+  		console.log('showDetails', sliderId);
+  		//this.dialogComponents.first.open();
+  		this.sliders.first.open().subscribe((index:Direction)=>{
+  			console.log('Slider response on subscribe', Direction[index]);
+  		},
+  		(err:any)=>{ console.log('Error on slider....')},
+  		()=>{console.log('complete on Slider')});
   	}
 
 }

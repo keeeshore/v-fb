@@ -4,7 +4,18 @@
 	right:0;
 	margin: 0px auto;
 	color: #FFF;
-	z-index: 10;
+	z-index: 20;
+	border-radius: 0px;
+	box-shadow: 0px 0px 7px -1px rgba(0,0,0, 1)
+}
+
+.navbar {
+	min-height: 26px;
+}
+
+.navbar-brand {
+	padding: 5px 0px 0px 0px;
+	height: auto;
 }
 
 #main-header .menu-bg {
@@ -17,19 +28,15 @@
 	z-index: -1;
 }
 
-#main-header ul#menu-list {
+#main-header .navbar-nav {
 	max-width: 540px;
 	float: none;
 	margin: 0px auto;
 }
 
-#main-header ul#menu-list li a {
+#main-header .navbar-nav li a {
 	color: black;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-size: 90%;
-}
-
-#main-header ul#menu-list ul {
-	float: left;
 }

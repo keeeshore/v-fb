@@ -1,5 +1,5 @@
 #home-container {
-	margin-top: 50px;
+	margin-top: 26px;
 	padding: 10px 0px;
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#bf392c+1,9d4188+100 */
 	background: #bf392c; /* Old browsers */
@@ -23,6 +23,10 @@
 #home #main-left,
 #home #main-left #home-photo-component {
 	height: 100%;
+}
+
+#home #main-right {
+	overflow-y: scroll;
 }
 
 .exhibition-list {

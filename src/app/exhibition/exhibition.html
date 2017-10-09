@@ -1,0 +1,64 @@
+<div id="exhibition-container">
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>Upcoming Events and Exhibitions</h3>
+			</div>
+		</div>
+	</div>	
+
+	<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
+		<div class="container">
+			<div class="row exhibition">
+				<div class="col-sm-4">
+					<img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+				</div>
+				<div class="col-sm-8"> 
+					<h2>{{eventModel.name}}</h2>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="dates-container">
+								<span class="glyphicon glyphicon-calendar"></span>
+								<span class="date">{{getDate(eventModel.startTime)}}</span>
+								<span class="glyphicon glyphicon-transfer"></span>
+								<span class="date">{{getDate(eventModel.endTime)}}</span>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<p class="lead" style="margin: 20px 0px 0px 20px;">
+								<!-- <input type="button" class="btn btn-xs btn-click" value="View Details" (click)="showEventDescription(eventModel)" /> -->
+								<!-- <a class="btn btn-sm btn-click" href="/shows#{{eventModel.id}}">View Details</a>
+								<a class="btn btn-sm btn-click" [routerLink]="['/shows', eventModel.id]">View Details</a> -->
+								<a class="btn btn-sm btn-click" [routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">View Details</a>
+							</p>
+						</div>
+					</div>
+					
+					<div class="row" *ngIf="isUpcomingEvent(eventModel.startTime)">
+						<input type="button" class="btn btn-xs btn-click" value="Book Now" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<slider direction="UP">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h4 style="color: red;">{{selectedModel.name}}</h4>
+				<p class="lead">{{selectedModel.description}}</p>
+				<p class="lead text-center">
+					
+				</p>
+			</div>
+			<div class="col-sm-6">
+				<img class="img img-responsive" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
+			</div>
+			<div class="col-sm-6 text-center">
+				<a class="btn btn-sm btn-click" href="#">Register Now</a>
+			</div>
+		</div>
+	</div>	
+</slider>

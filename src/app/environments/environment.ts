@@ -16,6 +16,8 @@ export const ENV = {
 
   	HOST_API_URL: ENVIRONMENT.HOST_API_URL,
 
+  	USER_DATE_FORMAT: 'Do  ddd, MMM  YY',
+
   	DATE_TIME_FORMAT: 'DD-MM-YYYY HH:mm',
 
   	FB_GRAPH_URL: 'https://graph.facebook.com/v2.10/',

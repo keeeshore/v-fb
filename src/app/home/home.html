@@ -1,11 +1,11 @@
-<div id="home-container" [ngStyle]="{ 'height': viewPortHeight }">
+<div id="home-container">
 	
 	<div class="container">
 
 		<div class="row" id="home">
 
-			<div class="col-sm-6" id="main-left">
-
+			<div class="col-sm-6" id="main-left"  [ngStyle]="{ 'height': viewPortHeight }">
+				<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
 				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
 
 						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
@@ -21,10 +21,9 @@
 						</carousel-item>
 
 				</carousel-component>
-
 			</div>
 
-			<div class="col-sm-6" id="main-right">
+			<div class="col-sm-6" id="main-right" [ngStyle]="{ 'height': viewPortHeight }">
 
 				<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
 					<div class="row">
@@ -38,7 +37,7 @@
 							<div *ngIf="isUpcomingEvent(eventModel.startTime)">
 								<input type="button" class="btn btn-xs event-btn" value="Book Now" />
 							</div>
-							<input type="button" class="btn btn-xs event-btn" value="View Details" />
+							<input type="button" class="btn btn-xs btn-click" value="View Details" />
 						</div>
 					</div>
 				</div>

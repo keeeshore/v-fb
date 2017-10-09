@@ -46,20 +46,22 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active">
-          <a href="/home">Home <span class="sr-only">(current)</span></a>
+          <a [routerLink]="['/home']">Home <span class="sr-only">(current)</span></a>
         </li>
 
-        <li><a href="/shows">Exhibitions</a></li>
+        <li><a [routerLink]="['/shows']">Exhibitions</a></li>
 
-        <li><a href="/press">Press Release</a></li>
+        <li><a [routerLink]="['/press']">Press Release</a></li>
 
-        <li><a href="gallery">Gallery</a></li>
-         <li class="dropdown">
+        <li><a [routerLink]="['/gallery']">Gallery</a></li>
+        
+        <li><a [routerLink]="['/about']">About</a></li>
+
+        <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            About <span class="caret"></span>
+            Collection <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#">About-us</a></li>
             <li><a href="#">Floor Plans</a></li>
             <li><a href="#">About Private Collection</a></li>
             <li><a href="#">Concept &amp; FAQ's</a></li>

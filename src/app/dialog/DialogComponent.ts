@@ -7,7 +7,8 @@ import { trigger,  state,  style, animate, transition, keyframes } from '@angula
 
 @Component({
     selector: 'dialog-component',
-    templateUrl: 'component.html',
+    templateUrl: 'dialog.html',
+    styleUrls: [ './dialog.css' ],
     animations: [
       trigger('dialogState', [
         state('open', style({ width: '70%', margin: '20px auto', height: '90%' })),
