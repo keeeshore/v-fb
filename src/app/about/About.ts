@@ -51,11 +51,7 @@ export class About {
   	public showDetails(sliderId:string):void {
   		console.log('showDetails', sliderId);
   		//this.dialogComponents.first.open();
-  		this.sliders.first.open().subscribe((index:Direction)=>{
-  			console.log('Slider response on subscribe', Direction[index]);
-  		},
-  		(err:any)=>{ console.log('Error on slider....')},
-  		()=>{console.log('complete on Slider')});
+  		this.sliders.first.open();
   	}
 
 }

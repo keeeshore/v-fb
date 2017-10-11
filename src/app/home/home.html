@@ -28,16 +28,20 @@
 				<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
 					<div class="row">
 						<h2>{{eventModel.name}}</h2>
-						<div class="col-xs-7">
-							<img class="img img-responsive exhibition-pic" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
-						</div>
-						<div class="col-xs-5 text-center">                
-							<div class="date-cover date-from">{{getDate(eventModel.startTime)}}</div>
-							<div class="date-cover date-to">{{getDate(eventModel.endTime)}}</div>
-							<div *ngIf="isUpcomingEvent(eventModel.startTime)">
-								<input type="button" class="btn btn-xs event-btn" value="Book Now" />
+						<div class="row">
+							<div class="col-xs-7">
+								<img class="img img-responsive exhibition-pic" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
 							</div>
-							<input type="button" class="btn btn-xs btn-click" value="View Details" />
+							<div class="col-xs-5 text-center">                
+								<div class="date-cover date-from">{{getDate(eventModel.startTime)}}</div>
+								<div class="date-cover date-to">{{getDate(eventModel.endTime)}}</div>
+								<div *ngIf="isUpcomingEvent(eventModel.startTime)">
+									<input type="button" class="btn btn-xs event-btn" value="Book Now" />
+								</div>
+								<a class="btn btn-xs btn-click" 
+									[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

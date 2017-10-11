@@ -4,7 +4,7 @@ import { BrowserModule }  from '@angular/platform-browser';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { AppComponent } from './component/Component';
+import { AppController } from './controller/AppController';
 import { AdminHeader } from './admin/header/Header';
 import { Posts } from './admin/posts/Posts';
 import { CarouselComponent } from "./carousel/CarouselComponent";
@@ -31,6 +31,22 @@ import {AutoPositionDirective} from "./directives/AutoPositionDirective";
 import {ApiService} from "./ApiService";
 
 const appRoutes: Routes = [
+    {
+        path: 'home',
+        component: Home
+    },    
+    {
+        path: '',
+        component: Home
+    },
+    {
+        path: 'admin/login',
+        component: Login
+    },
+    {
+        path: 'admin/login/:reason',
+        component: Login
+    },
     {
         path: 'admin/events',
         component: Events
@@ -65,15 +81,7 @@ const appRoutes: Routes = [
                 {'itemId': '4', 'itemStr': 'test 4'}
             ]
         }
-    },
-    {
-        path: 'admin/login',
-        component: Login
-    },
-    {
-        path: 'admin/login/:reason',
-        component: Login
-    },
+    },   
     {
         path: 'about',
         component: About
@@ -85,15 +93,6 @@ const appRoutes: Routes = [
     {
         path: 'shows/:id',
         component: Exhibition
-    },
-    {
-        path: '',
-        component: Home
-    },
-    
-    {
-        path: '**',
-        component: Home
     }
 ];
 
@@ -108,7 +107,7 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes)
 	],
 	declarations: [
-		AppComponent,
+        AppController,
         AdminHeader,
         MainHeader,
         Posts,
@@ -127,7 +126,7 @@ const appRoutes: Routes = [
         Footer,
         Slider
 	],
-	bootstrap: [ AppComponent ],
+	bootstrap: [ AppController ],
 	providers: [ApiService, ScrollerService]
 })
 

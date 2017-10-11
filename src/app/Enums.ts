@@ -6,3 +6,12 @@ export enum Direction {
     LEFT,
     RIGHT,
 } 
+
+
+export enum State {
+	OPEN,
+    CLOSE,
+    SHOW,
+    HIDE,
+    NONE
+} 

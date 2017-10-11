@@ -1,10 +1,10 @@
-import { Component, ViewChildren, QueryList, ContentChildren, AfterViewInit, Input, ViewChild, ElementRef} from '@angular/core';
+import { OnInit, Component, ViewChildren, QueryList, ContentChildren, AfterViewInit, Input, ViewChild, ElementRef} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { ApiService} from './../ApiService';
 import { Observable} from "rxjs";
 import { Subject} from "rxjs/Subject";
-import { Direction } from "../Enums";
+import { State, Direction } from "../Enums";
 import { ENV } from '../environments/environment';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 
@@ -40,35 +40,41 @@ export class Slider {
 
 	public btnState:string = 'hide';
 
-	public openObserver:Observable<Direction>;
+	public observer:Observable<State>;
 
-	public stateSubject:Subject<Direction> = new Subject<Direction>();
+	public sliderSubject:Subject<State> = new Subject<State>();
 
 	constructor (private apiService:ApiService) {
 		console.log('Slider constructor');
 	}
 
+	ngOnInit ():void {
+		console.log('SLider ngOnInit');
+		this.observer = Observable.create((observer:Subject<State>) => {
+		  	this.sliderSubject.next(State.NONE);
+		});
+	}
+
 	public _open():void {
-		console.log('Slider open..');
 		this.state = 'open';
 	}
 
-	public open():Observable<Direction> {
+	public open():void {
 		console.log('Slider open..');
 		this._open();
-		this.openObserver = Observable.create((observer:Subject<Direction>) => {
-		  	this.stateSubject.next(Direction.UP);
-		});
-		return this.openObserver;
+		//this.observer = Observable.create((observer:Subject<Direction>) => {
+		  	this.sliderSubject.next(State.OPEN);
+		//});
+		//return this.observer;
 	}
 
-	public close():Observable<Direction> {
+	public close():void {
 		console.log('Slider close..');
 		this._close();
-		this.openObserver = Observable.create((observer:Subject<Direction>) => {
-		  	this.stateSubject.next(Direction.UP);
-		});
-		return this.openObserver;
+		//this.openObserver = Observable.create((observer:Subject<Direction>) => {
+		  	this.sliderSubject.next(State.CLOSE);
+		//});
+		//return this.observer;
 	}
 
 	public _close():void {

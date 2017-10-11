@@ -137,3 +137,16 @@ h2::after {
     border-radius: 19px;
     font-weight: bold;
 }
+
+
+/*-----------FLEX-----*/
+
+
+.flex-row {
+	display: flex;
+	align-items: center;
+}
+
+.flex-row  .flex-column {
+	flex: 1;
+}
