@@ -119,7 +119,7 @@ export class Exhibition implements AfterViewInit {
 				console.log('getEventsFromTable ERR ->', err);
 			}
 		);
-		return this.eventsSubject;
+		return this.eventsSubject.asObservable();
 	}
 
 	public isUpcomingEvent(startTime:string):boolean {
