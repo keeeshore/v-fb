@@ -26,8 +26,8 @@ if ($_SERVER['SERVER_NAME'] != 'localhost') {
 		//exit;
 	} 
 
-	echo json_encode(array( 'success' => $success, 'message' => $httpStatusMsg ));
-	exit();
+	//echo json_encode(array( 'success' => $success, 'message' => $httpStatusMsg ));
+	//exit();
 
 }
 

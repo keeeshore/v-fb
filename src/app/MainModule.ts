@@ -55,6 +55,9 @@ const appRoutes: Routes = [
         component: Exhibition
     },
     {
+        path: 'admin/',   redirectTo: '/admin/', pathMatch: 'full'
+    },
+    {
         path: '**',
         component: ErrorComponent
     },

@@ -44,12 +44,12 @@ module.exports = webpackMerge(commonConfig, {
       }
     })
     
-    /*,new CopyWebpackPlugin([{ 
-          from: 'C:/xampp/htdocs/vimonisha/api',
-          to: 'api',
+    new CopyWebpackPlugin([{ 
+          from: helpers.root('api'),
+          to:  helpers.root('dist/api'),
           ignore: [ '*.jpg' ],
           copyUnmodified: true
         }
-    ])*/
+    ])
   ]
 });
