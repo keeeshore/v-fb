@@ -45,11 +45,11 @@ export class Slider {
 	public sliderSubject:Subject<State> = new Subject<State>();
 
 	constructor (private apiService:ApiService) {
-		console.log('Slider constructor');
+		//console.log('Slider constructor');
 	}
 
 	ngOnInit ():void {
-		console.log('SLider ngOnInit');
+		//console.log('SLider ngOnInit');
 		this.observer = Observable.create((observer:Subject<State>) => {
 		  	this.sliderSubject.next(State.NONE);
 		});
@@ -60,7 +60,6 @@ export class Slider {
 	}
 
 	public open():void {
-		console.log('Slider open..');
 		this._open();
 		//this.observer = Observable.create((observer:Subject<Direction>) => {
 		  	this.sliderSubject.next(State.OPEN);
@@ -69,7 +68,7 @@ export class Slider {
 	}
 
 	public close():void {
-		console.log('Slider close..');
+		//console.log('Slider close..');
 		this._close();
 		//this.openObserver = Observable.create((observer:Subject<Direction>) => {
 		  	this.sliderSubject.next(State.CLOSE);
@@ -78,20 +77,20 @@ export class Slider {
 	}
 
 	public _close():void {
-		console.log('Slider close..');
+		//console.log('Slider close..');
 		this.state = 'close';
 		this.btnState = 'hide';
 	}
 
 	public animationStarted(event:Event):void {
-		console.log('Slider anim started..');
+		//console.log('Slider anim started..');
 		if (this.state === 'close') {
 			this.btnState = 'hide';
 		}
 	}
 
 	public animationDone(event:Event):void {
-		console.log('Slider anim done..', this.state);
+		//console.log('Slider anim done..', this.state);
 		if (this.state === 'open') {
 			this.btnState = 'show';
 		}	

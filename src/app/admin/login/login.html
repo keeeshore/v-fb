@@ -1,12 +1,12 @@
-<section class="container">
+<div class="container">
     <div class="row">
-        <h2>Login</h2>
+        <h3>Login</h3>
         <p class="bg-danger">{{reason}}</p>
-        <form class="form-horizontal" action="{{hostApi}}/authorize.php" method="post">
+        <form class="col-sm-12 form-horizontal" action="{{hostApi}}/authorize.php" method="post">
             <div class="row">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">User name</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-5">
                         <input type="text" class="form-control" id="userName" [(ngModel)]="userName" name="userName">
                     </div>
                 </div>
@@ -15,7 +15,7 @@
             <div class="row">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-5">
                         <input type="text" class="form-control" id="password" [(ngModel)]="password" name="password">
                     </div>
                 </div>
@@ -30,4 +30,4 @@
             </div>
         </form>
     </div>
-</section>
+</div>

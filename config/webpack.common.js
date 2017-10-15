@@ -10,7 +10,8 @@ module.exports = {
     entry: {
         'polyfills': './src/polyfills.ts',
         'vendor': './src/vendor.ts',
-        'app': ['./src/main.ts']
+        'main': ['./src/Main.ts'],
+        'admin': ['./src/Admin.ts']
     },
 
     resolve: {
@@ -18,7 +19,7 @@ module.exports = {
     },
 
     module: {
-        loaders: [      
+        loaders: [
             {
                 test: /\.ts$/,
                 loaders: ['ts-loader', 'angular2-template-loader']
@@ -33,12 +34,12 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                exclude: helpers.root('src', 'app'),
+                exclude: helpers.root('src'),
                 loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
             },
             {
                 test: /\.css$/,
-                include: helpers.root('src', 'app'),
+                include: helpers.root('src'),
                 loader: 'raw'
             },
             {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
@@ -49,12 +50,27 @@ module.exports = {
     },
 
     plugins: [
+        
         new webpack.optimize.CommonsChunkPlugin({
-            name: ['app', 'vendor', 'polyfills']
+            name: ['vendor', 'polyfills']
         }),
 
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            filename: 'index.html',
+            template: 'src/index.html',
+            excludeChunks: ['admin']
+        }),
+
+        /*new HtmlWebpackPlugin({  
+          filename: 'admin.html',
+          template: 'src/admin.html',
+          excludeChunks: ['main']
+        }),*/
+
+        new HtmlWebpackPlugin({  
+          filename: 'admin/index.html',
+          template: 'src/app/admin/index.html',
+          excludeChunks: ['main']
         }),
 
         new webpack.ProvidePlugin({

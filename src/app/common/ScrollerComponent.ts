@@ -141,21 +141,21 @@ export class ScrollerComponent {
 	}
 
 	ngAfterViewInit () {
-        console.log('Scroller component ngAfterViewInit >> window.innerHeight:', window.innerHeight);
-        console.log('Scroller component elem.offsetTop >> :', this.elem.nativeElement.offsetTop); 
+        //console.log('Scroller component ngAfterViewInit >> window.innerHeight:', window.innerHeight);
+        //console.log('Scroller component elem.offsetTop >> :', this.elem.nativeElement.offsetTop); 
 
 		this.scrollerService.onScrollBroadcast().subscribe(
             (startY:number) => {
 
             	let rect = this.elem.nativeElement.getBoundingClientRect();
-				console.log('rect.top ->', rect.top);
+				//console.log('rect.top ->', rect.top);
 
             	//let offsetTop:number = this.elem.nativeElement.offsetTop;
             	let offsetTop:number = rect.top;
-            	console.log('Scroller:rect.top/window.innerHeight>> ', rect.top, '/',window.innerHeight);
+            	//console.log('Scroller:rect.top/window.innerHeight>> ', rect.top, '/',window.innerHeight);
             	//this.newPosY =  10 - Math.round((startY/rect.top * 100)/10);
             	this.newPosY =  Math.round((rect.top/(window.innerHeight) * 100))/10;
-            	console.log('onScrollBroadcast>---- -----newPosY-', this.newPosY);
+            	//console.log('onScrollBroadcast>---- -----newPosY-', this.newPosY);
 
             	if (!isNaN(this.newPosY)) {
             		if (this.newPosY >= 10) {
@@ -166,7 +166,7 @@ export class ScrollerComponent {
             		this.state = 'move-' + this.newPosY;
             		            	
             	} else {
-            		console.log('onScrollBroadcast>---------------------------isNaN:'); 
+            		//console.log('onScrollBroadcast>---------------------------isNaN:'); 
             	}
 
             },

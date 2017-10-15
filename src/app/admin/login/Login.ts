@@ -3,6 +3,7 @@
  */
 import {Component,  ViewChildren, QueryList, OnInit, isDevMode} from '@angular/core';
 import {ApiService} from './../../ApiService';
+import {AuthGuard} from './../AuthGuard';
 import {PagingData, Cursors} from '../model/PagingData';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
@@ -27,12 +28,16 @@ export class Login implements OnInit {
 
 	public reason:string = '';
 
-	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
-		console.log('Photos component init');
+	constructor(
+		private apiService: ApiService, 
+		public authGaurd: AuthGuard, 
+		private router: ActivatedRoute) {
+		console.log('Photos component init::AuthGuard', authGaurd);
 	}
 
 	ngOnInit () {
-		console.log( process.env.ENV, ' ::: ENV VARS::', ENV);
+		console.log( process.env.ENV, ' ::: ENV VARS::', ENV, ':::authGaurd:::', this.authGaurd);
+		this.authGaurd.doLogout();
 		this.reason = '';
 		this.router.params.forEach((params: Params) => {
 	    	if (params['reason']) {
@@ -43,22 +48,11 @@ export class Login implements OnInit {
 
 	public onLoginClick () {
 		console.log('onLoginClick');
-		document.forms[0].submit();
-	}
-
-
-	public onLoginTest () {
-		console.log('onLoginTest');
-		let url = ENV.HOST_URL + '/events_get.php';
+		//document.forms[0].submit();
 		let loginModel = new LoginModel(this.userName, this.password);
-		this.apiService.fetch(url).subscribe((response:any) => {
-			console.log('events_get get  response recieved....', response);
-			if (response && response.success) {
-				
-			}
-		});
+		this.authGaurd.doLogin(loginModel);
 	}
-	
+
 
 }
 

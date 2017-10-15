@@ -10,6 +10,8 @@ export class ApiService {
 		private route: ActivatedRoute,
     	private router: Router) {}
 
+	public isLoggedIn:boolean = false;
+
 	public fetch (url: string) {
 		return this.http.get(url)
 			.map(res => {
