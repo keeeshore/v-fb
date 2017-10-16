@@ -13,7 +13,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.html',
-	providers: [ApiService]
+	providers: []
 })
 
 export class Login implements OnInit {

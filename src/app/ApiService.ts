@@ -8,9 +8,11 @@ export class ApiService {
 
 	constructor (private http: Http,
 		private route: ActivatedRoute,
-    	private router: Router) {}
+    	private router: Router) {
+		console.log('APISERVICE CONSTRUCTOR---------------------------------------------------------');
+	}
 
-	public isLoggedIn:boolean = false;
+	public accessToken:string = '';
 
 	public fetch (url: string) {
 		return this.http.get(url)

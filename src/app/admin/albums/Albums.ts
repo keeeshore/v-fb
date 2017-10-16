@@ -11,7 +11,7 @@ import {Subject, Observable} from "rxjs";
 @Component({
 	selector: 'app-albums',
 	templateUrl: './albums.html',
-	providers: [ApiService]
+	providers: []
 })
 
 export class Albums {

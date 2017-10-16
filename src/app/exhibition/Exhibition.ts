@@ -30,7 +30,7 @@ import {
 	selector: 'exhibition-component',
 	templateUrl: './exhibition.html',
 	styleUrls: ['./exhibition.css'],
-	providers: [ ApiService ]
+	providers: []
 })
 
 export class Exhibition implements AfterViewInit {

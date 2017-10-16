@@ -13,7 +13,7 @@ import {ENV} from '../../environments/environment';
 @Component({
 	selector: 'app-events',
 	templateUrl: './events.html',
-	providers: [ApiService]
+	providers: []
 })
 
 export class Events {
@@ -37,6 +37,7 @@ export class Events {
 	constructor(private apiService: ApiService) {
 		console.log('Events component init');
 		this.getEventsFromTable();
+		this.accessToken = this.apiService.accessToken;
 	}
 
 	public setEvents (collectionModel:EventsCollection, eventsArray:Array<any>):Boolean {
@@ -105,6 +106,7 @@ export class Events {
 			(response: any) => {
 				console.log('getEvents RESPONSE ->', response);
 				if (response.data && response.data.length > 0) {
+					this.apiService.accessToken = this.accessToken;
 					let pagingData:PagingData = new PagingData(response.paging);
 					//let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
 					response.data.filter((dataModel:any)=>{ collection.push(dataModel)});

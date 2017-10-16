@@ -22,7 +22,7 @@ import {
 @Component({
 	selector: 'auto-scroller',
 	templateUrl: './scroller.html',
-	providers: [ApiService, ScrollerService],
+	providers: [ScrollerService],
 	animations: [
 	    trigger('scrollerState', [
 	      state('move-0', style({ margin: '0px'})),

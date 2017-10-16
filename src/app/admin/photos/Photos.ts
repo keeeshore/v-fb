@@ -14,7 +14,7 @@ import {ENV} from '../../environments/environment';
 @Component({
 	selector: 'app-photos',
 	templateUrl: './photos.html',
-	providers: [ApiService]
+	providers: []
 })
 
 export class Photos {
@@ -49,6 +49,7 @@ export class Photos {
 
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('Photos component init');
+		this.accessToken = this.apiService.accessToken;
 	}
 
 	public ngOnInit(): void {
@@ -93,6 +94,7 @@ export class Photos {
 		this.getPhotos(this.photoParams, photos, false).subscribe(
 			(response) => { 
 				console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+				this.apiService.accessToken = this.accessToken;
 				this.setPhotos(this.fbCollection.photos, response.data);
 			},
 			(err) => { console.log('getPhotos err:::', err)},

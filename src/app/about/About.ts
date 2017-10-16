@@ -28,7 +28,7 @@ import {
 	selector: 'about-component',
 	templateUrl: './about.html',
 	styleUrls: ['./about.css'],
-	providers: [ApiService]
+	providers: []
 })
 
 export class About {

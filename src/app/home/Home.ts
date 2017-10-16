@@ -27,7 +27,7 @@ import {
 	selector: 'app-home',
 	templateUrl: './home.html',
 	styleUrls: ['./home.css'],
-	providers: [ApiService],
+	providers: [],
 	animations: [
 	  trigger('heroState', [
 	    state('inactive', style({

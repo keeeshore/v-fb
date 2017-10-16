@@ -13,7 +13,7 @@ import {ENV} from '../../environments/environment';
 @Component({
     selector: 'app-posts',
     templateUrl: './posts.html',
-    providers: [ApiService]
+    providers: []
 })
 
 export class Posts {
@@ -36,6 +36,7 @@ export class Posts {
 
     constructor(private apiService: ApiService) {
         console.log('Post component init');
+        this.accessToken = this.apiService.accessToken 
         this.getPostsFromTable();
     }
 
@@ -59,6 +60,7 @@ export class Posts {
         this.getPosts(this.postParams, posts).subscribe(
             (response) => { 
                 console.log('posts success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+                this.apiService.accessToken = this.accessToken;
                 this.setPosts(this.fbCollection, response.data);
             },
             (err) => { console.log('posts err:::', err)},

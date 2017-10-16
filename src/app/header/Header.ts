@@ -13,7 +13,7 @@ import {ENV} from '../environments/environment';
 	selector: 'main-header',
 	templateUrl: './header.html',
 	styleUrls: ['./header.css'],
-	providers: [ApiService]
+	providers: []
 })
 
 export class MainHeader {

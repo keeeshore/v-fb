@@ -24,7 +24,11 @@ import { ScrollerComponent} from "./common/ScrollerComponent";
 import { AutoPositionDirective} from "./directives/AutoPositionDirective";
 import { ApiService} from "./ApiService";
 
-const appRoutes: Routes = [    
+const appRoutes: Routes = [
+    {
+        path: '',
+        component: Home
+    },
     {
         path: 'home',
         component: Home
@@ -35,10 +39,7 @@ const appRoutes: Routes = [
         data: {
             id: 111,
             items: [
-                {'itemId': '1', 'itemStr': 'test 1'},
-                {'itemId': '2', 'itemStr': 'test 2'},
-                {'itemId': '3', 'itemStr': 'test 3'},
-                {'itemId': '4', 'itemStr': 'test 4'}
+                { 'itemId': '1', 'itemStr': 'test 1' }
             ]
         }
     },
@@ -55,7 +56,9 @@ const appRoutes: Routes = [
         component: Exhibition
     },
     {
-        path: 'admin/',   redirectTo: '/admin/', pathMatch: 'full'
+        path: 'admin/', 
+        redirectTo: '/admin/',
+        pathMatch: 'full'
     },
     {
         path: '**',

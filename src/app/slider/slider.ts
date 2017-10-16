@@ -13,7 +13,7 @@ import { trigger, state, style, animate, transition, keyframes } from '@angular/
 	selector: 'slider',
 	templateUrl: './slider.html',
 	styleUrls: ['./slider.css'],
-	providers: [ApiService],
+	providers: [],
 	animations: [
 	trigger('btnState', [
 	      state('show', style({ top: '0px', opacity: 1})),

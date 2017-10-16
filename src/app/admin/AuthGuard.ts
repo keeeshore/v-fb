@@ -27,7 +27,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
 	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 		console.log('AuthGuard#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
-		console.log('AuthGuard#canActivateChild called:this.apiService.isLoggedIn', this.apiService.isLoggedIn);
 		//return this.permissions.canActivate(this.currentUser, route.params.id);
 		//return false;
 	    //return this.canActivate(route, state);

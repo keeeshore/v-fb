@@ -22,7 +22,7 @@ import {
 	selector: 'error-component',
 	templateUrl: './error.html',
 	styleUrls: ['./error.css'],
-	providers: [ ApiService ]
+	providers: []
 })
 
 export class ErrorComponent implements AfterViewInit {
