@@ -11,7 +11,7 @@ module.exports = {
         'polyfills': './src/polyfills.ts',
         'vendor': './src/vendor.ts',
         'main': ['./src/Main.ts'],
-        'admin': ['./src/Admin.ts']
+        /*'admin': ['./src/Admin.ts']*/
     },
 
     resolve: {
@@ -57,21 +57,20 @@ module.exports = {
 
         new HtmlWebpackPlugin({
             filename: 'index.html',
+            template: 'src/index.html'
+        }),
+
+        /*new HtmlWebpackPlugin({
+            filename: 'index.html',
             template: 'src/index.html',
             excludeChunks: ['admin']
         }),
-
-        /*new HtmlWebpackPlugin({  
-          filename: 'admin.html',
-          template: 'src/admin.html',
-          excludeChunks: ['main']
-        }),*/
 
         new HtmlWebpackPlugin({  
           filename: 'admin/index.html',
           template: 'src/app/admin/index.html',
           excludeChunks: ['main']
-        }),
+        }),*/
 
         new webpack.ProvidePlugin({
             jQuery: 'jquery',

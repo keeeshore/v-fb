@@ -12,8 +12,8 @@ import {ENV} from '../environments/environment';
 import {CarouselComponent} from "../carousel/CarouselComponent";
 import {DialogComponent} from "../dialog/DialogComponent";
 
-import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../admin/photos/PhotoCollection';
-import {EventsCollection, EventModel} from '../admin/events/EventsCollection';
+import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../../admin/photos/PhotoCollection';
+import {EventsCollection, EventModel} from '../../admin/events/EventsCollection';
 
 import {
   trigger,
@@ -46,7 +46,7 @@ import {
 
 export class Home {
 
-    public imageHostPath:string = ENV.HOST_API_URL;
+    public imageHostPath:string = ENV.HOST_URL;
 
     public albumId:string = '178838325568799';
 

@@ -4,7 +4,7 @@
   "description": "A webpack starter for Angular",
   "scripts": {
     "start1": "webpack-dev-server --inline --progress --port 3131",
-    "start": "webpack-dev-server --inline --config config/webpack.dev.js --progress --environment=development --port 1023",
+    "start": "webpack-dev-server --inline --config config/webpack.dev.js --progress --environment=development --port 1026",
     "test": "karma start",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail --environment=production"
   },

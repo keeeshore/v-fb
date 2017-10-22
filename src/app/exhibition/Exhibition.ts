@@ -15,8 +15,8 @@ import { DialogComponent} from "../dialog/DialogComponent";
 import { Location} from '@angular/common';
 import { Router} from '@angular/router'
 import { State } from "../Enums";
-import { PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../admin/photos/PhotoCollection';
-import { EventsCollection, EventModel} from '../admin/events/EventsCollection';
+import { PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../../admin/photos/PhotoCollection';
+import { EventsCollection, EventModel} from '../../admin/events/EventsCollection';
 
 import {
   trigger,
@@ -43,7 +43,7 @@ export class Exhibition implements AfterViewInit {
 
 	public selectedModel:EventModel = new EventModel({});
 
-	public imageHostPath:string = ENV.HOST_API_URL;
+	public imageHostPath:string = ENV.HOST_URL;
 
 	public detailSlider:Slider;
 

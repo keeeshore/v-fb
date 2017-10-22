@@ -32,35 +32,34 @@ if (is_array($result['photos']) || is_object($result['photos'])) {
 		$uid = $value['id'];
 		$source = $IMG_PHOTOS_DIR.'/albums/'.$albumId.'/default.jpg';
 
-		if (file_exists($IMG_PHOTOS_DIR)) {
+		//C:/workspace/v-fb/photos-assets/ 808322362620389 / 1353050738147546.jpg
+
+		//echo "1-----".$IMG_PHOTOS_DIR."\r\n"; 
+		
+
+		if (file_exists($IMG_PHOTOS_DIR) || mkdir($IMG_PHOTOS_DIR , 0777)) {
+
+			//echo "2-----".$IMG_PHOTOS_DIR."\r\n"; 
 
 			if ($value['source'] && $value['source'] !== '') {
 				
 				$PHOTO_ALBUM_ID_DIR = $IMG_PHOTOS_DIR.'/'.$albumId;
-				$source = $PHOTO_ALBUM_ID_DIR .'/'.$uid.'.jpg';
+				$source = $PHOTO_ALBUM_ID_DIR.'/'.$uid.'.jpg';
+				$fbImgSource = $value['source'];
 
-				if (file_exists($PHOTO_ALBUM_ID_DIR)) {
-					saveImage($value['source'], $source);
-				} else if (mkdir($PHOTO_ALBUM_ID_DIR , 0777)) {
-					saveImage($value['source'], $source);
+				//echo "3-----PHOTO_ALBUM_ID_DIR = ".$PHOTO_ALBUM_ID_DIR." , source = ".$source."\r\n"; 
+
+
+				if (file_exists($PHOTO_ALBUM_ID_DIR) || mkdir($PHOTO_ALBUM_ID_DIR , 0777)) {
+					//echo "4-----fbImgSource = ".$fbImgSource." , source = ".$source."\r\n"; 
+					saveImage($fbImgSource, $source);
 				}
 
 			}
 
-		} else if (mkdir($IMG_PHOTOS_DIR , 0777)) {
+		}	
 
-			if ($value['source'] && $value['source'] !== '') {
-				$PHOTO_ALBUM_ID_DIR = $IMG_PHOTOS_DIR.'/'.$albumId;
-				$source = $PHOTO_ALBUM_ID_DIR .'/'.$uid.'.jpg';
-
-				if (file_exists($PHOTO_ALBUM_ID_DIR)) {
-					saveImage($value['source'], $source);
-				} else if (mkdir($PHOTO_ALBUM_ID_DIR , 0777)) {
-					saveImage($value['source'], $source);
-				}
-			}
-		}
-		
+		//echo "END------".$IMG_PHOTOS_DIR."\r\n"; 
 		
 		$sql = "INSERT INTO $DB_NAME.`photos` (`id`, `name`, `source`, `createdtime`, `albumId`, `uid`) VALUES ('', '$name', '$source', '$createdTime', '$albumId', '$uid')";
 		

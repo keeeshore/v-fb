@@ -21,7 +21,7 @@ if (is_array($result['posts']) || is_object($result['posts'])) {
 
 	foreach ($result['posts'] as $key => $value) {
 	
-		$name = $value['name'];
+		$name = $value['name'] || '----';
 		$description = $value['description'];
 		$fullpicture = $value['fullPicture'];
 		$createdTime = date('Y-m-d H:i:s', strtotime($value['createdTime']));
@@ -30,9 +30,7 @@ if (is_array($result['posts']) || is_object($result['posts'])) {
 
 		if ($value['fullPicture'] !== '') {
 			$pictureSource = $IMG_POSTS_DIR.'/posts-'.$uid.'.jpg';			
-			if (file_exists($IMG_POSTS_DIR)) {
-				saveImage($value['fullPicture'], $pictureSource);
-			} else if (mkdir($IMG_POSTS_DIR , 0777)) {
+			if (file_exists($IMG_POSTS_DIR) || mkdir($IMG_POSTS_DIR , 0777)) {
 				saveImage($value['fullPicture'], $pictureSource);
 			}
 		}

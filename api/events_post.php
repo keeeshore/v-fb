@@ -38,9 +38,7 @@ if (is_array($result['events']) || is_object($result['events'])) {
 
 		if ($value['cover'] && $value['cover']['source'] !== '') {
 			$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
-			if (file_exists($IMG_EVENTS_DIR)) {
-				saveImage($value['cover']['source'], $eventImgName);
-			} else if (mkdir($IMG_EVENTS_DIR , 0777)) {
+			if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
 				saveImage($value['cover']['source'], $eventImgName);
 			}
 		}

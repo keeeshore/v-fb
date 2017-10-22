@@ -22,7 +22,7 @@ $result = json_decode(file_get_contents('php://input'), true);
 $cover_source = $result['cover']['source'];
 $id = $result['id'];
 
-if (file_exists($cover_source.'.jpg')) {	
+if (file_exists($cover_source)) {	
     if (unlink($cover_source)) {
 		$isSuccess = true;
 		$isFileDeleted = true;

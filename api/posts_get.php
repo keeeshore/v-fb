@@ -19,7 +19,7 @@ while($row=mysql_fetch_array($result)) {
 	$uid = $row['uid'];
 	$createdtime = $row['createdtime'];	
 		
-	$postsArr[] = array('id' => $id , 'name' => $name , 'description' => $description , 'uid' => $uid, 'createdTime' => $createdtime, 'fullpicture' => $fullpicture);	
+	$postsArr[] = array('id' => $id , 'name' => $name , 'description' => $description , 'uid' => $uid, 'createdTime' => $createdtime, 'fullPicture' => $fullpicture);	
 }
 
 echo json_encode(array( 'posts' => $postsArr ));

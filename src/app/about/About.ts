@@ -13,8 +13,8 @@ import {Subject, Observable} from "rxjs";
 import {ENV} from '../environments/environment';
 import {CarouselComponent} from "../carousel/CarouselComponent";
 import {DialogComponent} from "../dialog/DialogComponent";
-import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../admin/photos/PhotoCollection';
-import {EventsCollection, EventModel} from '../admin/events/EventsCollection';
+import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../../admin/photos/PhotoCollection';
+import {EventsCollection, EventModel} from '../../admin/events/EventsCollection';
 
 import {
   trigger,
@@ -45,7 +45,7 @@ export class About {
 	}
 
 	public ngOnInit(): void {
-		console.log('ngOnInit::');
+		console.log('About Component ngOnInit::');
   	}
 
   	public showDetails(sliderId:string):void {

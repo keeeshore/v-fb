@@ -22,7 +22,7 @@ $result = json_decode(file_get_contents('php://input'), true);
 $fullPicture = $result['fullPicture'];
 $id = $result['id'];
 
-if (file_exists($fullPicture.'.jpg')) {	
+if (file_exists($fullPicture)) {	
     if (unlink($fullPicture)) {
 		$isSuccess = true;
 		$isFileDeleted = true;

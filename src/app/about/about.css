@@ -1,4 +1,6 @@
 #about-us-container {
 	background: #FFF;
-	margin-top: 50px;
+}
+.view-details-btn {
+	margin: 20px 0px 50px 0px;
 }

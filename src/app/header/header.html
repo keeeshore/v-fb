@@ -49,13 +49,21 @@
           <a [routerLink]="['/home']">Home <span class="sr-only">(current)</span></a>
         </li>
 
+        
+
         <li><a [routerLink]="['/shows']">Exhibitions</a></li>
 
         <li><a [routerLink]="['/press']">Press Release</a></li>
 
         <li><a [routerLink]="['/gallery']">Gallery</a></li>
         
-        <li><a [routerLink]="['/about']">About</a></li>
+
+         
+        <li>
+          <!-- <a [routerLink]="[{ outlets: { pp: ['about'] } }]" >About -1  </a> -->
+          <!-- <a [routerLink]="['/about']">About</a> -->
+          <a [routerLink]="['/about']">About</a>
+        </li>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -65,6 +73,7 @@
             <li><a href="#">Floor Plans</a></li>
             <li><a href="#">About Private Collection</a></li>
             <li><a href="#">Concept &amp; FAQ's</a></li>
+            <li><a [routerLink]="['/admin']">Admin</a></li>
           </ul>
         </li>
       </ul>      

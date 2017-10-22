@@ -23,11 +23,9 @@ export class MainHeader {
     public imageHostPath:string = ENV.HOST_API_URL;
 
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
-		console.log('Home Header component init');
+		console.log('<home-header> component init');
 	}
 
-	public ngOnInit(): void {
-		console.log('ngOnInit::');
-  	}
+	public ngOnInit(): void {}
 
 }
