@@ -1,4 +1,8 @@
 <?php
+
+session_start();
+include_once 'sessionChecker.php';
+
 ob_start();
 require_once("./config.php");
 
@@ -6,8 +10,7 @@ extract($_POST);
 extract($_GET);
 	
 
-session_start();
-include_once 'sessionChecker.php';
+
 include_once 'common.php';
 
 

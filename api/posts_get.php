@@ -3,8 +3,6 @@
 ob_start();
 require_once("./config.php");
 
-session_start();
-include_once 'sessionChecker.php';
 
 $sql = "SELECT * FROM $DB_NAME.`posts` ORDER BY `posts`.`createdtime` DESC";
 $result = mysql_query($sql);

@@ -1,5 +1,6 @@
 <?php
-ob_start();
+session_start();
+include_once 'sessionChecker.php';
 require_once("./config.php");
 	
 header("Access-Control-Allow-Origin: *");

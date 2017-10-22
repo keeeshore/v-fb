@@ -24,6 +24,8 @@ export class Login implements OnInit {
 
 	public hostApi:string = ENV.HOST_API_URL;
 
+	public hostUrl:string = ENV.HOST_URL;
+
 	public _REASON:string = 'Session Expired. Please login again.';
 
 	public reason:string = '';
@@ -37,7 +39,7 @@ export class Login implements OnInit {
 
 	ngOnInit () {
 		console.log( process.env.ENV, ' ::: ENV VARS::', ENV, ':::authGaurd:::', this.authGaurd);
-		this.authGaurd.doLogout();
+		this.authGaurd.reset();
 		this.reason = '';
 		this.router.params.forEach((params: Params) => {
 	    	if (params['reason']) {

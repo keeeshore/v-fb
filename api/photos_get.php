@@ -2,9 +2,6 @@
 ob_start();
 require_once("./config.php");
 
-session_start();
-include_once 'sessionChecker.php';
-
 extract($_GET);
 
 if (!$_GET) {

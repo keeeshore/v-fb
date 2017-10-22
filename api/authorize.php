@@ -1,6 +1,6 @@
 <?php
-
-	ob_start();
+	session_start(); 
+	//ob_start();
 	require_once("config.php");	
 
 	$value = json_decode(file_get_contents('php://input'), true);
@@ -14,15 +14,19 @@
 	
 	$error = '';
 	$isLoggedIn = false;
-	session_start();
+
+	$_SESSION['login_user'] = 'allgood';
+	//header("Location:".$HOST_URL."/admin/events?user=".$_SESSION['login_user']);
+	//exit();
 
 	if ($value && $value['userName'] && $value['password']) {
 		
+		//$_SESSION['login_user'] = 'asd';
 		//var_dump($_SESSION);
 		//exit;	
+
 		$userName = $value['userName'];
 		$password = $value['password'];
-
 		
 
 		extract($_POST);
@@ -33,25 +37,42 @@
 		$record = mysql_num_rows($result);
 
 		$isLoggedIn = false;
+		$cookieName = "loggedIn";
+		
 
 		if ($record && $record > 0) {
-			$_SESSION['login_user'] = $userName.$password;
-			//header("Location:".$HOST_URL."/admin/events?user=".$_SESSION['login_user']);
-			//echo json_encode(array('success' => $_SESSION['login_user'], 'error' => $error));
+
+			$isLoggedIn = true;	
+			$_SESSION['login_user'] = 'allgood';
+
+			setcookie($cookieName, $isLoggedIn, 0); // 86400 = 1 day			
+			header("Location:".$HOST_URL."admin/login?redirect=/admin/events");
+
+			//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
+			//var_dump($_SESSION);
 			//exit();
-			$isLoggedIn = true;
+			
 		} else {
-			unset($_SESSION['login_user']);
+
+			$_COOKIE['loggedIn'] = "false";
 			$error = 'Unauthorized Error';
-			//header("Location:".$HOST_URL."/login?error=Login-fail");
+
+			setcookie($cookieName, $isLoggedIn, 0); 
+			header("Location:".$HOST_URL."admin/login?error=Login_failed");
+
+			//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
+			//var_dump($_SESSION);
 			//exit();
 		}
 
 	} else {
+
 		$error = 'Validation Error';
+
 	}
 
-	echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
+	//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
+	exit();
 
 
 ?>

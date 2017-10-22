@@ -1,9 +1,11 @@
 <?php
-ob_start();
-require_once("./config.php");
-
 session_start();
 include_once 'sessionChecker.php';
+
+require_once("./config.php");
+
+
+
 
 extract($_POST);
 extract($_GET);
