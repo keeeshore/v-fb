@@ -1,6 +1,7 @@
 <?php
 
 require_once("./config.php");
+include_once("common.php");
 
 $sql = "SELECT * FROM $DB_NAME.`events` ORDER BY `events`.`endtime` DESC";
 $result = mysql_query($sql);

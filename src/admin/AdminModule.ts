@@ -24,19 +24,25 @@ const adminRoutes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{ 
-				path: '', component: Login 
+				path: '',
+				component: Login
+			},
+			{ 
+				path: 'login:error',
+				component: Login
+			},
+			{
+				path: 'logout',
+				component: Login
 			},
 			{
 				path: '',
 				canActivateChild: [AuthGuard],
 				children: [
-					{ path: '', component: Login },
-					{ path: 'login', component: Login },
 					{ path: 'events', component: Events },
 					{ path: 'albums', component: Albums},
 					{ path: 'albums/:albumId', component: Photos, data: { albumId: 'albumId' } },
-					{ path: 'posts', component: Posts },					
-					{ path: 'logout', component: Login },
+					{ path: 'posts', component: Posts },
 					{ path: '**', component: Login }
 				]
 			}

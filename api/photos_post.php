@@ -2,7 +2,7 @@
 session_start();
 include_once 'sessionChecker.php';
 require_once("./config.php");
-include_once 'common.php';
+include_once("common.php");
 
 extract($_POST);
 extract($_GET);

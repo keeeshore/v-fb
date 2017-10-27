@@ -5,6 +5,12 @@
 	$IMG_POSTS_DIR = '../posts-assets';
 	$IMG_PHOTOS_DIR = '../photos-assets';
 
+	header("Access-Control-Allow-Origin: *");
+	header("Access-Control-Allow-Credentials: true");
+	header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+	header('Access-Control-Max-Age: 1000');
+	header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+	header('Content-type: application/json');
 
 
 	function saveImage ($inPath, $outPath) { 

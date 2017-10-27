@@ -2,6 +2,7 @@
 
 ob_start();
 require_once("./config.php");
+include_once("common.php");
 
 
 $sql = "SELECT * FROM $DB_NAME.`posts` ORDER BY `posts`.`createdtime` DESC";

@@ -2,16 +2,8 @@
 	session_start(); 
 	//ob_start();
 	require_once("config.php");	
+	include_once("common.php");
 
-	$value = json_decode(file_get_contents('php://input'), true);
-
-	header("Access-Control-Allow-Origin: *");
-	header("Access-Control-Allow-Credentials: true");
-	header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-	header('Access-Control-Max-Age: 1000');
-	header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
-	header('Content-type: application/json');
-	
 	$error = '';
 	$isLoggedIn = false;
 
@@ -19,15 +11,11 @@
 	//header("Location:".$HOST_URL."/admin/events?user=".$_SESSION['login_user']);
 	//exit();
 
-	if ($value && $value['userName'] && $value['password']) {
-		
-		//$_SESSION['login_user'] = 'asd';
-		//var_dump($_SESSION);
-		//exit;	
+	$userName = $_POST["userName"];
+	$password = $_POST["password"];
 
-		$userName = $value['userName'];
-		$password = $value['password'];
-		
+	//if ($value && $value['userName'] && $value['password']) {
+	if ($userName && $password) {
 
 		extract($_POST);
 
@@ -43,36 +31,29 @@
 		if ($record && $record > 0) {
 
 			$isLoggedIn = true;	
-			$_SESSION['login_user'] = 'allgood';
+			$_SESSION['login_user'] = $userName;
 
-			setcookie($cookieName, $isLoggedIn, 0); // 86400 = 1 day			
-			header("Location:".$HOST_URL."admin/login?redirect=/admin/events");
-
-			//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
-			//var_dump($_SESSION);
-			//exit();
+			setcookie($cookieName, 'tttt', 0); // 86400 = 1 day			
+			header("Location:".$HOST_URL."/admin/events");
+			exit();
 			
 		} else {
 
-			$_COOKIE['loggedIn'] = "false";
 			$error = 'Unauthorized Error';
-
-			setcookie($cookieName, $isLoggedIn, 0); 
-			header("Location:".$HOST_URL."admin/login?error=Login_failed");
+			unset($_SESSION['login_user']);
+			setcookie($cookieName, '', 0); 
+			header("Location:".$HOST_URL."/admin/login?error=Login_failed");
 
 			//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
 			//var_dump($_SESSION);
-			//exit();
+			exit();
 		}
-
-	} else {
-
-		$error = 'Validation Error';
 
 	}
 
-	//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
+	unset($_SESSION['login_user']);
+	$error = 'Validation Error';
+	header("Location:".$HOST_URL."/admin/login?error=".$error);
 	exit();
-
 
 ?>

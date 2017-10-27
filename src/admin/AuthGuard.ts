@@ -11,30 +11,29 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
 	public isLoggedIn:boolean = false;
 
-	public loggedInCookieStr:string = 'loggedIn';
+	public loggedInCookieStr:string = 'PHPSESSID';
 
 	constructor(private apiService: ApiService, private router: Router) {
-		console.log('AuthGuard#-----------------------------#constructor:this.isLoggedIn ,', this.isLoggedIn);
 		this.apiService = apiService;
-		console.log('AuthGaurd::', apiService);
 	}
 
-	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-		console.log('AuthGuard#canActivate called for state.url', state.url, ' isLoggedIn:', this.isLoggedIn);
-		this.isLoggedIn = parseInt(this.getCookie(this.loggedInCookieStr), 10) === 1;		
-		/*if  (state.url === '/login' || state.url === '/' || state.url === '/admin') {
-			return true;
-		}*/
-		return this.isLoggedIn;	
+	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):boolean {
+		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
+		console.log('AuthGuard#--------#canActivate getCookie:', this.getCookie(this.loggedInCookieStr), ', state.url :', state.url, ' , this.isLoggedIn:', this.isLoggedIn);
+		
+		if  (state.url !== '/admin' && !this.isLoggedIn) {
+			console.log('state url is not /admin but a child');
+			this.router.navigate(['/admin']);
+		}
+		return true;
 	}
 
-	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-		console.log('AuthGuard#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
-		//return this.permissions.canActivate(this.currentUser, route.params.id);
-		//return false;
-	    //return this.canActivate(route, state);
-	    if  (state.url === '/login' || state.url === '/') {
-			return true;
+	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {		
+		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
+		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
+		if  (!this.isLoggedIn) {
+			console.log('canActivateChild state url is not /admin-> navigate to admin');
+			this.router.navigate(['/admin']);			
 		}
 		return this.isLoggedIn;	
 	}
@@ -52,7 +51,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 				this.router.navigate(['/admin/events']);
 			} else {
 				this.reset();
-			}	
+			}
 		},
 		(err:any) => {
 			console.log('err response:', err);

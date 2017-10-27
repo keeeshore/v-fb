@@ -34,23 +34,29 @@ export class Login implements OnInit {
 		private apiService: ApiService, 
 		public authGaurd: AuthGuard, 
 		private router: ActivatedRoute) {
-		console.log('Photos component init::AuthGuard', authGaurd);
+		console.log('Login component init::AuthGuard', authGaurd);
 	}
 
 	ngOnInit () {
-		console.log( process.env.ENV, ' ::: ENV VARS::', ENV, ':::authGaurd:::', this.authGaurd);
+		//console.log( process.env.ENV, ' ::: ENV VARS::', ENV, ':::authGaurd:::', this.authGaurd);
 		this.authGaurd.reset();
 		this.reason = '';
 		this.router.params.forEach((params: Params) => {
-	    	if (params['reason']) {
+	    	if (params['error']) {
 	    		this.reason = this._REASON;
 	    	}
 	    });
 	}
 
 	public onLoginClick () {
-		console.log('onLoginClick');
-		//document.forms[0].submit();
+		//console.log('onLoginClick');
+		document.forms[0].submit();
+		//let loginModel = new LoginModel(this.userName, this.password);
+		//this.authGaurd.doLogin(loginModel);
+	}
+
+	public onLoginClick1 () {
+		//console.log('onLoginClick---------ajax');
 		let loginModel = new LoginModel(this.userName, this.password);
 		this.authGaurd.doLogin(loginModel);
 	}

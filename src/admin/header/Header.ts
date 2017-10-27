@@ -15,7 +15,7 @@ export class AdminHeader {
 	}
 
 	public ngOnInit () {
-		console.log('ADMIN HEADER ngOnint, isLoggedIn:', this.authGuard.isLoggedIn);
+		//console.log('ADMIN HEADER ngOnint, isLoggedIn:', this.authGuard.isLoggedIn);
 		this.loggedIn = this.authGuard.isLoggedIn;
 	}
 

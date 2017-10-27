@@ -48,12 +48,10 @@ export class Photos {
     public imageHostPath:string = ENV.HOST_API_URL;
 
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
-		console.log('<Photos> component init');
 		this.accessToken = this.apiService.accessToken;
 	}
 
 	public ngOnInit(): void {
-		console.log('ngOnInit::');
 		let albumId:string = '';
 	    this.router.params.forEach((params: Params) => {
 	    	console.log('<Photos> component ngOnInit::', params['albumId']);
@@ -89,10 +87,9 @@ export class Photos {
 		let photos = new Array<PhotoModel>();
 		this.photoParams = new PhotoParams(this.albumId);
 		this.dialogSubject =  new Subject<DataEvent>();
-		console.log('onGetPhotosClick:::::::', photos);
 
 		this.getPhotos(this.photoParams, photos, false).subscribe(
-			(response) => { 
+			(response) => {
 				console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.apiService.accessToken = this.accessToken;
 				this.setPhotos(this.fbCollection.photos, response.data);
