@@ -1,0 +1,21 @@
+<div id="press-container">
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>Press Releases</h3>
+			</div>
+		</div>
+	</div>	
+
+	<div class="container">
+		<album-component albumId="416935778425718" albumName="Press Release"> </album-component>
+		<div class="col-sm-12">
+			<ul class="list-inline photo-container">
+	            <li *ngFor="let photoModel of photoCollection.photos; let myIndex = index;">
+	            	<img src="{{photoModel.source}}">
+	            </li>
+	        </ul>
+		</div>
+	</div>
+</div>
