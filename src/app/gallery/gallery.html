@@ -1,54 +1,63 @@
-<div id="about-us-container">
+<div id="gallery-container">
 	
 	<div class="container">		
-		<h1>Exclusive Venue for Exhibitions for Product Launches</h1>		
+		<h1>Exhibition Gallery</h1>		
 	</div>
-	<div class="image-header">
-		<auto-scroller>
-			<img src="../../../public/images/about-us-head-1.jpg" alt="" />
-		</auto-scroller>
+
+	<div class="container">		
+		Total: {{albumCollection.length}}
+        <ul class="list-inline album-container">
+            <li *ngFor="let albumModel of albumCollection.albums;" >
+                <!-- href="admin/photos/{{albumModel.id}}" -->
+                <!-- <album-component [albumModel]="albumModel"></album-component> -->
+                <a [routerLink]="['/gallery']" [queryParams]="{ albumId: albumModel.id }" >
+                    <album-component [albumModel]="albumModel"></album-component>
+                </a>
+            </li>
+        </ul>
+        albumPhotos = {{albumPhotos.length}}	
 	</div>
-	<div class="container">
-		<p class="lead">
-			Held thrice a year, in luxurious five star hotels in the city, it brings together designers from all over the world for a two day show.Vimonisha Exhibitions enjoys the prestige of being Chennai’s most premium designer exhibition and the pioneer of designer exhibitions in Chennai, and takes pride in its impressive repertoire of designers that they have provided a platform to, and launched through their much awaited exhibitions repeatedly for the last 25 years.			
-		</p>
-		<blockquote>
-			Vimonisha exhibtions organises high end designer shows in chennai for the last 25 years, and is chennai's most awaited and premium exhibition.
-		</blockquote>	
-		<h3>Story</h3>
-		<p class="lead">
-			Vimonisha Private Collection is a vision of mother and daughter Vimal Shivdasanil and Monisha Gidwanii, who ran
-			a very successful gallery in Chennai called Vimonisha Gallery and examined the need to promote designers and handle their marketing and publicity. Beginning with only five designers in each exhibition, Vimonisha exhibitions has completed 75 shows and now has more than 55 designers at each show. The Vimonisha Private Collection held thrice a year in Chennai is a reflection of Monisha’s tastes and fashion preferences, and is a carefully handpicked eclectic collection of the nation’s best talent, which she successfully romotes in the south of India.
-		</p>
-		<div class="col-sm-12 text-center view-details-btn">
-			<input type="button" name="details" class="btn btn-xs btn-click" value="View details" (click)="showDetails('test-1')">
-		</div>
-	</div>
-	<div class="clear-fix"></div>
+
+
+    <slider direction="UP">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 *ngIf="selectedAlbum">{{selectedAlbum.name}}</h3>
+                    <ul class="list-inline album-container">
+                        <li *ngFor="let photoModel of albumPhotos; let myIndex = index;">
+                            <img class="img img-responsive" src="{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        
+    </slider>
+
+     <dialog-component>
+        <div>
+            <img style="width: 100%; height: 100%" src="{{selectedPhoto.source}}"/>
+            <div>{{selectedPhoto.name}}</div>
+        </div>
+    </dialog-component>
+
+   <!--  <dialog-component>
+        <carousel-component id="gallery-photo-component" uid="gallery-photo-component">
+
+                    <carousel-item *ngFor="let photoModel of albumPhotos; let myIndex = index;" active="{{myIndex === photoIndexId}}" >
+
+                        <div class="photo-model-container text-center" >
+                            <img class="img img-responsive" src="{{photoModel.source}}"/>
+                        </div>
+
+                    </carousel-item>
+
+            </carousel-component>
+    </dialog-component> -->
+
+
 </div>
 
-<slider direction="UP" id="test-1">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Company Overview: Slider</h3>
-				<p class="lead">
-					The Vimonisha Private Collection , promoted by Vimonisha exhibitions is Chennai's most awaited designer show, and has completed more than 75 such shows. Held thrice a year, in luxurious five star hotels in the city, it brings together designers from all over the world for a two day show.Vimonisha Exhibitions enjoys the prestige of being Chennai’s most premium designer exhibition and the pioneer of designer exhibitions in Chennai, and takes pride in its impressive repertoire of designers that they have provided a platform to, and launched through their much awaited exhibitions repeatedly for the last 25 years. 
-				</p>
-				<p class="lead">
-					Designers from across India are handpicked and invited to showcase their products ranging from clothes in prêt, couture, accessories, jewelry and lifestyle products under one roof and is Chennai's most sought after exhibtion among the creme de la creme of Chennai's high society ladies, fashion icons, film actresses, industrialists, international expat ladies, bureaucrats, politicians and export buying houses and merchandisers alike.Designers participating in Vimonisha's exhibitions can expect sales from both the retail trade as well as whole sale enquiries and business from leading fashion houses, boutiques and stores from South India. Thus it provides the perfect platform to designers looking at expanding their business in the south of India.Curated by Monisha Gidwani CEO of Vimonisha, this collection will see the finest of talent from across the country where more than 60 innovative designers par excellence will converge to showcase their new creations.
-				</p>
-				<blockquote>
-					For bookings write to monisha@vimonisha.com
-				</blockquote>
-				<p class="lead">
-					Fashionistas, fashion trend watchers, shoppers, traders, export houses , life style store owners and merchandisers from across south India wait eagerly every quarter to see what Vimonisha has in store for them and what new they offer at the hugely popular multi designer booth fashion expo. Vimonisha never fails to disappoint as it brings the latest show stoppers to Chennai each time.
-				</p>
-				<p class="lead"> 
-					Vimonisha Private Collection is a vision of mother and daughter VimalShivdasani and Monisha Gidwani, who ran a very successful gallery in Chennai called Vimonisha Gallery and examined the need to promote designers and handle their marketing and publicity. Beginning with only five designers in each exhibition, Vimonisha exhibitions has completed 75 shows and now has more than 55 designers at each show. The Vimonisha Private Collection held thrice a year in Chennai is a reflection of Monisha’s tastes and fashion preferences, and is a carefully handpicked eclectic collection of the nation’s best talent, which she helps promote in the south of India.
 
-				</p>
-			</div>
-		</div>
-	</div>
-</slider>

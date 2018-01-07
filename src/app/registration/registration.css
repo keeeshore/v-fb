@@ -1,0 +1,47 @@
+#exhibition-container {
+	background: #3d83a7;
+	overflow: auto;
+}
+
+h3 {
+	color: #FFF;
+}
+
+.exhibition-list {
+	margin: 0px;
+	padding: 10px 0px;
+}
+
+
+
+
+.exhibition-list h2 {
+	color: #b5ad15;
+	margin: 0px;
+}
+
+.exhibition-list .exhibition {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #6ea7c4;
+}
+
+.exhibition-list .dates-container {
+	margin: 10px 0px 0px 30px;
+	color: #FFF;
+}
+
+.exhibition-list .dates-container .date {
+	padding: 0px 10px;
+	display: inline-block;
+	border-radius: 3px;
+	background: #FFF;
+	color: #000;
+	padding: 4px 10px;
+    margin: 0px 10px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.exhibition-pic {
+	margin-left: 13px;
+}

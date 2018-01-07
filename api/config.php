@@ -4,7 +4,7 @@
 		
 		$DEV_ENV = true;
 		$HOST_URL = "http://localhost:3131";
-		$DB_NAME = "vimonisha";
+		$DB_NAME = "kisho2au_vimonisha";
 		$conn=mysql_connect("localhost", "root", "") or die("Could not connect to database");
 		$db=mysql_select_db($DB_NAME, $conn);
 	

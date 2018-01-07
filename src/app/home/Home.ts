@@ -67,7 +67,7 @@ export class Home {
     @ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
 
 	constructor(
-		private apiService: ApiService, 
+		private apiService: ApiService,
 		private router: ActivatedRoute,
 		private scrollerService: ScrollerService) {
 		console.log('Home component init');
@@ -80,7 +80,7 @@ export class Home {
 		return date;
 	}
 
-	public ngOnInit(): void {
+	public ngOnInit():void {
 		console.log('ngOnInit::');
 		this.getPhotosFromTable(this.albumId);
 		this.getExhibitionsFromTable();
@@ -88,7 +88,6 @@ export class Home {
 
     ngAfterViewInit () {
         //console.log('CarouselItem::ngAfterViewInit:::active', this.active);
-        
     }
 
   	public getPhotosFromTable (albumId:string) {
@@ -101,7 +100,6 @@ export class Home {
 				if (response.photos.length > 0) {
 					response.photos.filter((photo:any) => {
 						let photoModel:PhotoModel = new PhotoModel(photo);
-						//console.log('set photo ->', photoModel);
 						this.photoCollection.photos.push(photoModel);
 					});
 					window.setTimeout(function () {
@@ -162,5 +160,6 @@ export class Home {
 		console.log('openDialog clicked....');
 		this.dialogComponents.first.open();
 	}
+
 
 }

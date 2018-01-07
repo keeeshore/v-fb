@@ -6,10 +6,10 @@
 
 			<div class="col-sm-6" id="main-left"  [ngStyle]="{ 'height': viewPortHeight }">
 				<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
-				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="5">
+				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="0">
 
 						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
-						(onItemInit)="onItemLoaded()" active="{{myIndex === 5}}" >
+						(onItemInit)="onItemLoaded()" active="{{myIndex === 0}}" >
 
 							<div class="photo-model-container text-center" >
 								<!-- <h2>{{photoModel.name}} </h2>

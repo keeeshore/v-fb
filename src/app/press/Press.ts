@@ -29,21 +29,15 @@ import {
 } from '@angular/animations';
 
 @Component({
-	selector: 'gallery-component',
-	templateUrl: './gallery.html',
-	styleUrls: ['./gallery.css'],
+	selector: 'press-component',
+	templateUrl: './press.html',
+	styleUrls: ['./press.css'],
 	providers: []
 })
 
-export class Gallery {
+export class Press {
 
 	@ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
-
-	@ViewChildren(Slider) sliders:QueryList<Slider> =  new QueryList<Slider>();
-
-	@ViewChildren(AlbumComponent) albumComponents:QueryList<AlbumComponent> =  new QueryList<AlbumComponent>();
-
-	 @ContentChildren(CarouselItem) carouselItems:QueryList<CarouselItem> = new QueryList<CarouselItem>();
 
 	public albumCollection:AlbumCollection = new AlbumCollection();
 
@@ -51,11 +45,11 @@ export class Gallery {
 
 	public selectedPhoto:PhotoModel = new PhotoModel({});
 
-	public photoSlider:Slider;
-
 	public albumPhotos:Array<PhotoModel> = new Array<PhotoModel>();
 
 	public photoIndexId:number = 0;
+
+	public albumId:number = 808322362620389;
 
 	constructor(
 		private apiService: ApiService, 
@@ -71,46 +65,29 @@ export class Gallery {
   	}
 
   	public ngAfterViewInit(): void {
-		console.log('void AfterViewInit::');
-		this.photoSlider = this.sliders.first;
+		console.log('void AfterViewInit::');		
 
-	    this.router.queryParams.subscribe((params:any) =>{ 
-	       console.log('ngAfterViewInit::router------------------:', params);
-	       if (params && params.albumId) {
-	       	this.showPhotos(params.albumId);
-	       }
-	    });
+		this.selectedAlbum = this.albumCollection.albums.filter((albumModel:AlbumModel, indexId:number) => {
+			return parseInt(albumModel.id, 8) === this.albumId;
+		})[0];
 
-		this.photoSlider.sliderSubject.subscribe((stateIndex:State) => {
-				console.log('detailSlider observer', State[stateIndex]);
-				if ('CLOSE' === State[stateIndex].toString()) {
-					this.route.navigate(['/gallery'], {});
-				}
+		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + this.albumId;
+		
+		this.apiService.fetch(url).subscribe(
+			(response: any) => {
+				console.log('getPhotos response ->', response);	
+				this.albumPhotos = response.photos;
 			},
-			(err:any) => { 
-				console.log('photoSlider err', err)
-		});
+			(err) => { 
+				console.log('getPhotos ERR ->', err);
+			}
+		);
 
   	}
 
-  	public showPhotos(albumId:string):void {
-  		console.log('showPhotos', albumId);
-  		console.log('showPhotos', this.albumComponents);
-  		var self = this;
-  		this.albumComponents.find((album, indexId) => {
-  			console.log('filter::', album.albumModel.id, albumId);
-  			if (album.albumModel.id === albumId) {
-  				console.log('match found:::', album.photos);
-  				self.selectedAlbum = album.albumModel;
-  				self.albumPhotos = album.photos;
-  				return true;
-  			}
-  		});
-  		this.sliders.first.open();
-  	}
 
   	public openDialog(photoModel:PhotoModel, indexId:number):void {
-  		console.log('openDialog::indexId:', indexId, this.carouselItems);
+  		console.log('openDialog::indexId:', indexId);
   		this.photoIndexId = indexId;
   		this.selectedPhoto = photoModel;
   		this.dialogComponents.first.open();

@@ -7,6 +7,10 @@ $sql = "SELECT * FROM $DB_NAME.`events` ORDER BY `events`.`endtime` DESC";
 $result = mysql_query($sql);
 $eventsArr = array();
 
+if($result === FALSE) { 
+    die(mysql_error()); // TODO: better error handling
+}
+
 while($row=mysql_fetch_array($result)) {
 	
 	$id = $row['id'];

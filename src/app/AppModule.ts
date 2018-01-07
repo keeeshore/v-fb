@@ -10,10 +10,13 @@ import { CarouselComponent } from "../app/carousel/CarouselComponent";
 import { Home } from "../app/home/Home";
 import { ErrorComponent } from "../app/errors/Error";
 import { Exhibition } from "../app/exhibition/Exhibition";
+import { Gallery } from "../app/Gallery/Gallery";
 import { MainHeader } from "../app/header/Header";
 import { About } from "../app/about/About";
+import { Press } from "../app/press/Press";
 import { Footer } from "../app/footer/Footer";
 import { Slider } from "../app/slider/Slider";
+import { Registration } from "../app/registration/Registration";
 
 import { Login } from "../admin/login/Login";
 
@@ -22,6 +25,7 @@ import {trigger,state,style,animate,transition}from '@angular/animations';
 
 import { CarouselItem } from "../app/carousel/CarouselItem";
 import { DialogComponent} from "../app/dialog/DialogComponent";
+import { AlbumComponent} from "../app/album/AlbumComponent";
 import { ScrollerService} from "../app/services/ScrollerService";
 import { ScrollerComponent} from "../app/common/ScrollerComponent";
 import { AutoPositionDirective} from "../app/directives/AutoPositionDirective";
@@ -42,7 +46,11 @@ const appRoutes: Routes = [
           { path: '', component: Home },
           { path: 'home', component: Home },
           { path: 'shows', component: Exhibition },
-          { path: 'about', component: About }
+          { path: 'about', component: About },
+          { path: 'press', component: Press },
+          { path: 'register', component: Registration },
+          { path: 'gallery', component: Gallery },
+          { path: 'gallery/:albumId', component: Gallery }
         ]
     }
    /* {
@@ -133,12 +141,16 @@ const appRoutes: Routes = [
         CarouselItem,
         Slider,
         ScrollerComponent,
-        /*DialogComponent,
-        AutoPositionDirective,*/
+        DialogComponent,
+        Press,
+        /*AutoPositionDirective,*/
         Home,
         Exhibition,
+        Gallery,
         About,
         Footer,
+        AlbumComponent,
+        Registration
         /*Slider
         ,ErrorComponent*/
 	],
