@@ -3,9 +3,12 @@
 	display: block;
 	overflow: hidden;
 	z-index: 10;
+	left: 0;
+	right: 0;
 	background: #FFF;
 	padding-top: 50px;
 	width: 100%;
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 1);
 }
 
 .slider-container .slider-content {

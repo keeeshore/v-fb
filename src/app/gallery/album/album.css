@@ -1,0 +1,10 @@
+#album-container {
+	border: 1px solid red;
+}
+
+.isLoading {
+	background: url('../public/images/loader-2.gif') no-repeat center;
+}
+
+.done {
+}

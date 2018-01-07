@@ -12,6 +12,9 @@ import { ErrorComponent } from "../app/errors/Error";
 import { Exhibition } from "../app/exhibition/Exhibition";
 import { MainHeader } from "../app/header/Header";
 import { About } from "../app/about/About";
+import { Gallery } from "../app/gallery/Gallery";
+import { Press } from "../app/press/Press";
+import { AlbumComponent } from "../app/gallery/album/Album";
 import { Footer } from "../app/footer/Footer";
 import { Slider } from "../app/slider/Slider";
 
@@ -42,6 +45,9 @@ const appRoutes: Routes = [
           { path: '', component: Home },
           { path: 'home', component: Home },
           { path: 'shows', component: Exhibition },
+          { path: 'gallery', component: Gallery },
+          { path: 'gallery/:id', component: Gallery },
+          { path: 'press', component: Press },
           { path: 'about', component: About }
         ]
     }
@@ -133,17 +139,20 @@ const appRoutes: Routes = [
         CarouselItem,
         Slider,
         ScrollerComponent,
-        /*DialogComponent,
-        AutoPositionDirective,*/
+        DialogComponent,
+        /*AutoPositionDirective,*/
         Home,
         Exhibition,
         About,
         Footer,
+        Gallery,
+        AlbumComponent,
+        Press,
         /*Slider
         ,ErrorComponent*/
 	],
 	bootstrap: [ AppComponent ],
-	providers: [ApiService, ScrollerService]
+	providers: [ ApiService, ScrollerService ]
 })
 
 export class AppModule { }

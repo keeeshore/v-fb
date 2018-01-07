@@ -46,8 +46,12 @@
 }
 
 .modal-dialog.open .modal-content .modal-placeholder {
-    height: 85%;
     overflow-y: auto;
     overflow-x: hidden;
-    margin: 20px 20px 10px 20px;
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    right: 26px;
+    left: 2px;
+    border-radius: 6px;
 }

@@ -74,9 +74,9 @@ const mainRoutes: Routes = [
         /*MainHeader,*/
         /*ScrollerComponent,
         CarouselItem,
-        CarouselComponent,*/
+        CarouselComponent,
         DialogComponent,
-        AutoPositionDirective,
+        AutoPositionDirective,*/
         /*Home,
         Exhibition,
         About,

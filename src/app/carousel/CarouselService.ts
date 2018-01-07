@@ -14,7 +14,7 @@ export class CarouselService {
     private carouselSubject: Subject<CarouselEvent> =  new Subject<CarouselEvent>();
 
     constructor () {
-        console.log('CarouselService:::constructor...this.id=', this.id);
+        //console.log('CarouselService:::constructor...this.id=', this.id);
     }
 
     broadcast (eventObj:CarouselEvent) {

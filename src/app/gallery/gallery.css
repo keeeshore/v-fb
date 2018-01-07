@@ -1,6 +1,36 @@
-#about-us-container {
+#gallery-container {
 	background: #FFF;
+	margin: 20px 0px;
 }
+
 .view-details-btn {
 	margin: 20px 0px 50px 0px;
+}
+
+ul.photo-container,
+ul.album-container {
+	margin: 25px auto;
+	padding: 0;
+	text-align: center;
+}
+
+
+ul.album-container li,
+ul.photo-container li {
+	cursor: pointer;
+	padding: 0;
+	height: auto;
+	width: 25%;
+	vertical-align: middle;
+}
+
+ul.photo-container li img {
+	width: 100%;
+}
+
+@media (max-width: 768px) {
+	ul.album-container li,
+	ul.photo-container li {
+		width: 50%;
+	}
 }

@@ -27,7 +27,7 @@ export class DialogComponent implements OnInit {
     private isModalOpen:boolean = false;
 
     public constructor () {
-        console.log('DialogComponent:::constructor...');
+        //console.log('DialogComponent:::constructor...');
     }
 
     public open():void {
@@ -49,6 +49,6 @@ export class DialogComponent implements OnInit {
     }
 
     ngOnInit ():void {
-        console.log('DialogComponent:::ngOnInit...', this.id);
+        //console.log('DialogComponent:::ngOnInit...', this.id);
     }
 }

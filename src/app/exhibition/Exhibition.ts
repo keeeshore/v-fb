@@ -1,7 +1,7 @@
 /**
  * Created by balank on 8/09/2017.
  */
-import { Component,  ViewChildren, QueryList, ContentChildren, AfterViewInit} from '@angular/core';
+import { Component,  ViewChildren, OnInit, OnDestroy, QueryList, ContentChildren, AfterViewInit} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { ApiService} from './../ApiService';
@@ -15,6 +15,7 @@ import { DialogComponent} from "../dialog/DialogComponent";
 import { Location} from '@angular/common';
 import { Router} from '@angular/router'
 import { State } from "../Enums";
+import { ViewLoader } from "../ViewLoader";
 import { PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../../admin/photos/PhotoCollection';
 import { EventsCollection, EventModel} from '../../admin/events/EventsCollection';
 
@@ -33,11 +34,11 @@ import {
 	providers: []
 })
 
-export class Exhibition implements AfterViewInit {
+export class Exhibition implements ViewLoader, AfterViewInit {
 
 	@ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
 
-	@ViewChildren(Slider) sliders:QueryList<Slider> =  new QueryList<Slider>();	
+	@ViewChildren(Slider) sliders:QueryList<Slider> =  new QueryList<Slider>();
 
 	public eventsCollection:EventsCollection = new EventsCollection();
 
@@ -55,21 +56,27 @@ export class Exhibition implements AfterViewInit {
 		private router:ActivatedRoute,
 		private route:Router,
 		private location:Location) {
-		console.log('Exhbition component init');
+		console.log('Exhbition component constructor');
+	}
+
+	public ngOnInit(): void {
+		console.log('Exhbition Component ngOnInit::');
+  	}
+
+  	public ngOnDestroy(): void {
+		console.log('Exhbition Component ngOnDestroy::');
+  	}
+
+	public onViewStart():void {
+		console.log('VIEW LOADER.onViewLoaded CALLED-----------------------------------------');
 	}
 
 	private routeChanged():void {
     	var path:string = this.location.path();
-    	console.log("Path:;:::" + path);
   	}
 
-	public ngAfterViewInit(): void {
-		console.log('Exhbition AfterViewInit::');
-		/*this.router.params.forEach((params: Params) => {
-	    	if (params['id']) {
-	    		console.log('ngOnInit::id:',params['id']);
-	    	}
-	    });*/
+	public ngAfterViewInit():void {
+		console.log('Exhbition Component AfterViewInit::');
 		this.detailSlider = this.sliders.first;
 		this.detailSlider.sliderSubject.subscribe((stateIndex:State) => {
 				console.log('detailSlider observer', State[stateIndex]);
@@ -77,12 +84,11 @@ export class Exhibition implements AfterViewInit {
 					this.route.navigate(['/shows'], {});
 				}
 			},
-			(err:any) => { 
+			(err:any) => {
 				console.log('detailsder err', err)
 		});
 
-	    this.router.queryParams.subscribe((params:any) =>{ 
-	       console.log('ngOnInit::val------------------:', params);
+	    this.router.queryParams.subscribe((params:any) => { 
 	       	if (!isNaN(params.id)) {
 	       		console.log('ngOnInit::val------------------:Valid param id', params);
 	       		this.getExhibitionsFromTable().subscribe((events:EventsCollection)=>{
@@ -96,17 +102,14 @@ export class Exhibition implements AfterViewInit {
   	}
 
   	public showDetails():void {
-  		console.log('showDetails');
   		this.dialogComponents.first.open();
   	}
 
   	public getExhibitionsFromTable():Observable<EventsCollection> {
-		console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
 
 		this.apiService.fetch(url).subscribe(
 			(response: any) => {
-				console.log('getEventsFromTable response ->', response);
 				if (response.events.length > 0) {
 					response.events.filter((event:any) => {
 						let eventModel:EventModel = new EventModel(event);
@@ -138,7 +141,6 @@ export class Exhibition implements AfterViewInit {
 	}
 
 	public showEventDescription (id:number):void {
-		console.log('showEentDescriton....', id);
 		this.eventsCollection.events.filter((model:EventModel)=>{
 			if (model.id === id) {
 				this.selectedModel = model;
@@ -149,3 +151,5 @@ export class Exhibition implements AfterViewInit {
 
 
 }
+
+

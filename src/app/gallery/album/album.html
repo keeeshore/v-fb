@@ -1,25 +1,12 @@
-<div id="gallery-container">
-		
-	<div class="container">
-		<h2>Vimonisha Exhibitions Gallery</h2>
-		<ul class="list-inline album-container">
-            <li *ngFor="let albumModel of albumCollection.albums;">
-            	<!-- [routerLink]="['/gallery/', albumModel.id]" -->
-                <a [routerLink]="['/gallery']" [queryParams]="{ id: albumModel.id }">
-                <!-- <div (click)="showPhotos(albumModel)"> -->
-                    <album-component
-                    	albumId="{{albumModel.id}}"
-                    	albumName="{{albumModel.name}}">
-                    </album-component>
-                </a>
-            </li>
-        </ul>
+<div id="album-container" class="{{loaderClass}}">
+	<div>
+		<h4>{{albumName}}</h4>
+    	<div class="name">{{photoCollection && photoCollection.photos ? photoCollection.photos.length : 0 }}</div>
 	</div>
-
 </div>
 
-<slider direction="UP" id="album-photos">
- 	
+ <!-- <slider direction="UP" id="album-photos">
+ 	<div *ngIf="photoCollection">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12 text-left">
@@ -50,8 +37,8 @@
 
 			</carousel-component>
 		</dialog-component>
-	
+	</div>
 
-</slider> 
+</slider>  -->
 
 

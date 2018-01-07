@@ -106,13 +106,28 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         this.prev();
     }
 
+    public goTo (newIndex:number) {
+        console.log('goTo called:', newIndex, ', currIndex at ', this.currIndex);
+        this.carouselItems.forEach((item:CarouselItem, indexId:number) => {
+            if (indexId === this.currIndex) {
+                //console.log('setting item:', indexId,'to false');
+                item.setActive(false, 'left', 'NEXT');
+            }
+            if (indexId === newIndex) {
+                //console.log('setting item:', indexId,'to true');
+                item.setActive(true,  'right', 'NEXT');
+            }
+        });
+        this.currIndex = newIndex;
+    }
+
     public next () {
        // console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
 
-        this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
+        this.carouselItems.forEach((item:CarouselItem, indexId:number) => {
             if (indexId === currIndex) {
                 //console.log('setting item:', indexId,'to false');
                 item.setActive(false, 'left', 'NEXT');
@@ -132,7 +147,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         let newIndex:number = currIndex - 1 < 0 ? total - 1 : currIndex - 1;
 
 
-        this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
+        this.carouselItems.forEach((item:CarouselItem, indexId:number) => {
             if (indexId === currIndex) {
                 //console.log('setting item:', indexId, 'to false');
                 item.setActive(false, 'right', 'PREV');
