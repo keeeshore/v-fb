@@ -58,9 +58,11 @@ h2 {
 }
 
 h3 {
-	border-bottom: 1px solid #FFF;
+	border-bottom: 1px solid #CCC;
     padding-bottom: 8px;
     font-weight: bold;
+    color: #CC0000;
+    font-size: 16px;
 }
 
 
@@ -149,4 +151,19 @@ h2::after {
 
 .flex-row  .flex-column {
 	flex: 1;
+}
+
+
+
+/*-----FOOTER------------*/
+
+footer-component {
+	display: block;
+	/*position: fixed;
+	width: 100%;
+	bottom: 0;*/
+}
+
+#footer-container h3 {
+	color: #FFF;
 }

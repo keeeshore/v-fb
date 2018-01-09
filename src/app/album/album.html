@@ -1,11 +1,13 @@
 <div id="album-container-{{albumModel.id}}">
-	<h4>{{albumModel.name}} ({{total}})</h4>
-    <div class="row">
-        <div class="col-sm-12">
+	<div class="row">
+		<div class="col-sm-12">
+			<h4>{{albumModel.name}} ({{total}})</h4>
+		</div>
+		<div class="col-sm-12">
             {{loaderTxt}}
         </div>
         <div class="col-sm-12" *ngIf="photos && photos.length > 0">
             <img class="img img-responsive" src="{{photos[0].source}}">
         </div>
-    </div>
+	</div>
 </div>

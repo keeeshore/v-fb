@@ -1,29 +1,31 @@
 <div id="gallery-container">
 	
-	<div class="container">		
-		<h1>Exhibition Gallery</h1>		
-	</div>
+	<div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Exhibition Gallery</h3>
+            </div>
+        </div>
 
-	<div class="container">		
-		Total: {{albumCollection.length}}
-        <ul class="list-inline album-container">
-            <li *ngFor="let albumModel of albumCollection.albums;" >
-                <!-- href="admin/photos/{{albumModel.id}}" -->
-                <!-- <album-component [albumModel]="albumModel"></album-component> -->
-                <a [routerLink]="['/gallery']" [queryParams]="{ albumId: albumModel.id }" >
-                    <album-component [albumModel]="albumModel"></album-component>
-                </a>
-            </li>
-        </ul>
-        albumPhotos = {{albumPhotos.length}}	
-	</div>
+    	<div class="row">
+            <div class="col-sm-12">
+                <ul class="list-inline album-container">
+                    <li *ngFor="let albumModel of albumCollection.albums;" >
+                        <a [routerLink]="['/gallery']" [queryParams]="{ albumId: albumModel.id }">
+                            <album-component [albumModel]="albumModel"></album-component>
+                        </a>
+                    </li>
+                </ul>
+            </div>	
+    	</div>
 
+    </div>
 
     <slider direction="UP">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 *ngIf="selectedAlbum">{{selectedAlbum.name}}</h3>
+                    <h4 *ngIf="selectedAlbum">{{selectedAlbum.name}}</h4>
                     <ul class="list-inline album-container">
                         <li *ngFor="let photoModel of albumPhotos; let myIndex = index;">
                             <img class="img img-responsive" src="{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />

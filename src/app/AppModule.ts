@@ -16,6 +16,7 @@ import { About } from "../app/about/About";
 import { Press } from "../app/press/Press";
 import { Footer } from "../app/footer/Footer";
 import { Slider } from "../app/slider/Slider";
+import { Contact } from "../app/contact/Contact";
 import { Registration } from "../app/registration/Registration";
 
 import { Login } from "../admin/login/Login";
@@ -50,6 +51,7 @@ const appRoutes: Routes = [
           { path: 'press', component: Press },
           { path: 'register', component: Registration },
           { path: 'gallery', component: Gallery },
+          { path: 'contact', component: Contact },
           { path: 'gallery/:albumId', component: Gallery }
         ]
     }
@@ -150,7 +152,8 @@ const appRoutes: Routes = [
         About,
         Footer,
         AlbumComponent,
-        Registration
+        Registration,
+        Contact
         /*Slider
         ,ErrorComponent*/
 	],

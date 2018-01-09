@@ -11,7 +11,7 @@ import { trigger,  state,  style, animate, transition, keyframes } from '@angula
     styleUrls: [ './dialog.css' ],
     animations: [
       trigger('dialogState', [
-        state('open', style({ width: '70%', margin: '20px auto', height: '90%' })),
+        state('open', style({ margin: '20px auto', height: '90%' })),
         state('close', style({ width: '0px', margin: '10% auto', height: '0px' })),
         transition('* => *', animate('500ms ease-out'))
       ])

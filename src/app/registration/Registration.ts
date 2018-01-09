@@ -32,6 +32,13 @@ import {
 
 export class Registration implements AfterViewInit {
 
+	public name:String = '';
+
+	public phone:String = '';
+
+	public email:String = '';
+
+	public comments:String = '';
 
 	constructor(
 		private apiService: ApiService, 
@@ -57,6 +64,28 @@ export class Registration implements AfterViewInit {
 	       	}
 	    });
 
+  	}
+
+  	public onFormSubmit(): void {
+		console.log('Registration onFormSubmit::');
+		let url1 = 'https://www.google.com/recaptcha/api/siteverify';
+		let url = ENV.HOST_API_URL + 'registration.php';
+		let data = {
+			name: this.name,
+			phone: this.phone,
+			email: this.email,
+			comments: this.comments
+		}
+		if (this.name && this.phone && this.email && this.comments) {
+
+			this.apiService.post(url, data).subscribe((res:any)=>{
+				console.log('post response:', res);
+			});
+
+		} else {
+			console.log('all fields are mandatory')
+		}
+		
   	}
 
   	
