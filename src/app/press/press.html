@@ -15,7 +15,7 @@
                 <ul class="list-inline album-container">
                     <li *ngFor="let photoModel of albumPhotos; let myIndex = index;">
                         <img class="img img-responsive" src="{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
-                    </li>
+                    </li> 
                 </ul>
             </div>
         </div>
@@ -23,8 +23,8 @@
 
 
      <dialog-component>
-        <div>
-            <img style="width: 100%; height: 100%" src="{{selectedPhoto.source}}"/>
+        <div class="text-center">
+            <img src="{{selectedPhoto.source}}"/>
             <div>{{selectedPhoto.name}}</div>
         </div>
     </dialog-component>

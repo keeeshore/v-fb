@@ -57,6 +57,7 @@ export class Slider {
 
 	public _open():void {
 		this.state = 'open';
+		document.body.style.overflowY = 'hidden';
 	}
 
 	public open():void {
@@ -80,6 +81,7 @@ export class Slider {
 		//console.log('Slider close..');
 		this.state = 'close';
 		this.btnState = 'hide';
+		document.body.style.overflowY = 'auto';
 	}
 
 	public animationStarted(event:Event):void {
@@ -95,6 +97,5 @@ export class Slider {
 			this.btnState = 'show';
 		}	
 	}
-
 	
 }

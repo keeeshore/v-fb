@@ -9,7 +9,7 @@
 
     	<div class="row">
             <div class="col-sm-12">
-                <ul class="list-inline album-container">
+                <ul class="list-inline album-main-container">
                     <li *ngFor="let albumModel of albumCollection.albums;" >
                         <a [routerLink]="['/gallery']" [queryParams]="{ albumId: albumModel.id }">
                             <album-component [albumModel]="albumModel"></album-component>
@@ -39,8 +39,8 @@
     </slider>
 
      <dialog-component>
-        <div>
-            <img style="width: 100%; height: 100%" src="{{selectedPhoto.source}}"/>
+        <div class="text-center">
+            <img src="{{selectedPhoto.source}}"/>
             <div>{{selectedPhoto.name}}</div>
         </div>
     </dialog-component>

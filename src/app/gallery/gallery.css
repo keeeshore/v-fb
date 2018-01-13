@@ -1,6 +1,32 @@
-#about-us-container {
-	background: #FFF;
-}
-.view-details-btn {
+
+#gallery-container {
 	margin: 20px 0px 50px 0px;
+}
+
+#gallery-container dialog-component .modal-dialog.open .modal-container .model-content {
+	background: red !important;
+}
+
+ul.album-main-container li {
+	width: 24%;
+    margin: 5px;
+    border: 1px solid #CCC;
+    vertical-align: middle;
+}
+
+ul.album-container li {
+	width: 10%;
+    border: 1px solid red;
+    height: 118px;
+    margin: 5px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+ul.album-container li img {
+    vertical-align: middle;
+}
+
+.modal-dialog.open  .modal-content {
+	background: red !important;	
 }

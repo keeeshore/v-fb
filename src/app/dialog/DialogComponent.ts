@@ -32,11 +32,13 @@ export class DialogComponent implements OnInit {
 
     public open():void {
         this.state = 'open';
+        document.body.style.overflowY = 'hidden';
         this.isModalOpen = true;
     }
 
     public close():void {
         this.state = 'close';
+        document.body.style.overflowY = 'auto';
     }
 
     public animationStarted(event:Event) {

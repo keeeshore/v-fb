@@ -1,6 +1,6 @@
 <?php
 	
-  ob_start();
+ob_start();
 require_once("./config.php");
   
 header("Access-Control-Allow-Origin: *");
@@ -14,27 +14,56 @@ header('Content-type: application/json');
 extract($_POST);
 extract($_GET);
 
-	$result = json_decode(file_get_contents('php://input'), true);
+$result = json_decode(file_get_contents('php://input'), true);
 
-	$name = $result['name'];	
-	$phone = $result['phone'];	
-	$email = $result['email'];	
-	$comments = $result['comments'];
+$name = $result['name'];	
+$phone = $result['phone'];	
+$email = $result['email'];	
+$comments = $result['comments'];
+$recaptha = $result['recaptha'];
+$secret = '6Lelvj8UAAAAANHT_JxRUVSka6Dz5NPl74JLeeX_';
 
-	//sys date
+//sys date
 
-	$tmp = time();
-	$date = date("Y-m-d H:i:s",$tmp);		
-	{
- 		$to="sendamailtokishore@gmail.com"; 
- 		$subject = "Registration from Vimonisha";  
- 	}
-		
-	$succesMsg = "Your mail has been successfully sent!";
+$tmp = time();
+$date = date("Y-m-d H:i:s",$tmp);		
+{
+	$to = "sendamailtokishore@gmail.com"; 
+	$subject = "Registration from Vimonisha";
+}
+	
+$succesMsg = "Your mail has been successfully sent!";
 
-$msg = "
-<HTML>
+$url = 'https://www.google.com/recaptcha/api/siteverify';
+$myvars = 'secret=' . $secret . '&response=' . $recaptha;
+
+$ch = curl_init($url);
+curl_setopt( $ch, CURLOPT_POST, 1);
+curl_setopt( $ch, CURLOPT_POSTFIELDS, $myvars);
+curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt( $ch, CURLOPT_HEADER, 0);
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+
+$response = curl_exec($ch);
+
+//$json = $response;
+
+$result = json_decode($response);
+$success = false;
+
+if ($result) {
+  $success = $result->success;
+}
+//echo json_encode(array( 'result' => $result->success ));
+//exit;
+
+if ($success == true) {
+
+
+  $msg = "
+<html>
   <body>
+
   <table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"5\">
     
     <tr>
@@ -63,17 +92,27 @@ $msg = "
     </tr>  
       
   </table>
+
   </body>
 </html>";
 
-$headers = "From: $name <$email>\nReply-To: $email\nCc:sendamailtokishore@gmail.com\nContent-Type: text/html; charset=iso-8859-1\n";  
+//$headers = "From: $name <$email>\nReply-To: $email\nCc:sendamailtokishore@gmail.com\nContent-Type: text/html; charset=iso-8859-1\n";  
+
+  $headers = 'From: $name <$email>' . "\r\n" .
+    'Reply-To: $email' . "\r\n" . 
+    'CC:sendamailtokishore@gmail.com'. "\r\n" .
+    'Content-Type: text/html; charset=iso-8859-1\n' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
 
 //echo $msg;
 //exit;
 
   mail($to,$subject,$msg,$headers);
+  
+}
 
-  $success = true;
+
+
 
   echo json_encode(array( 'success' => $success ));
 

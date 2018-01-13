@@ -58,7 +58,7 @@
 				<img class="img img-responsive" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
 			</div>
 			<div class="col-sm-6 flex-column text-center">
-				<a class="btn btn-sm btn-click" href="#">Register Now</a>
+				<a class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ name: selectedModel.name }">Register Now</a>
 			</div>
 		</div>
 	</div>	

@@ -12,19 +12,23 @@
 			<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 
 			<div class="col-sm-6 col-sm-offset-1">
+
 				<form name="registration-form" id="registration-form">
+
 					<div class="form-group row">
 						<label for="name" class="col-sm-2 col-form-label">Name</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="name" name="name" [(ngModel)]="name" placeholder="Name">
 						</div>
 					</div>
+
 					<div class="form-group row">
 						<label for="phone" class="col-sm-2 col-form-label">Phone</label>
 						<div class="col-sm-10">
 							<input type="phone" class="form-control" id="phone" name="phone" [(ngModel)]="phone" placeholder="Phone">
 						</div>
 					</div>
+					
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Email Id</label>
 						<div class="col-sm-10">
@@ -52,7 +56,9 @@
 							<button type="buttom" class="form-control" class="btn btn-primary" (click)="onFormSubmit()">Register</button>
 						</div>
 					</div>
+
 				</form>
+
 			</div>
 		</div>
 	</div>	
