@@ -9,41 +9,47 @@
 
 		<div class="row">
 
-			<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+			<!-- <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script> -->
+
+			<div class="col-sm-6 col-sm-offset-1">
+				<p class="bg-info">
+					{{msg}}
+				</p>
+			</div>
 
 			<div class="col-sm-6 col-sm-offset-1">
 
 				<form name="registration-form" id="registration-form">
 
-					<div class="form-group row">
+					<div class="form-group row  {{nameError}}">
 						<label for="name" class="col-sm-2 col-form-label">Name</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="name" name="name" [(ngModel)]="name" placeholder="Name">
 						</div>
 					</div>
 
-					<div class="form-group row">
+					<div class="form-group row {{phoneError}}">
 						<label for="phone" class="col-sm-2 col-form-label">Phone</label>
 						<div class="col-sm-10">
 							<input type="phone" class="form-control" id="phone" name="phone" [(ngModel)]="phone" placeholder="Phone">
 						</div>
 					</div>
 					
-					<div class="form-group row">
+					<div class="form-group row {{emailError}}">
 						<label for="email" class="col-sm-2 col-form-label">Email Id</label>
 						<div class="col-sm-10">
 							<input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" placeholder="Email">
 						</div>
 					</div>
 
-					<div class="form-group row">
+					<div class="form-group row {{commentsError}}">
 						<label for="email" class="col-sm-2 col-form-label">Comments</label>
 						<div class="col-sm-10">
 							<textarea name="comments" id="comments" class="form-control" [(ngModel)]="comments"></textarea>
 						</div>
 					</div>
 
-					<div class="form-group row">
+					<div class="form-group row {{captchaError}}">
 						<label for="email" class="col-sm-2 col-form-label"></label>
 						<div class="col-sm-10">
 							<div class="g-recaptcha" data-sitekey="6Lelvj8UAAAAALDtKIhd7Q_ov4TZYXNL0OQWuVFZ"></div>

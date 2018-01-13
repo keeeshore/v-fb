@@ -33,14 +33,25 @@ import {
 export class Registration implements AfterViewInit {
 
 	public name:String = '';
+	public nameError:String = '';
 
 	public phone:String = '';
+	public phoneError:String = '';
 
 	public email:String = '';
+	public emailError:String = '';
 
 	public comments:String = '';
+	public commentsError:String = '';
 
 	public recaptha:String = '';
+	public recapthaError:String = '';
+
+	public _ERROR_MSG:String = 'Missing Required fields';
+
+	public _SUCCESS_MSG:String = 'Form submitted successfully!';
+
+	public msg:String = '';
 
 	constructor(
 		private apiService: ApiService, 
@@ -64,8 +75,7 @@ export class Registration implements AfterViewInit {
 	       console.log('ngOnInit::val------------------:', params);
 	       	if (!isNaN(params.id)) {
 	       		console.log('ngOnInit::val------------------:Valid param id', params);
-	       	}
-	       
+	       	}	       
 	    });
   	}
 
@@ -86,7 +96,15 @@ export class Registration implements AfterViewInit {
   	public onFormSubmit(): void {
 		console.log('Registration onFormSubmit:');
 		let url = ENV.HOST_API_URL + 'registration.php';
-		this.recaptha = document.getElementById('g-recaptcha-response').value;
+		let elem:any = document.getElementById('g-recaptcha-response');
+		let error = false;
+		let errors = [];
+		let hasErrorClass = 'has-error';
+		let mandatoryFields = [ 'name', 'phone', 'email', 'comments'];
+		let self = this;
+
+		this.recaptha = elem.value;
+		this.msg = 'Processing...';
 		
 		let data = {
 			name: this.name,
@@ -96,12 +114,29 @@ export class Registration implements AfterViewInit {
 			recaptha: this.recaptha
 		}
 
-		if (this.name && this.phone && this.email && this.comments) {
+		mandatoryFields.forEach((fieldName, indexId)=>{
+			console.log(fieldName, ':fieldName ==', self[fieldName]);
+			self[fieldName + 'Error'] = '';
+			if (!self[fieldName] || self[fieldName] == '') {
+				console.log( fieldName, ':fieldName: has error');
+				error = true;
+				self[fieldName + 'Error'] = 'has-error';
+			}
+		});
+
+		if (!error) {
+			this.msg = '';
 			this.apiService.post(url, data).subscribe((res:any)=>{
 				console.log('post response:', res);
+				if (res && res.success) {
+					this.msg = this._SUCCESS_MSG;
+				} else {
+					this.msg = this._ERROR_MSG;
+				}
 			});
 		} else {
-			console.log('all fields are mandatory')
+			console.log('all fields are mandatory');
+			this.msg = this._ERROR_MSG;
 		}
 		
   	}
