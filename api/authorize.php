@@ -13,9 +13,36 @@
 
 	$userName = $_POST["userName"];
 	$password = $_POST["password"];
+	$recaptha = $_POST["g-recaptcha-response"];
+
+
+	$url = 'https://www.google.com/recaptcha/api/siteverify';
+	$secret = '6Lelvj8UAAAAANHT_JxRUVSka6Dz5NPl74JLeeX_';
+
+	$myvars = 'secret=' . $secret . '&response=' . $recaptha;
+
+	$ch = curl_init($url);
+	curl_setopt( $ch, CURLOPT_POST, 1);
+	curl_setopt( $ch, CURLOPT_POSTFIELDS, $myvars);
+	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+	curl_setopt( $ch, CURLOPT_HEADER, 0);
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+
+	$response = curl_exec($ch);
+
+	//$json = $response;
+
+	$result = json_decode($response);
+	$success = false;
+
+	if ($result) {
+	  	$success = $result->success;
+	}
+	//echo json_encode(array( 'result' => $result->success ));
+	//exit;
 
 	//if ($value && $value['userName'] && $value['password']) {
-	if ($userName && $password) {
+	if ($userName && $password && $success) {
 
 		extract($_POST);
 
@@ -33,16 +60,16 @@
 			$isLoggedIn = true;	
 			$_SESSION['login_user'] = $userName;
 
-			setcookie($cookieName, 'tttt', 0); // 86400 = 1 day			
+			setcookie($cookieName, $userName, 0); // 86400 = 1 day	
 			header("Location:".$HOST_URL."/admin/events");
 			exit();
 			
 		} else {
 
-			$error = 'Unauthorized Error';
+			$error = 'unauthorized_error';
 			unset($_SESSION['login_user']);
 			setcookie($cookieName, '', 0); 
-			header("Location:".$HOST_URL."/admin/login?error=Login_failed");
+			header("Location:".$HOST_URL."/admin/login?error=".$error);
 
 			//echo json_encode(array('success' => $isLoggedIn, 'error' => $error));
 			//var_dump($_SESSION);
@@ -51,8 +78,13 @@
 
 	}
 
-	unset($_SESSION['login_user']);
-	$error = 'Validation Error';
+	if (!$success) {
+		$error = 'captcha_error';
+	} else {
+		$error = 'validation_error';
+	}
+
+	unset($_SESSION['login_user']);	
 	header("Location:".$HOST_URL."/admin/login?error=".$error);
 	exit();
 

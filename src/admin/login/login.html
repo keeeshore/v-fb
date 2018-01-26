@@ -21,7 +21,16 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Password</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" id="password" [(ngModel)]="password" name="password">
+                        <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group {{captchaError}}">
+                    <label for="email" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <div class="g-recaptcha" data-sitekey="6Lelvj8UAAAAALDtKIhd7Q_ov4TZYXNL0OQWuVFZ"></div>
                     </div>
                 </div>
             </div>

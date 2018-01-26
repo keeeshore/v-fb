@@ -66,4 +66,18 @@ export class ApiService {
 		return Observable.throw(errMsg);
 	}
 
+	public insertGoogleCaptha(): void {
+  		let head:any = document.getElementsByTagName('head')[0];		
+		let scriptElem:any = document.getElementById('google-captcha');
+
+		if (scriptElem) {
+			head.removeChild(scriptElem);
+		}
+		let script:any = document.createElement('script');
+			script.type = 'text/javascript';
+			script.id = 'google-captcha';
+			script.src = 'https://www.google.com/recaptcha/api.js';
+		head.appendChild(script);
+  	}
+
 }

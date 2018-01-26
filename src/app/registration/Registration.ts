@@ -69,28 +69,14 @@ export class Registration implements AfterViewInit {
 
 	public ngAfterViewInit(): void {
 		console.log('Registration AfterViewInit::');
-		this.insertGoogleCaptha();
+		this.apiService.insertGoogleCaptha();
 
 	    this.router.queryParams.subscribe((params:any) =>{ 
 	       console.log('ngOnInit::val------------------:', params);
 	       	if (!isNaN(params.id)) {
 	       		console.log('ngOnInit::val------------------:Valid param id', params);
-	       	}	       
+	       	}
 	    });
-  	}
-
-  	public insertGoogleCaptha(): void {
-  		let head:any = document.getElementsByTagName('head')[0];		
-		let scriptElem:any = document.getElementById('google-captcha');
-
-		if (scriptElem) {
-			head.removeChild(scriptElem);
-		}
-		let script:any = document.createElement('script');
-			script.type = 'text/javascript';
-			script.id = 'google-captcha';
-			script.src = 'https://www.google.com/recaptcha/api.js';
-		head.appendChild(script);
   	}
 
   	public onFormSubmit(): void {

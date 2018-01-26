@@ -40,6 +40,7 @@ export class Login implements OnInit {
 	ngOnInit () {
 		//console.log( process.env.ENV, ' ::: ENV VARS::', ENV, ':::authGaurd:::', this.authGaurd);
 		this.authGaurd.reset();
+		this.apiService.insertGoogleCaptha();
 		this.reason = '';
 		this.router.params.forEach((params: Params) => {
 	    	if (params['error']) {
