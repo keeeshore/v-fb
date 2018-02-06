@@ -190,7 +190,7 @@ export class UpdateAll {
 
 	public logInfo(updateType:string, message:string):void {		
 		let logType = updateType + 'Log';
-		this[logType] += ' | ' + message;
+		this[logType] +=  message + ' \n '
 	}
 
 	public clearLog(updateType:string):void {
