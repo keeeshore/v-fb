@@ -21,7 +21,7 @@
                 <div class="col-sm-12">
                     <input type="button" class="btn btn-xs btn-success" value="Get Posts from Facebook" (click)="onGetPostsClick()">
                     <input type="button" class="btn btn-xs btn-warning" value="Add Posts to DB" (click)="onSubmitPosts()">
-                    <input type="button" class="btn btn-xs btn-warning" value="Get Posts from DB" (click)="getPostsFromTable()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Get Posts from DB" (click)="onGetPostsFromTable()">
                 </div>
             </div>
         </form>
@@ -86,8 +86,10 @@
                                 <img class="img img-responsive" src="{{postModel.fullPicture}}" /> 
                             </div>
                             <div class="col-sm-8">
-                                <h3>{{postModel.name}}</h3>
-                                {{postModel.createdTime}}
+                                <b>{{postModel.name}}</b>
+                                <p style="font-size: 11px">
+                                    {{postModel.description}}
+                                </p>
                             </div>
                             
                         </div> 

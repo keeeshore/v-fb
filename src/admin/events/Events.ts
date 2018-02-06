@@ -6,6 +6,7 @@ import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../../app/ApiService';
 import {EventsCollection, EventModel, EventParams} from './EventsCollection';
 import {PagingData, Cursors} from '../model/PagingData';
+import { Http, Response } from '@angular/http';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
 import {ENV} from '../../app/environments/environment';
@@ -28,30 +29,56 @@ export class Events {
 
 	public eventParams:EventParams;
 
-	private fromDate: string = 'NONE';
+	public fromDate: string = 'NONE';
 
-    private toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
+    public toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
+
+    public fbEventsSubject: Subject<DataEvent> =  new Subject<DataEvent>();
+
+    public eventsSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
     public accessToken: string = '';
 
 	constructor(private apiService: ApiService) {
 		console.log('Events component init');
-		this.getEventsFromTable();
+		this.getEventsFromTable().subscribe((response) => {
+			console.log('getEventsFromTable 111 :::flatMap::response', response);
+			//return response;
+			//return new Observable((observer:any) => {
+				//observer.next(response);
+			//});
+		});
+		/*this.getEventsFromTable().flatMap(response => {
+			//return this.http.get(response)
+			console.log('getEventsFromTable::flatMap::response', response);
+			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
+			//this.setLastEndTime();
+			return new Observable((observer:any) => {
+				observer.next(response);
+			});
+		}).subscribe(response => {
+			//return this.http.get(response)
+			console.log('getEventsFromTable:::subscribe::response', response);
+			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
+			this.setLastEndTime();
+			return response;
+		});*/
 		this.accessToken = this.apiService.accessToken;
 	}
 
 	public setEvents (collectionModel:EventsCollection, eventsArray:Array<any>):Boolean {
-		console.log('setEvents:::-------------------------------------------------------------------------------------');
+		console.log('setEvents:::-------------------------------------', eventsArray);
 		let events:Array<EventModel> = eventsArray.map((model:any) => {			
 			model.endTime = model.end_time || model.endTime;
 			model.startTime = model.start_time || model.startTime;
 			delete model.end_time;
 			delete model.start_time;
 			let eventModel = new EventModel(model);
-			console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
+			//console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
 			collectionModel.events.push(eventModel);
 			return eventModel;
 		});
+		console.log('setEvents:::--------------------------------------collectionModel.events = ', collectionModel.events.length);
 		return events.length > 0 ? true : false;
 	}
 
@@ -63,15 +90,16 @@ export class Events {
 				console.log('getEvents success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.setEvents(this.fbCollection, response.data);
 			},
-			(err) => { console.log('getEvents err:::', err)},
-			() => {console.log('getEvents final:::')}
+			(err) => { console.log('getEvents err:::', err) },
+			() => { console.log('getEvents final:::') }
 		);
 	}
+	
 
-	private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
-
-	public getEvents (eventParams:EventParams, collection:Array<any>):Observable<DataEvent> {
+	public getEvents (eventParams:EventParams, collection:Array<any>):Observable<any> {
 		console.log('getEvents....called with eventParams:', eventParams);
+		console.log('this.fromDate:', this.fromDate);
+		console.log('this.toDate:', this.toDate);
 		this.message = 'In progress...';
 		
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
@@ -102,52 +130,66 @@ export class Events {
 		url = url + '?' + params.toString();
 		console.log('url->', url);		
 
-		this.apiService.fetch(url).subscribe(
+		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
 				console.log('getEvents RESPONSE ->', response);
 				if (response.data && response.data.length > 0) {
+					
 					this.apiService.accessToken = this.accessToken;
 					let pagingData:PagingData = new PagingData(response.paging);
 					//let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
 					response.data.filter((dataModel:any)=>{ collection.push(dataModel)});
 
 					if (pagingData.cursors.after !== '') {
+						
 						console.log('pagingData.cursor.after PRESENT');
-						this.eventParams.after = pagingData.cursors.after;
-						return this.getEvents(this.eventParams, collection);
-					} else {
-						this.eventParams.after = '';
-						console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
-						this.dialogSubject.next({data: collection});
-					}
+						eventParams.after = pagingData.cursors.after;
+						return this.getEvents(eventParams, collection);
 					
+					} else {
+						
+						eventParams.after = '';
+						console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
+						//this.fbEventsSubject.next({data: collection});
+						return new Observable((observer:any) => {
+							observer.next({data: collection});
+						});
+
+					}
+
 				} else {
+					
 					this.message = 'Complete!';
 					console.log('-------------------------------------------ALL DONE!!');
-					this.dialogSubject.next({data: collection});
-				}
-			},
-			(err) => { 
-				this.message = JSON.stringify(err);
-			});
+					//this.fbEventsSubject.next({data: collection});
+					return new Observable((observer:any) => {
+						observer.next({data: collection});
+					});
 
-		return this.dialogSubject;
+				}
+
+
+			});
 	}
 
 	public onSubmitEvents1 () {
 		console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
-		this.submitEvents(this.fbCollection);
+		this.submitEvents(this.fbCollection).subscribe();
 	}
 
-	public submitEvents (collection:EventsCollection) {
-		console.log('SUBMIT eventsCollection...', collection);
+	public submitEvents (collection:EventsCollection):Observable<any> {
+		console.log('submitEvents:: SUBMIT eventsCollection...', collection);
 		let url = ENV.HOST_API_URL + '/events_post.php';
-		this.apiService.post(url, collection).subscribe((response:any) => {
-			console.log('eventModel POST response recieved....', response);
+		return this.apiService.post(url, collection).flatMap((response:any) => {
+			console.log('submitEvents:: eventModel POST response received....', response);
 			if (response && response.success) {
 				this.fbCollection = new EventsCollection();
-				this.getEventsFromTable();
-			}
+				return this.getEventsFromTable();
+			} else {
+				return new Observable((observer:any) => {
+					observer.next(null);
+				});
+			}			
 		});
 	}
 
@@ -155,7 +197,7 @@ export class Events {
 		let eventsCollection = new EventsCollection();
 		eventsCollection.events.push(eventModel);
 		console.log('SUBMIT addEventModel...', eventsCollection);
-		this.submitEvents(eventsCollection);
+		this.submitEvents(eventsCollection).subscribe();
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
@@ -168,7 +210,7 @@ export class Events {
 			} else {
 				console.log('Delete UNSUCCESSFUL');
 			}	
-			this.getEventsFromTable();		
+			this.getEventsFromTable().subscribe();
 		});
 	}
 
@@ -184,17 +226,34 @@ export class Events {
 		console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
 		this.eventsCollection.events = new Array<EventModel>();
-		return this.apiService.fetch(url).subscribe(
+		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
-				console.log('getEventsFromTable response ->', response);
+				console.log('getEventsFromTable flatMap response ->', response);
 				let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 				this.setLastEndTime();
+				return new Observable((observer:any) => {
+					observer.next(response);
+				});
+			}
+		);
+		//return this.http.get(url).map((res: Response) => res.json());
+		/*this.http.get(url)
+            .map((res: Response) => res.json())
+            .mergeMap(customer => this.http.get(customer.contractUrl))
+            .map((res: Response) => res.json())
+            .subscribe(res => this.contract = res);*/
+		/*return this.apiService.fetch(url).subscribe(
+			(response: any) => {
+				console.log('getEventsFromTable response ->', response);
+				//return response;
+				//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
+				//this.setLastEndTime();
 			},
 			(err) => { 
 				console.log('getEventsFromTable ERR ->', err);
 				this.message = JSON.stringify(err);
 			}
-		);
+		);*/
 	}
 
 	public setLastEndTime () {		

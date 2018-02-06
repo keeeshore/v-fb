@@ -12,6 +12,7 @@ import { Events } from "./events/Events";
 import { Albums } from "./albums/Albums";
 import { Posts } from "./posts/Posts";
 import { Photos } from "./photos/Photos";
+import { UpdateAll } from "./update-all/UpdateAll";
 import { AuthGuard } from "./AuthGuard";
 import { ApiService } from "../app/ApiService";
 import { AdminComponent } from "./component/AdminComponent";
@@ -39,6 +40,7 @@ const adminRoutes: Routes = [
 				path: '',
 				canActivateChild: [AuthGuard],
 				children: [
+					{ path: 'update-all', component: UpdateAll },
 					{ path: 'events', component: Events },
 					{ path: 'albums', component: Albums},
 					{ path: 'albums/:albumId', component: Photos, data: { albumId: 'albumId' } },
@@ -67,6 +69,7 @@ const adminRoutes: Routes = [
 		Albums,
 		Photos,
 		Posts,
+		UpdateAll,
 		Login
 	],
 	exports: [ RouterModule ],

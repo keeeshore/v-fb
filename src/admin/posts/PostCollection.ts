@@ -37,12 +37,14 @@ export class PostModel  {
 
     public createdTime:string;
 
+    public created_time:string;
+
     constructor (postModel:any) {
-        this.name = postModel.name; //TODO: check for untitled string.
+        this.name = postModel.name || 'none'; //TODO: check for untitled string.
         this.id = postModel.id;       
         this.uid = postModel.uid; 
         this.description = postModel.description || '';
-        this.fullPicture = postModel.fullPicture || '';
+        this.fullPicture = postModel.full_picture || '';
         this.createdTime = moment(postModel.createdTime || '').format(ENV.DATE_TIME_FORMAT);
     }
 

@@ -61,7 +61,7 @@
 			$_SESSION['login_user'] = $userName;
 
 			setcookie($cookieName, $userName, 0); // 86400 = 1 day	
-			header("Location:".$HOST_URL."/admin/events");
+			header("Location:".$HOST_URL."/admin/update-all");
 			exit();
 			
 		} else {

@@ -28,24 +28,24 @@ export class Posts {
 
     public postParams:PostParams;
 
-    private fromDate: string = 'NONE';
+    public fromDate: string = 'NONE';
 
-    private toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
+    public toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
 
     public accessToken: string = '';
 
     constructor(private apiService: ApiService) {
         console.log('Post component init');
         this.accessToken = this.apiService.accessToken 
-        this.getPostsFromTable();
+        this.getPostsFromTable().subscribe();
     }
 
     public setPosts (collectionModel:PostCollection, postsArray:Array<any>):Boolean {
-        console.log('setPosts::-------------------------------------------------------------------------------------');
+        console.log('setPosts::-------------------------------------------------------------------------------------', postsArray);
         debugger;
-        let posts:Array<PostModel> = postsArray.map((model:any) => {
+        let posts:Array<PostModel> = postsArray.map((model:PostModel) => {
             model.createdTime = model.created_time || model.createdTime;
-            delete model.created_time;
+            delete model.created_time;    
             let postModel = new PostModel(model);
             console.log(collectionModel.posts.length, ':setPosts:::-----------------------------------------------------NEW postModel->', postModel);
             collectionModel.posts.push(postModel);
@@ -58,9 +58,10 @@ export class Posts {
         let posts = new Array<PostModel>();
         this.postParams = new PostParams();
         this.getPosts(this.postParams, posts).subscribe(
-            (response) => { 
+            (response:any) => { 
                 console.log('posts success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
                 this.apiService.accessToken = this.accessToken;
+                this.fbCollection = new PostCollection();
                 this.setPosts(this.fbCollection, response.data);
             },
             (err) => { console.log('posts err:::', err)},
@@ -70,14 +71,16 @@ export class Posts {
 
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
-    public getPosts (postParams:PostParams, collection:Array<any>):Observable<DataEvent> {
-        console.log('getEvents....called with postParams:', postParams);
+    public getPosts (postParams:PostParams, collection:Array<PostModel>): Observable<any> {
+        console.log('getPosts....called with postParams:', postParams);
         this.message = 'In progress...';
         
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
             console.log('Invalid Date range!!!!');
             this.message = 'Invalid Date range......';
-            return;
+            return new Observable((observer:any) => {
+                observer.next(this.message);
+            });
         }
 
         console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
@@ -102,51 +105,67 @@ export class Posts {
         url = url + '?' + params.toString();
         console.log('url->', url);        
 
-        this.apiService.fetch(url).subscribe(
+        return this.apiService.fetch(url).flatMap(
             (response: any) => {
-                console.log('getEvents RESPONSE ->', response);
+                console.log('getPosts RESPONSE ->', response);
                 if (response.data && response.data.length > 0) {
                     let pagingData:PagingData = new PagingData(response.paging);
                     //let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
-                    response.data.filter((dataModel:any)=>{ collection.push(dataModel)});
+                    response.data.filter((postModel:PostModel)=>{ collection.push(postModel) });
+                    console.log('getPosts RESPONSE collection->', collection);
 
                     if (pagingData.cursors.after !== '') {
-                        console.log('pagingData.cursor.after PRESENT');
-                        this.postParams.after = pagingData.cursors.after;
-                        return this.getPosts(this.postParams, collection);
+                        console.log('----------------------------------------------------pagingData.cursor.after PRESENT 1');                   
+                        postParams.after = pagingData.cursors.after;
+                        /*return new Observable((observer:any) => {
+                            observer.next(this.getPosts(this.postParams, collection));
+                        });*/
+                        console.log('----------------------------------------------------pagingData.cursor.after PRESENT 2', collection);
+                        return this.getPosts(postParams, collection);
                     } else {
                         this.postParams.after = '';
-                        console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
-                        this.dialogSubject.next({data: collection});
+                        console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!', collection);
+                        return new Observable((observer:any) => {
+                            observer.next({ data: collection });
+                        });
                     }
                     
                 } else {
                     this.message = 'Complete!';
-                    console.log('-------------------------------------------ALL DONE!!');
-                    this.dialogSubject.next({data: collection});
+                    console.log('----------------------------------------------------ALL DONE!!');
+                    return new Observable((observer:any) => {
+                        observer.next({ data: collection });
+                    });
                 }
-            },
-            (err) => { 
-                this.message = JSON.stringify(err);
-            });
+            }
+        );
+    }
 
-        return this.dialogSubject;
+    public onGetPostsFromTable () {
+        console.log('SUBMIT onGetPostsFromTable...');
+        this.getPostsFromTable().subscribe();
     }
 
     public onSubmitPosts () {
         console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
-        this.submitPosts(this.fbCollection);
+        this.submitPosts(this.fbCollection).subscribe(()=>{
+            this.getPostsFromTable().subscribe();
+        });
     }
 
-    public submitPosts (collection:PostCollection) {
+    public submitPosts (collection:PostCollection):Observable<any> {
         console.log('SUBMIT postCollection...', collection);
         let url = ENV.HOST_API_URL + '/posts_post.php';
-        this.apiService.post(url, collection).subscribe((response:any) => {
+        return this.apiService.post(url, collection).flatMap((response:any) => {
             console.log('postModel POST response recieved....', response);
-            if (response && response.success) {
-                this.fbCollection = new PostCollection();
-                this.getPostsFromTable();
+            let success:boolean = false;
+           if (response && response.success) {
+               this.fbCollection = new PostCollection();
+               success = true;
             }
+            return new Observable((observer:any)=>{
+                observer.next(response);
+            })
         });
     }
 
@@ -154,7 +173,9 @@ export class Posts {
         let postCollection = new PostCollection();
         postCollection.posts.push(postModel);
         console.log('SUBMIT addEventModel...', postCollection);
-        this.submitPosts(postCollection);
+        this.submitPosts(postCollection).subscribe(()=>{
+            this.getPostsFromTable().subscribe();
+        });
     }
 
     public onDeletePosts (postModel:PostModel) {
@@ -167,7 +188,7 @@ export class Posts {
             } else {
                 console.log('Delete UNSUCCESSFUL');
             }    
-            this.getPostsFromTable();        
+            this.getPostsFromTable().subscribe();        
         });
     }
 
@@ -179,21 +200,18 @@ export class Posts {
         });*/
     }
 
-    public getPostsFromTable () {
+    public getPostsFromTable():Observable<PostCollection> {
         console.log('getPostsFromTable...');
         let url = ENV.HOST_API_URL + '/posts_get.php';
         this.postCollection.posts = new Array<PostModel>();
-        return this.apiService.fetch(url).subscribe(
-            (response: any) => {
-                console.log('getPostsFromTable response ->', response);
-                let isSet:Boolean = this.setPosts(this.postCollection, response.posts);
-                this.setLastEndTime();
-            },
-            (err) => { 
-                console.log('getPostsFromTable ERR ->', err);
-                this.message = JSON.stringify(err);
-            }
-        );
+        return this.apiService.fetch(url).flatMap((response: PostCollection) => {
+            console.log('getPostsFromTable response ->', response);
+            this.setPosts(this.postCollection, response.posts);
+            this.setLastEndTime();
+            return new Observable((observer:any) => {
+                observer.next(response);
+            });
+        });
     }
 
     public setLastEndTime () {        

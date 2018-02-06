@@ -3,10 +3,13 @@
 		<div class="col-sm-12" *ngIf="authGuard.isLoggedIn">
 			<ul class="list-inline" style="border-bottom: 1px solid #CCC; padding: 10px 5px; margin-bottom: 20px;">
                 <li>
-                    <a routerLink="/admin/events" routerLinkActive="active">Events</a>
+                    <a routerLink="/admin/update-all" routerLinkActive="active">Update ALL</a>
                 </li>
 				<li>
                     <a routerLink="/admin/posts" routerLinkActive="active">Posts</a>
+                </li>
+                <li>
+                    <a routerLink="/admin/events" routerLinkActive="active">Events</a>
                 </li>
                 <li>
                     <a [routerLink]="['/admin/albums']">Albums</a>

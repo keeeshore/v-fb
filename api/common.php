@@ -5,6 +5,8 @@
 	$IMG_POSTS_DIR = '../posts-assets';
 	$IMG_PHOTOS_DIR = '../photos-assets';
 
+	//set_time_limit ( int 120 );
+
 	header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Credentials: true");
 	header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
