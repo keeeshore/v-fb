@@ -37,15 +37,15 @@ export class Photos {
 
 	public photoParams:PhotoParams;
 
-	private fromDate: string = 'NONE';
+	public fromDate: string = 'NONE';
 
 	public accessToken: string = '';
 
-    private toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
+    public toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
 
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
-    public imageHostPath:string = ENV.HOST_API_URL;
+    public imageHostPath:string = ENV.HOST_URL;
 
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		this.accessToken = this.apiService.accessToken;
@@ -62,9 +62,9 @@ export class Photos {
 	    		this.albumName = album.name;
 	    	}
 	    });
- 		this.photoCollection = new PhotoCollection(this.albumId);	
+ 		this.photoCollection = new PhotoCollection(this.albumId);
 		this.fbCollection = new PhotoCollection(this.albumId);
-		this.getPhotosFromTable(this.albumId);
+		this.getPhotosFromTable(this.albumId).subscribe();
   	}	
 
 	public setPhotos (photosArr:Array<PhotoModel>, dataArray:Array<any>):Boolean {
@@ -88,7 +88,7 @@ export class Photos {
 		this.photoParams = new PhotoParams(this.albumId);
 		this.dialogSubject =  new Subject<DataEvent>();
 
-		this.getPhotos(this.photoParams, photos, false).subscribe(
+		this.getPhotos(this.photoParams, photos).subscribe(
 			(response) => {
 				console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.apiService.accessToken = this.accessToken;
@@ -99,20 +99,37 @@ export class Photos {
 		);
 	}
 
-
-	public getPhotosFromTable (albumId:string) {
-		console.log('getEventsFromTable...');
-		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
-		this.photoCollection.photos = new Array<PhotoModel>();
-		return this.apiService.fetch(url).subscribe(
+	public onGetPhotosFromTable (albumId:string) {
+		console.log('getPhotosFromTable...');
+		this.getPhotosFromTable(albumId).subscribe(
 			(response: any) => {
 				console.log('getPhotosFromTable response ->', response);
 				this.setPhotos(this.photoCollection.photos, response.photos);
 				this.setLastEndTime();
+				return new Observable((observer:any) => {
+                	observer.next(response);
+            	});
 			},
-			(err) => { 
-				console.log('getPhotosFromTable ERR ->', err);
-				this.message = JSON.stringify(err);
+			(err:any) => {
+				console.log('ERR in gePhotosFromTable');
+
+			}
+		);
+	}
+
+
+	public getPhotosFromTable (albumId:string):Observable<any> {
+		console.log('getEventsFromTable...');
+		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
+		this.photoCollection.photos = new Array<PhotoModel>();
+		return this.apiService.fetch(url).flatMap(
+			(response: any) => {
+				console.log('getPhotosFromTable response ->', response);
+				this.setPhotos(this.photoCollection.photos, response.photos);
+				this.setLastEndTime();
+				return new Observable((observer:any) => {
+                	observer.next(response);
+            	});
 			}
 		);
 	}
@@ -123,7 +140,7 @@ export class Photos {
 		this.apiService.post(url, photoModel).subscribe(
 			(response: any) => {
 				console.log('onDeletePhotoModel response ->', response);
-				this.getPhotosFromTable(this.photoCollection.albumId);
+				this.getPhotosFromTable(this.photoCollection.albumId).subscribe();
 			},
 			(err) => { 
 				console.log('onDeletePhotoModel ERR ->', err);
@@ -137,27 +154,36 @@ export class Photos {
 		this.fbCollection.photos.splice(indexId, 1);
 		let collection = this.fbCollection;
 		collection.photos = [photoModel];
-		this.submitPhotos(collection);
+		this.submitPhotos(collection).subscribe();
 	}
 
 
 	public onSubmitPhotos ():void {
 		console.log('onSubmitPhotos');
-		this.submitPhotos(this.fbCollection);
+		this.submitPhotos(this.fbCollection).subscribe((response:any)=>{
+			console.log('response recieved aft3er submiting photos')
+		},
+		(err:any)=>{
+			console.log('err recieved aft3er submiting photos')
+		});
 	}
 
-	public submitPhotos (collection:PhotoCollection) {
+	public submitPhotos (collection:PhotoCollection):Observable<any> {
 		console.log('SUBMIT PhotoCollection...', collection);
 		let url = ENV.HOST_API_URL + '/photos_post.php';
-		this.apiService.post(url, collection).subscribe((response:any) => {
+		return this.apiService.post(url, collection).flatMap((response:any) => {
 			console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
-				this.getPhotosFromTable(this.albumId);
+				return this.getPhotosFromTable(this.albumId).flatMap(()=>{
+					return new Observable((observer:any) => {
+		                observer.next(response);
+		            });
+				});
 			}
 		});
 	}	
 
-	public getPhotos (photoParams:PhotoParams, collection:Array<any>, isRepeat:boolean):Observable<DataEvent> {
+	public getPhotos (photoParams:PhotoParams, collection:Array<any>):Observable<any> {
 		console.log('getPhotos....called with photoParams:', photoParams, 'COLLETION:::', collection);
 		this.message = 'In progress...';
 		
@@ -171,7 +197,6 @@ export class Photos {
         let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
         let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 		console.log('is valid date range', since + ' : to : ' + until);
-
 
 		let url = ENV.FB_GRAPH_URL + photoParams.albumId + '/photos';
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
@@ -189,16 +214,16 @@ export class Photos {
 		}
 		url = url + '?' + params.toString();
 		
-		console.log('url->', url);		
+		console.log('url->', url);
 
-		this.apiService.fetch(url).subscribe(
-			(response: any) => {
-				console.log('getEvents RESPONSE ->', response);
-				let photos:any = response;
+		return this.apiService.fetch(url).flatMap(
+			(response:any) => {
+				console.log('getPhotos RESPONSE ->', response);
+				debugger;
 				
-				if (photos && photos.data.length > 0) {
-					let data = photos.data;
-					let pagingData:PagingData = new PagingData(photos.paging);
+				if (response && response.data.length > 0) {
+					let data = response.data;
+					let pagingData:PagingData = new PagingData(response.paging);
 					
 					data.filter((dataModel:any)=>{ collection.push(dataModel)});
 					
@@ -206,24 +231,25 @@ export class Photos {
 						console.log(collection.length, ':::pagingData.NEXT PRESENT');
 						this.photoParams.after = pagingData.cursors.after;
 						this.photoParams.nextUrl = pagingData.next;
-						return this.getPhotos(this.photoParams, collection, true);
+						return this.getPhotos(this.photoParams, collection);
 					} else {
 						this.photoParams.after = '';
 						this.photoParams.nextUrl = '';
 						console.log('---------------------------------------------------- pagingData complete--------ALL DONE!!', collection);
-						this.dialogSubject.next({data: collection});
+						//this.dialogSubject.next({data: collection});
+						return new Observable((observer:any) => {
+			                observer.next({data: collection});
+			            });
 					}
 				} else {
 					this.message = 'Complete!';
 					console.log('-------------------------------------------ALL DONE!!', collection);
-					this.dialogSubject.next({data: collection});
+					//this.dialogSubject.next({data: collection});
+					return new Observable((observer:any) => {
+		                observer.next({data: collection});
+		            });
 				}
-			},
-			(err:any) => { 
-				this.message = JSON.stringify(err);
 			});
-
-		return this.dialogSubject;
 	}
 
 	public setLastEndTime () {

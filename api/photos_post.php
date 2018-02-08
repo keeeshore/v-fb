@@ -25,7 +25,7 @@ if (is_array($result['photos']) || is_object($result['photos'])) {
 
 	foreach ($result['photos'] as $key => $value) {
 			
-		$name = $value['name'];
+		$name = mysql_real_escape_string($value['name']);
 		$createdTime = date('Y-m-d H:i:s', strtotime($value['createdTime']));
 		$uid = $value['id'];
 		$source = $IMG_PHOTOS_DIR.'/albums/'.$albumId.'/default.jpg';

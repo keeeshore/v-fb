@@ -48,4 +48,18 @@
         <pre>{{postsLog}}</pre>
     </div>
 
+
+    <ul class="row">
+      <li *ngFor="let photos of galleries; index as i;">
+         <h3 class="text-danger">
+            <div class="col-sm-6">Galleries:{{i}}:{{photos.albumName}}</div>
+            <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="photos.fromDate" name="fromDate">
+            <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="photos.toDate" name="toDate">
+            <input type="button" class="" value="Update Photos" (click)="updateGallery(galleries[i])">
+            <div style="clear: both;"></div>
+        </h3>              
+      </li>
+      <pre>{{photosLog}}</pre>    
+    </ul>
+
 </section>

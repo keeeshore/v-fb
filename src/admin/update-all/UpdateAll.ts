@@ -5,8 +5,11 @@ import {Component,  ViewChildren, QueryList} from '@angular/core';
 import {ApiService} from './../../app/ApiService';
 import {Events} from '../events/Events';
 import {Posts} from '../posts/Posts';
+import {Photos} from '../photos/Photos';
+import { ActivatedRoute, Params } from '@angular/router';
 import {EventsCollection, EventModel, EventParams} from '../events/EventsCollection';
 import {PostCollection, PostModel, PostParams} from '../posts/PostCollection';
+import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../photos/PhotoCollection';
 import {ENV} from '../../app/environments/environment';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
@@ -25,6 +28,10 @@ export class UpdateAll {
 
 	public posts:Posts;
 
+	public photos:Photos;
+
+	public galleries:Array<Photos>;
+
 	public accessToken:string = 'mandatory';
 
 	public eventsLog:string = '';
@@ -37,18 +44,81 @@ export class UpdateAll {
 
 	public toDate:string = '01-06-2015 00:00';
 
-	constructor(private apiService: ApiService) {
+	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('Update ALL component init');
 		this.events = new Events(this.apiService);
 		this.posts = new Posts(this.apiService);
+		this.galleries = new Array<Photos>();
+
+		let albumCollection = new AlbumCollection();
+		let albumSource = Observable.from(albumCollection.albums);
+
+		albumCollection.albums.forEach((x:AlbumModel)=>{
+			this.apiService.accessToken = this.accessToken;
+			let photos =  new Photos(this.apiService, this.router);
+				photos.accessToken = this.accessToken;
+				photos.albumId = x.id;
+				photos.albumName = x.name;
+				photos.photoCollection = new PhotoCollection(x.id);
+				photos.fbCollection = new PhotoCollection(x.id);
+				photos.accessToken = this.accessToken;
+			this.galleries.push(photos);
+		});
+
+
+		// Prints out each item
+		/*var albumSubscription = albumSource.subscribe(
+  			function (x:AlbumModel) { 
+  				console.log('onNext: %s', x);
+  				this.apiService.accessToken = this.accessToken;
+  				let photos =  new Photos(this.apiService, this.router);
+  				photos.accessToken = this.accessToken;
+  				photos.albumId = x.id;
+				photos.photoCollection = new PhotoCollection(x.id);
+				photos.fbCollection = new PhotoCollection(x.id);
+				photos.accessToken = this.accessToken;
+  				this.galleries.push(photos);
+  			},
+  			function (e) { 
+  				console.log('onError: %s', e); 
+  			},
+  			function () { console.log('onCompleted'); 
+  		});*/
+		
 	}
 
 	public update ():void {
 		console.log('update method called');
 		this.clearLog('events');
 		this.clearLog('posts');
-		this.updateEvents();
-		this.updatePosts();
+		this.clearLog('photos');
+		//this.updateEvents();
+		//this.updatePosts();
+
+		/*let albumCollection = new AlbumCollection();
+		let albumSource = Observable.from(albumCollection.albums);
+
+		// Prints out each item
+		var albumSubscription = albumSource.subscribe(
+  			function (x:AlbumModel) { 
+  				console.log('onNext: %s', x);
+  				let photos =  new Photos(this.apiService, this.router);
+  				photos.albumId = x.id;
+				photos.photoCollection = new PhotoCollection(x.id);
+				photos.fbCollection = new PhotoCollection(x.id);
+  				this.galleries.push(photos);
+  			},
+  			function (e) { 
+  				console.log('onError: %s', e); 
+  			},
+  			function () { console.log('onCompleted'); 
+  		});*/
+		let albumCollection = new AlbumCollection();
+		albumCollection.albums.forEach((x:AlbumModel, indexId:number)=>{
+			this.updateGallery(this.galleries[indexId]);
+		});
+		
+		
 
 		/*let pModel:PostModel = new PostModel({
 			created_time:"12-05-2012 17:34",
@@ -148,43 +218,66 @@ export class UpdateAll {
 	}
 
 
-	public updateGallery () {
+	public updateGallery (photos:Photos):void {
 		console.log('updateGallery start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.events.fromDate);
-		let postParams = new PostParams();
-		//this.posts.eventParams = new EventParams();
-		this.posts.accessToken = this.accessToken;
-		this.logInfo('posts', 'start');
+		
+		//let albumModel:AlbumModel = albums[indexId];
+		this.photos = photos;
 
-		this.posts.getPostsFromTable().flatMap((response:PostCollection) => {
-			console.log('UPDATEALL:getPostsFromTable ::flatMap:: response', response);			
-			if (!moment(this.posts.fromDate, ENV.DATE_TIME_FORMAT).isValid()) {
-				this.logInfo('posts', 'getPostsFromTable done, no fromDate found, using default date');
-				this.posts.fromDate = this.fromDate;
-			}
-			this.logInfo('posts', 'getPostsFromTable done, last fetched date = ' + this.posts.fromDate);
-			this.logInfo('posts', 'starting getPosts from FB...');
-			return this.posts.getPosts(postParams, new Array<PostModel>());
-		}).flatMap((response:any) => {
-			this.logInfo('posts', 'getPosts done with ' + response.data.length);
-			this.logInfo('posts', 'starting setPosts ');
-			debugger;
-			this.posts.setPosts(this.posts.fbCollection, response.data);
-			this.logInfo('posts', 'setPosts done with ' + this.posts.fbCollection.posts.length);
-			return new Observable((observer:any) => {
-				observer.next(this.posts.fbCollection);
-			});
-		}).subscribe((fbCollection:PostCollection) => {
-			this.logInfo('posts', 'fbCollection done with' + fbCollection.posts.length);
-			console.log('UPDATEALL:subscribe:: fbCollection', fbCollection);
-			this.logInfo('posts', 'start submitPosts to DB');
-			this.posts.submitPosts(fbCollection).subscribe((response:any) => {
-				console.log('UPDATEALL:subscribe:: submitPosts', response);
-				this.logInfo('posts', 'submitPosts to DB DONE>>COMPLETE');
-			});
-		},
-		(err:any) => {
-			this.logInfo('posts', 'ERROR::' + JSON.stringify(err));
-		});
+		let albumId:string = this.photos.albumId;
+
+		if (!this.photos) {
+			this.logInfo('photos', 'NO MORE PHOTOS TO UPDATE...');
+			return;
+		}
+		this.logInfo('photos', 'UPDATING PHOTO...' + this.photos.albumName + ':' + this.photos.albumId);
+		//let albumId:string = albumModel.id;
+		let photoParams:PhotoParams = new PhotoParams(albumId);
+		this.photos.photoParams = photoParams;
+		//let photos = new Array<PhotoModel>();
+
+
+		/*this.photos = new Photos(this.apiService, this.router);
+		this.photos.albumId = albumId;
+		this.photos.photoCollection = new PhotoCollection(albumId);
+		this.photos.fbCollection = new PhotoCollection(albumId);*/
+
+		this.photos.accessToken = this.accessToken;
+		this.logInfo('photos', 'start');
+
+		this.photos.getPhotosFromTable(albumId).flatMap((response:any) => {
+				console.log('UPDATEALL:getPhotosFromTable ::flatMap:: response', response);			
+				if (!moment(this.photos.fromDate, ENV.DATE_TIME_FORMAT).isValid()) {
+					this.logInfo('photos', 'getPhotosFromTable done, no fromDate found, using default date');
+					this.photos.fromDate = this.fromDate;
+				}
+				this.logInfo('photos', 'getPhotosFromTable done, last fetched date = ' + this.photos.fromDate);
+				this.logInfo('photos', 'starting getPhotos from FB...' + albumId);
+				return this.photos.getPhotos(photoParams, new Array<PhotoModel>());
+			}).flatMap((response:any) => {
+				this.logInfo('photos', 'getPhotos done with ' + response.data.length);
+				this.logInfo('photos', 'starting setPhotos ');
+				this.photos.setPhotos(this.photos.fbCollection.photos, response.data);
+				this.logInfo('photos', 'setPhotos done with ' + this.photos.fbCollection.photos.length);
+				return new Observable((observer:any) => {
+					observer.next(this.photos.fbCollection);
+				});
+			}).subscribe((fbCollection:PhotoCollection) => {
+				this.logInfo('photos', 'fbCollection done with' + fbCollection.photos.length);
+				console.log('UPDATEALL:subscribe:: fbCollection', fbCollection);
+				this.logInfo('photos', 'start submitPhotos to DB'  + albumId);
+					return this.photos.submitPhotos(fbCollection).subscribe((response:any) => {
+						console.log('UPDATEALL:subscribe:: submitPhotos', response);
+						this.logInfo('photos', 'submitPhotos to DB DONE>>COMPLETE'  + albumId);
+						//this.updateGallery(photos, indexId++);
+						/*return new Observable((observer:any) => {
+							observer.next(this.photos.fbCollection);
+						});*/
+					});
+				},
+				(err:any) => {
+					this.logInfo('photos', 'ERROR::' + JSON.stringify(err));
+				});
 	}
 	
 
