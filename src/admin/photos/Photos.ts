@@ -65,7 +65,33 @@ export class Photos {
  		this.photoCollection = new PhotoCollection(this.albumId);
 		this.fbCollection = new PhotoCollection(this.albumId);
 		this.getPhotosFromTable(this.albumId).subscribe();
-  	}	
+
+
+		/*let pModel1 = new PhotoModel({
+			"name":"Vimog at slashed down prices!",
+			"uid":"",
+			"id":"1540601579392460",
+			"source":"https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/27748038_1540601579392460_6503689655911687952_o.jpg?oh=107d597578761e58fb72834cd7b56af6&oe=5B0A9CB6",
+			"createdTime":"06-02-2018 22:05"});
+
+		let pModel2 = new PhotoModel({
+			"name":"Vimog at slashed down prices!",
+			"uid":"",
+			"id":"1540601579392460",
+			"source":"https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/27748038_1540601579392460_6503689655911687952_o.jpg?oh=107d597578761e58fb72834cd7b56af6&oe=5B0A9CB6",
+			"createdTime":"06-02-2018 22:05"});
+		let pModel3 = new PhotoModel({
+			"name":"Vimog at slashed down prices!",
+			"uid":"",
+			"id":"1540601579392460",
+			"source":"https://scontent.xx.fbcdn.net/v/t31.0-8/s720x720/27748038_1540601579392460_6503689655911687952_o.jpg?oh=107d597578761e58fb72834cd7b56af6&oe=5B0A9CB6",
+			"createdTime":"06-02-2018 22:05"});
+
+		this.fbCollection.photos.push(pModel1);
+		this.fbCollection.photos.push(pModel2);
+		this.fbCollection.photos.push(pModel3);*/
+		
+	}	
 
 	public setPhotos (photosArr:Array<PhotoModel>, dataArray:Array<any>):Boolean {
 		console.log('setPhotos:::-------------------------------------------------------------------------------------');
@@ -157,15 +183,61 @@ export class Photos {
 		this.submitPhotos(collection).subscribe();
 	}
 
+	public doSubmitPhotos ():void {
+		console.log('doSubmitPhotos----=');
+		this.onSubmitPhotos(0, this.albumId).subscribe((response:any) => {
+			console.log('FINAL SUCCESS-----------##############----------DONE for:', response);
+			this.getPhotosFromTable(this.albumId).subscribe();        
+    	},
+    	(err:any)=>{
+    		console.log('ERR-------------------#############--DONE for:', err);
+    		this.message = JSON.stringify(err);
+			//observer.next({success: false, data: err});
+    	},
+    	()=> {console.log('COMPELTE------------##################---------DONE for:');}
+    	);
+	}
 
-	public onSubmitPhotos ():void {
-		console.log('onSubmitPhotos');
-		this.submitPhotos(this.fbCollection).subscribe((response:any)=>{
-			console.log('response recieved aft3er submiting photos')
-		},
-		(err:any)=>{
-			console.log('err recieved aft3er submiting photos')
-		});
+
+	public onSubmitPhotos (indexId:number, albumId:string):Observable<any> {
+		console.log('onSubmitPhotos--------------START----------------:indexId=', indexId);
+
+		return new Observable((observer:any) => {
+			if (!indexId) {
+	            indexId = 0;
+	        }
+
+	        if (this.fbCollection.photos[indexId]) {
+	            this.message = 'In Progress.....';
+
+	            let photoModel:PhotoModel = this.fbCollection.photos[indexId];	 			
+	 			console.log('onSubmitPhotos--------------in PROGRESS');	            
+	            console.log('onSubmitPhotos--------------in Observable');
+
+	            	this.submitPhoto(photoModel, albumId).subscribe(
+	            		(response:any) => {
+			                console.log('response---------------------DONE for:', indexId);
+			                indexId = indexId + 1;
+			                this.onSubmitPhotos(indexId, albumId).subscribe(
+			                	(response:any) => {
+					                console.log('response___________________________________', indexId);
+					                observer.next({success: response.success, data: response});
+				            	},
+			            		(err:any)=>{
+				            		console.log('response_______________________________r:', err);
+									observer.next({success: false, data: err});
+			                	});
+		            	},
+		            	(err:any)=>{
+		            		console.log('ERR---------------------DONE for:', err);
+							observer.next({success: false, data: err});
+	                });
+	        } else {
+	            this.message = 'POSTS UPDATE COMPLETE!!';
+	            console.log('NO MORE POST TO SUBMIT.....');            
+	            observer.next({success: true});
+	        }
+        });
 	}
 
 	public submitPhotos (collection:PhotoCollection):Observable<any> {
@@ -181,7 +253,21 @@ export class Photos {
 				});
 			}
 		});
-	}	
+	}
+
+	public submitPhoto (photoModel:PhotoModel, albumId:string):Observable<any> {
+		console.log('SUBMIT photoModel...', photoModel);
+		let photoCollection = new PhotoCollection(albumId);
+		photoCollection.photos.push(photoModel);
+
+		let url = ENV.HOST_API_URL + '/photos_post.php';
+		return this.apiService.post(url, photoCollection).flatMap((response:any) => {
+			console.log('eventModel POST response recieved....', response);
+			return new Observable((observer:any) => {
+                observer.next({ success: response.success, data: response});
+            });
+		});
+	}
 
 	public getPhotos (photoParams:PhotoParams, collection:Array<any>):Observable<any> {
 		console.log('getPhotos....called with photoParams:', photoParams, 'COLLETION:::', collection);
@@ -190,7 +276,9 @@ export class Photos {
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
         	console.log('Invalid Date range!!!!');
             this.message = 'Invalid Date range......';
-            return;
+            return new Observable((observer:any) => {
+                observer.next({success: false, data: this.message});
+            });
         }
 
         console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
@@ -257,7 +345,8 @@ export class Photos {
 		console.log('setLastEndTime', total);
 		if (total > 0) {
 			let lastModel = this.photoCollection.photos[0];
-			this.fromDate = lastModel.createdTime;
+			let fDate = moment(lastModel.createdTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
+			this.fromDate = fDate.format(ENV.DATE_TIME_FORMAT);
 		}
 	}
 

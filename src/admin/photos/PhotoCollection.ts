@@ -103,17 +103,13 @@ export class AlbumModel {
 
 export class AlbumCollection {
 
-    public albums:Array<AlbumModel> = [
-      {
-        "createdTime": "2012-03-23T06:05:36+0000",
-        "name": "Timeline Photos",
-        "id": "178838325568799"
-      },
-      {
+    public albums:Array<AlbumModel> = [    
+    {
         "createdTime": "2012-05-12T07:34:21+0000",
         "name": "Cover Photos",
         "id": "213393798779918"
       },
+
       {
         "createdTime": "2015-07-31T14:12:59+0000",
         "name": "Press & Media Coverage",
@@ -123,12 +119,7 @@ export class AlbumCollection {
         "createdTime": "2012-03-17T05:30:45+0000",
         "name": "Profile Pictures",
         "id": "175166482602650"
-      },
-      {
-        "createdTime": "2014-03-29T12:29:40+0000",
-        "name": "Mobile Uploads",
-        "id": "541765672609394"
-      },
+      },      
       {
         "createdTime": "2014-11-03T06:57:37+0000",
         "name": "Vimonisha Mega style souk at Hyatt on 17th 18th Dec 2014",
@@ -143,6 +134,16 @@ export class AlbumCollection {
         "createdTime": "2013-07-30T08:28:04+0000",
         "name": "Vimonisha - Past Exhibitions",
         "id": "416935778425718"
+      },
+      {
+        "createdTime": "2012-03-23T06:05:36+0000",
+        "name": "Timeline Photos",
+        "id": "178838325568799"
+      },
+      {
+        "createdTime": "2014-03-29T12:29:40+0000",
+        "name": "Mobile Uploads",
+        "id": "541765672609394"
       }
     ]
 }

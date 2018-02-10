@@ -21,6 +21,8 @@ export class Events {
 
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
 
+	//"https://graph.facebook.com/v2.12/VimonishaExhibitions?fields=events&since=1513866660&until=1518172140&access_token=EAACEdEose0cBAAnlvp6VktlaOAwjBvZAnRwooQBTGC4a2JBVzktfYd1NWIyeYLYWhF5tzQtN9gYgqFF8Uow7mKtbjOUkLTzD2jYQEX7ukAWjnaw9CLfJJCXTO9dZBCMZCHYKEysUZAuu0A77zMidDaZBp59gPoMX7ccdXDsdrL4EqEZCi7XNV7wQZBER9u1qQoZD"
+
 	public message:string = '';
 
 	public eventsCollection:EventsCollection = new EventsCollection();	
@@ -31,7 +33,7 @@ export class Events {
 
 	public fromDate: string = 'NONE';
 
-    public toDate: string = moment().format(ENV.DATE_TIME_FORMAT);
+    public toDate: string = moment().add(6, 'M').format(ENV.DATE_TIME_FORMAT);
 
     public fbEventsSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
@@ -113,12 +115,16 @@ export class Events {
         let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 
 		let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/events';
+		//let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID;
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
 		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
+		//fields=events&since=1513866660&until=1518172140
 		params.append('fields', eventParams.fields);
+		//params.append('fields', 'events');
+		//params.append('fields', 'events&since='+since+'&until='+until);
 		params.append('limit', eventParams.limit);
 		params.append('pretty', eventParams.pretty);
 
@@ -261,7 +267,8 @@ export class Events {
 		console.log('setLastEndTime', total);
 		if (total > 0) {
 			let lastModel = this.eventsCollection.events[0];
-			this.fromDate = lastModel.endTime;
+			let fDate = moment(lastModel.endTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
+			this.fromDate = fDate.format(ENV.DATE_TIME_FORMAT);
 		}
 	}
 

@@ -48,7 +48,7 @@ export class Home {
 
     public imageHostPath:string = ENV.HOST_URL;
 
-    public albumId:string = '178838325568799';
+    public albumId:string = '808322362620389';
 
     public hero:any =  { state: 'active' };
 

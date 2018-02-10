@@ -146,12 +146,65 @@ export class Posts {
         this.getPostsFromTable().subscribe();
     }
 
-    public onSubmitPosts () {
-        console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
-        this.submitPosts(this.fbCollection).subscribe(()=>{
+    public doSubmitPosts () {
+        console.log('SUBMIT doSubmitPosts...');
+        /*this.fbCollection = new PostCollection();
+        let postModel = new PostModel({
+            id: '111',
+            uid:'1129292', 
+            full_picture:'https://scontent-syd2-1.xx.fbcdn.net/v/t1.0-9/27657162_1539554446163840_8773820738982568241_n.jpg?oh=360b948fce071a8d4b24d2ca255558a3&oe=5B147CF8',
+            description: 'TEST DESC FOR 111',
+            createdTime: '2018-02-09T07:25:47+0000'
+        });
+        let postModel2 = new PostModel({
+            id: '222',
+            uid:'22222', 
+            full_picture:'https://scontent-syd2-1.xx.fbcdn.net/v/t1.0-9/27657162_1539554446163840_8773820738982568241_n.jpg?oh=360b948fce071a8d4b24d2ca255558a3&oe=5B147CF8',
+            description: 'TEST DESC FOR 22',
+            createdTime: '2018-03-09T07:25:47+0000'
+        });
+        let postModel3 = new PostModel({
+            id: '333',
+            uid:'33333', 
+            full_picture:'https://scontent-syd2-1.xx.fbcdn.net/v/t1.0-9/27657162_1539554446163840_8773820738982568241_n.jpg?oh=360b948fce071a8d4b24d2ca255558a3&oe=5B147CF8',
+            description: 'TEST DESC FOR 33',
+            createdTime: '2018-04-09T07:25:47+0000'
+        });
+        this.fbCollection.posts.push(postModel);
+        this.fbCollection.posts.push(postModel2);
+        this.fbCollection.posts.push(postModel3);*/
+
+        this.onSubmitPosts(0).subscribe((response:any)=>{
+            console.log('SUCCESS SUBMIT doSubmitPosts...');
             this.getPostsFromTable().subscribe();
         });
     }
+
+    public onSubmitPosts (indexId:number):Observable<any> {
+        console.log('SUBMIT onSubmitPosts...', indexId);
+        console.log('SUBMIT onSubmitPosts...', this.fbCollection);
+
+        if (!indexId) {
+            indexId = 0;
+        }
+
+        if (this.fbCollection.posts[indexId]) {
+            this.message = 'In Progress.....';
+            let postModel:PostModel = this.fbCollection.posts[indexId];
+            return this.addPostModel(postModel).flatMap((response:any) => {
+                console.log('response---------------------DONE for:', indexId);
+                indexId = indexId + 1;
+                return this.onSubmitPosts(indexId++);
+            })
+        } else {
+            this.message = 'POSTS COMPLETE!!';
+            console.log('NO MORE POST TO SUBMIT.....');            
+            return new Observable((observer:any) => {
+                observer.next({success: true});
+            });
+        }
+    }
+
 
     public submitPosts (collection:PostCollection):Observable<any> {
         console.log('SUBMIT postCollection...', collection);
@@ -169,12 +222,26 @@ export class Posts {
         });
     }
 
-    public addPostModel (postModel:PostModel) {
+    public onAddPostModel(postModel:PostModel) {
+        console.log('onAddPOstModel..............................');
+        this.addPostModel(postModel).subscribe(
+            (s:any)=>{ 
+                console.log('SUCCESS:add post Model');
+                 this.message = 'ADDED POST!';
+            },
+            (e:any)=>{ console.log('ERROR:add post Model') },
+            ()=>{console.log('COMPLETE:add post Model')}
+        );
+    }
+
+    public addPostModel (postModel:PostModel):Observable<any> {
         let postCollection = new PostCollection();
         postCollection.posts.push(postModel);
-        console.log('SUBMIT addEventModel...', postCollection);
-        this.submitPosts(postCollection).subscribe(()=>{
-            this.getPostsFromTable().subscribe();
+        console.log('SUBMIT addPostModel...', postCollection);
+        return this.submitPosts(postCollection).flatMap((resp:any)=>{
+            return new Observable((observer:any) => {
+                observer.next({success: true, data: resp});
+            });
         });
     }
 
@@ -219,7 +286,8 @@ export class Posts {
         console.log('setLastEndTime', total);
         if (total > 0) {
             let lastModel = this.postCollection.posts[0];
-            this.fromDate = lastModel.createdTime;
+            let fDate = moment(lastModel.createdTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
+            this.fromDate = fDate.format(ENV.DATE_TIME_FORMAT);
         }
     }
 

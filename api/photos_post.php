@@ -65,6 +65,7 @@ if (is_array($result['photos']) || is_object($result['photos'])) {
 		$results = mysql_query($sql);	
 		if (!$result) {
 			$photosArr[] = array('uid'=> false);
+			$isSuccess = false;
 		} else {
 			$photosArr[] = array('uid'=> $uid);
 		}
@@ -73,7 +74,7 @@ if (is_array($result['photos']) || is_object($result['photos'])) {
 }
 
 
-$successObj = array('success' => true, 'photos'=> $photosArr);
+$successObj = array('success' => $isSuccess, 'photos'=> $photosArr);
 print_r(json_encode($successObj));
 
 

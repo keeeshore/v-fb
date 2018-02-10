@@ -31,25 +31,46 @@ if (is_array($result['posts']) || is_object($result['posts'])) {
 		$uid = $value['id'];
 		$pictureSource = $IMG_POSTS_DIR.'/posts-default.jpg';
 
+		$getSql = "SELECT * FROM $DB_NAME.`posts` WHERE `posts`.`uid` = '$uid'";
+		$getResult = mysql_query($getSql);
 
 		
-		//print_r(json_encode($photosArr));
-
-
-		if ($value['fullPicture'] != '') {
-			$pictureSource = $IMG_POSTS_DIR.'/posts-'.$uid.'.jpg';			
-			if (file_exists($IMG_POSTS_DIR) || mkdir($IMG_POSTS_DIR , 0777)) {
-				saveImage($value['fullPicture'], $pictureSource);
+		if (mysql_affected_rows() != 0) {
+			
+			if ($value['fullPicture'] != '') {
+				$pictureSource = $IMG_POSTS_DIR.'/posts-'.$uid.'.jpg';			
+				if (file_exists($IMG_POSTS_DIR) || mkdir($IMG_POSTS_DIR , 0777)) {
+					saveImage($value['fullPicture'], $pictureSource);
+				}
 			}
-		}
+
+			$sql = "UPDATE $DB_NAME.`posts` SET `name` = '$name', `description` = '$description', `fullpicture` = '$pictureSource', `createdtime` = '$createdTime' WHERE `posts`.`uid` = '$uid' LIMIT 1";
+			
+			//$successObj = array('data' => mysql_affected_rows());
+			$results = mysql_query($sql);
+
+
+		} else {
+
+			if ($value['fullPicture'] != '') {
+				$pictureSource = $IMG_POSTS_DIR.'/posts-'.$uid.'.jpg';			
+				if (file_exists($IMG_POSTS_DIR) || mkdir($IMG_POSTS_DIR , 0777)) {
+					saveImage($value['fullPicture'], $pictureSource);
+				}
+			}
+
+			$sql = "INSERT INTO $DB_NAME.`posts` (`id`, `name`, `description`, `fullpicture`, `uid`, `createdtime`) VALUES ('', '$name', '$description', '$pictureSource', '$uid', '$createdTime')";
+
+			//$photosArr[] = array('name'=> $name, 'fullpicture'=> $pictureSource, 'uid'=> $uid, 'createdtime'=> $createdTime);
+			//$photosArr[] = array('sql' => $sql);
+
+			//$successObj = array('data' => mysql_affected_rows());
+			$results = mysql_query($sql);
+
+
+		}		
 		
-		$sql = "INSERT INTO $DB_NAME.`posts` (`id`, `name`, `description`, `fullpicture`, `uid`, `createdtime`) VALUES ('', '$name', '$description', '$pictureSource', '$uid', '$createdTime')";
-
-
-		//$photosArr[] = array('name'=> $name, 'fullpicture'=> $pictureSource, 'uid'=> $uid, 'createdtime'=> $createdTime);
-		//$photosArr[] = array('sql' => $sql);
-
-		$results = mysql_query($sql);	
+			
 		if (!$results) {
 			$postsArr[] = array('success'=> false, 'name'=> $name, 'fullpicture'=> $pictureSource, 'uid'=> $uid, 'createdtime'=> $createdTime);
 			//print_r('NO success');

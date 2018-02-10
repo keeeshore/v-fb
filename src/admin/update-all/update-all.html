@@ -1,4 +1,5 @@
 <section class="container">
+    
     <div class="row">
         <form class="form-horizontal">
             <div class="form-group">
@@ -20,46 +21,37 @@
                     <input type="button" class="btn btn-md btn-warning" value="Update All" (click)="update()">
                 </div>
             </div>
-            <div class="form-group">
-                
-            </div>
+            <div class="form-group"></div>
         </form>
     </div>
 
     <div class="row">
-        <h3 class="text-danger">
-            <div class="col-sm-1">Events</div>
-            <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="events.fromDate" name="fromDate">
-            <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="events.toDate" name="toDate">
-            <input type="button" class="" value="Update Events" (click)="updateEvents()">
-            <div style="clear: both;"></div>
-        </h3>
+        <div class="col-sm-1">Events</div>
+        <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="events.fromDate" name="fromDate">
+        <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="events.toDate" name="toDate">
+        <input type="button" class="" value="Update Events" (click)="updateEvents()">
+        <div style="clear: both;"></div>
         <pre>{{eventsLog}}</pre>
     </div>
 
     <div class="row">
-        <h3 class="text-danger">
-            <div class="col-sm-1">Posts</div>
-            <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="posts.fromDate" name="fromDate">
-            <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="posts.toDate" name="toDate">
-            <input type="button" class="" value="Update Posts" (click)="updatePosts()">
-            <div style="clear: both;"></div>
-        </h3>
+        <div class="col-sm-1">Posts</div>
+        <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="posts.fromDate" name="fromDate">
+        <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="posts.toDate" name="toDate">
+        <input type="button" class="" value="Update Posts" (click)="updatePosts()">
+        <div style="clear: both;"></div>
         <pre>{{postsLog}}</pre>
     </div>
 
-
-    <ul class="row">
-      <li *ngFor="let photos of galleries; index as i;">
-         <h3 class="text-danger">
-            <div class="col-sm-6">Galleries:{{i}}:{{photos.albumName}}</div>
-            <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="photos.fromDate" name="fromDate">
-            <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="photos.toDate" name="toDate">
-            <input type="button" class="" value="Update Photos" (click)="updateGallery(galleries[i])">
-            <div style="clear: both;"></div>
-        </h3>              
-      </li>
-      <pre>{{photosLog}}</pre>    
-    </ul>
+    <h3>Galleries</h3>
+    <div class="row" *ngFor="let photos of galleries; index as i;">
+        <div class="col-sm-5">{{i}} . {{photos.albumName}}</div>
+        <div class="col-sm-1">({{photos.photoCollection.photos.length}})</div>
+        <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="photos.fromDate" name="fromDate">
+        <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="photos.toDate" name="toDate">
+        <input type="button" class="col-sm-2" value="Update Photos" (click)="updateGallery(galleries[i])">
+        <div style="clear: both;"></div>        
+    </div>
+    <pre>{{photosLog}}</pre>
 
 </section>

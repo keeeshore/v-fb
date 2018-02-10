@@ -35,21 +35,51 @@ if (is_array($result['events']) || is_object($result['events'])) {
 		$uid = $value['id'];
 		$eventImgName = $IMG_EVENTS_DIR.'/default.jpg';
 
-		if ($value['cover'] && $value['cover']['source'] !== '') {
-			$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
-			if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
-				saveImage($value['cover']['source'], $eventImgName);
-			}
-		}
-		
-		$sql = "INSERT INTO $DB_NAME.`events` (`id`, `name`, `description`, `starttime`, `endtime`, `cover`, `uid`) VALUES ('', '$name', '$description', '$startTime', '$endTime', '$eventImgName', '$uid')";
 
-		$results = mysql_query($sql);	
-		if (!$result) {
+		$getSql = "SELECT * FROM `events` WHERE `events`.`uid` = '$uid'";
+		
+		$getResult = mysql_query($getSql);
+
+		if (mysql_affected_rows() != 0) {
+
+			
+			if ($value['cover'] && $value['cover']['source'] !== '') {
+				$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
+				if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
+					saveImage($value['cover']['source'], $eventImgName);
+				}
+			}
+
+			$sql = "UPDATE $DB_NAME.`events` SET `uid` = '$uid',`name` = '$name',`description` = '$description',`starttime` = '$startTime', `endtime` = '$endTime', `cover` = '$eventImgName' WHERE `events`.`uid` ='$uid' LIMIT 1";
+			
+			//$successObj = array('data' => mysql_affected_rows());
+			$results = mysql_query($sql);
+
+
+		} else {
+
+			if ($value['cover'] && $value['cover']['source'] !== '') {
+				$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
+				if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
+					saveImage($value['cover']['source'], $eventImgName);
+				}
+			}
+		
+			$sql = "INSERT INTO $DB_NAME.`events` (`id`, `name`, `description`, `starttime`, `endtime`, `cover`, `uid`) VALUES ('', '$name', '$description', '$startTime', '$endTime', '$eventImgName', '$uid')";
+
+			//$successObj = array('sql' => $sql);
+			$results = mysql_query($sql);
+
+		}
+
+			
+		if (!$results) {
 			$eventsArr[] = array('uid'=> false);
 		} else {
 			$eventsArr[] = array('uid'=> $name);
 		}
+
+
 		//print_r($sql);
 		//header('Location:events_get.php');
 	}
