@@ -70,10 +70,12 @@ export class Exhibition implements AfterViewInit {
 	    		console.log('ngOnInit::id:',params['id']);
 	    	}
 	    });*/
+
 		this.detailSlider = this.sliders.first;
 		this.detailSlider.sliderSubject.subscribe((stateIndex:State) => {
 				console.log('detailSlider observer', State[stateIndex]);
 				if ('CLOSE' === State[stateIndex].toString()) {
+
 					this.route.navigate(['/shows'], {});
 				}
 			},
@@ -83,8 +85,10 @@ export class Exhibition implements AfterViewInit {
 
 	    this.router.queryParams.subscribe((params:any) =>{ 
 	       console.log('ngOnInit::val------------------:', params);
+
 	       	if (!isNaN(params.id)) {
 	       		console.log('ngOnInit::val------------------:Valid param id', params);
+	       		this.eventsCollection = new EventsCollection();
 	       		this.getExhibitionsFromTable().subscribe((events:EventsCollection)=>{
 	       			console.log('getExhibitionsFromTable::subscribe:::', events);
 	       			this.showEventDescription(params.id);
@@ -92,7 +96,7 @@ export class Exhibition implements AfterViewInit {
 	       	}
 	    });
 
-		this.getExhibitionsFromTable();
+		this.getExhibitionsFromTable().subscribe();
   	}
 
   	public showDetails():void {

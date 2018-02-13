@@ -94,8 +94,8 @@ export class UpdateAll {
 		this.clearLog('events');
 		this.clearLog('posts');
 		this.clearLog('photos');
-		//this.updateEvents();
-		//this.updatePosts();
+		this.updateEvents();
+		this.updatePosts();
 		this.logInfo('photos', '____________________UPDATE GALLERIES START______________________TOTAL:' + this.galleries.length);
 		this.updateGalleries(0);
 

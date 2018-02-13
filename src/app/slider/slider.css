@@ -30,4 +30,7 @@
     padding: 15px;
     cursor: pointer;
     background: #CCC;
+    border: 2px solid #FFF;
+    color: #CC0000;
+    box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.8);
 }

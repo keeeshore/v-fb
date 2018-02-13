@@ -1,7 +1,13 @@
 #exhibition-container {
-	background: #3d83a7;
 	overflow: auto;
+	background: url('public/images/page-bg-gold.jpg');
+	background-attachment: fixed;
+	background-repeat: repeat-y;
+	background-position: center;
+	background-size: 100%;
 }
+
+
 
 h3 {
 	color: #FFF;
@@ -11,8 +17,6 @@ h3 {
 	margin: 0px;
 	padding: 10px 0px;
 }
-
-
 
 
 .exhibition-list h2 {
@@ -40,8 +44,10 @@ h3 {
     margin: 0px 10px;
     font-size: 12px;
     text-align: center;
+    box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.2);
 }
 
 .exhibition-pic {
-	margin-left: 13px;
+	/*margin-left: 13px;*/
+	box-shadow: 2px 2px 5px 0px rgba(0,0,0, 0.5);
 }

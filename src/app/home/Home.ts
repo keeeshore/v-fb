@@ -101,10 +101,14 @@ export class Home {
 					response.photos.filter((photo:any) => {
 						let photoModel:PhotoModel = new PhotoModel(photo);
 						this.photoCollection.photos.push(photoModel);
+												
 					});
-					window.setTimeout(function () {
-						//self.startAutoPlay();
-					}, 5000);
+					window.setTimeout(function () {						
+						this.carouselComponents.first.setActiveIndex(0);
+					}.bind(this), 200);
+					window.setTimeout(function () {						
+						self.startAutoPlay();
+					}, 3500);
 				}
 			},
 			(err) => { 

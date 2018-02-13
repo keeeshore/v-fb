@@ -6,16 +6,19 @@
 
 			<div class="col-sm-6" id="main-left"  [ngStyle]="{ 'height': viewPortHeight }">
 				<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
-				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="0">
+				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="1">
 
 						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
-						(onItemInit)="onItemLoaded()" active="{{myIndex === 0}}" >
+						(onItemInit)="onItemLoaded()">
 
 							<div class="photo-model-container text-center" >
 								<!-- <h2>{{photoModel.name}} </h2>
 								<p>{{photoModel.description}} </p> -->
 								<!-- <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" [ngStyle]="{ 'height': viewPortHeight }" /> -->
-								<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
+								<a [routerLink]="['/press']">
+									<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
+								</a>
+								
 							</div>
 
 						</carousel-item>
@@ -36,7 +39,11 @@
 								<div class="date-cover date-from">{{getDate(eventModel.startTime)}}</div>
 								<div class="date-cover date-to">{{getDate(eventModel.endTime)}}</div>
 								<div *ngIf="isUpcomingEvent(eventModel.startTime)">
-									<input type="button" class="btn btn-xs event-btn" value="Book Now" />
+									<!-- <input type="button" class="btn btn-xs event-btn" value="Book Now" /> -->
+									<a class="btn btn-xs btn-click" style="margin: 10px 0px;" 
+										[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
+									</a>
+
 								</div>
 								<a class="btn btn-xs btn-click" 
 									[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
@@ -53,6 +60,32 @@
 
 </div>
 <about-component></about-component>
+
+
+<!-- <div style="width: 800px; margin: 0px auto;">
+			<carousel-component id="home-photo-component" uid="photo-component" activeIndex="0">
+
+				<carousel-item>
+					<div style="background: green; height: 50px;">
+						ITEM 1
+					</div>
+				</carousel-item>
+
+				<carousel-item >
+					<div style="background: yellow; height: 60px;">
+						ITEM 2
+					</div>
+				</carousel-item>
+
+				<carousel-item >
+					<div style="background: orange; height: 70px;">
+						ITEM 3
+					</div>
+				</carousel-item>
+
+			</carousel-component>
+</div> -->
+
 
 	
 

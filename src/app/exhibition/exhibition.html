@@ -12,7 +12,7 @@
 		<div class="container">
 			<div class="row exhibition">
 				<div class="col-sm-4">
-					<img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+					<img class="img img-responsive exhibition-pic " src="{{imageHostPath}}/{{eventModel.cover.source}}" />
 				</div>
 				<div class="col-sm-8"> 
 					<h2>{{eventModel.name}}</h2>
@@ -30,14 +30,17 @@
 								<!-- <input type="button" class="btn btn-xs btn-click" value="View Details" (click)="showEventDescription(eventModel)" /> -->
 								<!-- <a class="btn btn-sm btn-click" href="/shows#{{eventModel.id}}">View Details</a>
 								<a class="btn btn-sm btn-click" [routerLink]="['/shows', eventModel.id]">View Details</a> -->
+								<a *ngIf="isUpcomingEvent(eventModel.startTime)"class="btn btn-xs btn-click" 
+										[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
+									</a>
 								<a class="btn btn-sm btn-click" [routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">View Details</a>
 							</p>
 						</div>
 					</div>
 					
-					<div class="row" *ngIf="isUpcomingEvent(eventModel.startTime)">
+					<!-- <div class="row" *ngIf="isUpcomingEvent(eventModel.startTime)">
 						<input type="button" class="btn btn-xs btn-click" value="Book Now" />
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -46,8 +49,9 @@
 <slider direction="UP">
 	<div class="container">
 		<div class="row">
+			
 			<div class="col-sm-12">
-				<h4 style="color: red;">{{selectedModel.name}}</h4>
+				<h3  style="color: red;">{{selectedModel.name}}</h3>
 				<p class="lead">{{selectedModel.description}}</p>
 				<p class="lead text-center"></p>
 			</div>
@@ -58,7 +62,9 @@
 				<img class="img img-responsive" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
 			</div>
 			<div class="col-sm-6 flex-column text-center">
-				<a class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ name: selectedModel.name }">Register Now</a>
+				<a class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ name: selectedModel.name }">
+					Register Now
+				</a>
 			</div>
 		</div>
 	</div>	

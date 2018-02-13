@@ -18,6 +18,10 @@
 	height: auto;
 }
 
+#main-header {
+	border: none;
+}
+
 #main-header .menu-bg {
 	background: #FFF;
 	opacity: 0.5;
@@ -39,6 +43,13 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-size: 90%;
+}
+
+#main-header .navbar-nav li a:hover{
+	background-color: #CCC;
+}
+#main-header .navbar-nav li a:active{
+	background-color: red;
 }
 
 

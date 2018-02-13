@@ -1,6 +1,24 @@
 #about-us-container {
 	background: #FFF;
+	color: #FFF;
+	/*background: url('public/images/page-bg-gold.jpg');*/
 }
 .view-details-btn {
 	margin: 20px 0px 50px 0px;
+}
+
+.vimonisha-page-bg {
+	background: url('public/images/vimonisha-bg-main-1.jpg');
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100%;
+}
+
+.vimonisha-bg {
+	padding-top: 20px;
+	background: url('public/images/vimonisha-bg-1.jpg');
+	background-color: #b79886;
+	background-repeat: no-repeat;
+	background-size: 100%;
 }

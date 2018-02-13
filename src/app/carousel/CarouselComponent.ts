@@ -27,6 +27,8 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
 
     private count:number = 0;
 
+    public activeIndex:number = 0;
+
     @ContentChildren(CarouselItem) carouselItems:QueryList<CarouselItem> = new QueryList<CarouselItem>();
 
     //public observableItems: Observable<QueryList<CarouselItem>>;
@@ -42,7 +44,24 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     ngOnInit () {
-       //console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
+       console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
+        this.carouselSubscription = this.carouselService.onEventBroadcast().subscribe(
+            (carouselEvent:CarouselEvent) => {
+                console.log('onEventBroadcast------------------------------------------------------ items.length:', this.carouselItems.length);
+                let items:Array<CarouselItem> = this.carouselItems.toArray();
+                if (items[this.activeIndex]) {
+                    console.log('CarouselComponent:::>activeIndex=setActive()', items[this.activeIndex]);
+                    items[this.activeIndex].setActive(true, 'left');
+                }
+            },
+            e => console.log('onError: carouselItems %s', e),
+            () => console.log('onCompleted carouselItems')
+        );
+        this.carouselItems.changes.subscribe(
+            (x) => console.log('CarouselComponent::items changed:------- %s', x, 'items= ', this.carouselItems.length),
+            (e) => console.log('onError: carouselItems %s', e),
+            () => console.log('onCompleted carouselItems')
+        );
     }
 
     ngOnChanges (changes: SimpleChanges) {
@@ -54,28 +73,24 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     ngAfterContentChecked () {
-        //console.log('CarouselComponent::ngAfterContentChecked::>uid=', this.uid, 'items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngAfterContentChecked::>items= ', this.carouselItems.length);
+        //console.log('CarouselComponent::ngAfterContentChecked::>activeIndex= ', this.activeIndex);
+
     }
 
     ngAfterViewInit () {
-        //console.log('CarouselComponent::ngAfterViewInit::>uid=', this.uid);
-        var self = this;
-        this.carouselSubscription = this.carouselService.onEventBroadcast().subscribe(
-            (carouselEvent:CarouselEvent) => {
-                //console.log('onNext------------------------------------------------------ items.length:', self.carouselItems.length);
-                if (carouselEvent.isActive) {
-                    self.currIndex = self.count;
-                }
-                self.count++;
-            },
-            e => console.log('onError: carouselItems %s', e),
-            () => console.log('onCompleted carouselItems')
-        );
-        this.carouselItems.changes.subscribe(
-            (x) => console.log('CarouselComponent::items changed:------- %s', x, 'items= ', self.carouselItems.length),
-            (e) => console.log('onError: carouselItems %s', e),
-            () => console.log('onCompleted carouselItems')
-        );
+        console.log('CarouselComponent::ngAfterViewInit::>carouselItems=',  this.carouselItems.length);
+        let items:Array<CarouselItem> = this.carouselItems.toArray();
+        /*if (items[this.activeIndex]) {
+            console.log('CarouselComponent::ngAfterContentChecked::>activeIndex=setActive()', items[this.activeIndex]);
+            items[this.activeIndex].setActive(true, 'left');
+        }*/
+        /*let items:Array<CarouselItem> = this.carouselItems.toArray();
+        if (this.activeIndex && items[this.activeIndex]) {
+            items[this.activeIndex].setActive(true, 'left');
+        }*/
+
+        
     }
 
     ngOnDestroy () {
@@ -107,12 +122,25 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     public next () {
-       // console.log('next called...' + this.carouselItems.length , ', currIndex=' + this.currIndex);
+       
         let total:number = this.carouselItems.length;
+        let items:Array<CarouselItem> = this.carouselItems.toArray();
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
 
-        this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
+        console.log('next called...currIndex =' + currIndex , ', newIndex=' + newIndex);
+
+        if (newIndex > currIndex) {
+            items[currIndex].setActive(false, 'right');
+            items[newIndex].setActive(true, 'right');
+            this.currIndex = newIndex;
+        } else if (newIndex < currIndex) {
+            items[currIndex].setActive(false, 'right');
+            items[newIndex].setActive(true, 'right');
+            this.currIndex = newIndex;
+        }        
+
+        /*this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
             if (indexId === currIndex) {
                 //console.log('setting item:', indexId,'to false');
                 item.setActive(false, 'left', 'NEXT');
@@ -121,7 +149,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
                 //console.log('setting item:', indexId,'to true');
                 item.setActive(true,  'right', 'NEXT');
             }
-        });
+        });*/
         this.currIndex = newIndex;
     }
 
@@ -129,20 +157,33 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         //console.log('prev called...');
         let total:number = this.carouselItems.length;
         let currIndex:number = this.currIndex;
+        let items:Array<CarouselItem> = this.carouselItems.toArray();
         let newIndex:number = currIndex - 1 < 0 ? total - 1 : currIndex - 1;
 
 
-        this.carouselItems.forEach((item:CarouselItem, indexId:number)=>{
-            if (indexId === currIndex) {
-                //console.log('setting item:', indexId, 'to false');
-                item.setActive(false, 'right', 'PREV');
-            }
-            if (indexId === newIndex) {
-                //console.log('setting item:', indexId,'to true');
-                item.setActive(true,  'left', 'PREV');
-            }
-        });
+        if (newIndex > currIndex) {
+            items[currIndex].setActive(false, 'left');
+            items[newIndex].setActive(true, 'left');
+            this.currIndex = newIndex;
+        } else if (newIndex < currIndex) {
+            items[currIndex].setActive(false, 'left');
+            items[newIndex].setActive(true, 'left');
+            this.currIndex = newIndex;
+        }  
         this.currIndex = newIndex;
+    }
+
+    public setActiveIndex (indexId:number) {
+        this.activeIndex = indexId;
+        let items:Array<CarouselItem> = this.carouselItems.toArray();
+        let currIndex = this.currIndex;
+
+        if (items[indexId] && items[this.currIndex]) {
+            items[currIndex].setActive(false, 'left');
+            items[indexId].setActive(true, 'left');
+        }
+
+        this.currIndex = indexId;
     }
 
 }

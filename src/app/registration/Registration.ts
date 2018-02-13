@@ -81,7 +81,8 @@ export class Registration implements AfterViewInit {
 
   	public onFormSubmit(): void {
 		console.log('Registration onFormSubmit:');
-		let url = ENV.HOST_API_URL + 'registration.php';
+		let url_back = ENV.HOST_API_URL + 'registration.php';
+		let url = 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/contact';
 		let elem:any = document.getElementById('g-recaptcha-response');
 		let error = false;
 		let errors = [];

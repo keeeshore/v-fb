@@ -11,7 +11,7 @@ body {
 .photo-container li {
 	position: relative;
 	vertical-align: top;
-	width: 25%;
+	width: 19%;
 	height: 300px;
 	overflow: hidden;
 	border: 1px solid #CCC;
@@ -126,7 +126,8 @@ h2::after {
 	height: 100px;
 	overflow: hidden;
 	text-align: center;
-	margin: 30px auto;
+	margin: 0px;
+	padding: 0px;
 	border-bottom: 1px solid #CCC;
 }
 
@@ -138,6 +139,7 @@ h2::after {
     font-size: 16px;
     border-radius: 19px;
     font-weight: bold;
+    min-width: 120px;
 }
 
 

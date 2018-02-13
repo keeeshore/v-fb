@@ -45,10 +45,15 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active">
+        <li>
           <a [routerLink]="['/home']">Home <span class="sr-only">(current)</span></a>
         </li>
 
+        <li>
+          <!-- <a [routerLink]="[{ outlets: { pp: ['about'] } }]" >About -1  </a> -->
+          <!-- <a [routerLink]="['/about']">About</a> -->
+          <a [routerLink]="['/about']">About</a>
+        </li>
         
 
         <li><a [routerLink]="['/shows']">Exhibitions</a></li>
@@ -56,14 +61,8 @@
         <li><a [routerLink]="['/press']">Press Release</a></li>
 
         <li><a [routerLink]="['/gallery']">Gallery</a></li>
-        
-
          
-        <li>
-          <!-- <a [routerLink]="[{ outlets: { pp: ['about'] } }]" >About -1  </a> -->
-          <!-- <a [routerLink]="['/about']">About</a> -->
-          <a [routerLink]="['/about']">About</a>
-        </li>
+       
 
         <!-- <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
