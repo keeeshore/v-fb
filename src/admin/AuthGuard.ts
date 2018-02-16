@@ -60,8 +60,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 	}
 
 	public reset():void {
+		console.log('AuthGuard#reset before: ', this.isLoggedIn);
 		this.isLoggedIn = false;
 		document.cookie = this.loggedInCookieStr + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		console.log('AuthGuard#reset after: ', this.isLoggedIn);
 	}
 
 	public getCookie(cname:string):string {

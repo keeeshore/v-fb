@@ -87,7 +87,7 @@ export class Registration implements AfterViewInit {
 		let error = false;
 		let errors = [];
 		let hasErrorClass = 'has-error';
-		let mandatoryFields = [ 'name', 'phone', 'email', 'comments'];
+		let mandatoryFields = ['name', 'phone', 'email', 'comments'];
 		let self = this;
 
 		this.recaptha = elem.value;
@@ -108,8 +108,22 @@ export class Registration implements AfterViewInit {
 				console.log( fieldName, ':fieldName: has error');
 				error = true;
 				self[fieldName + 'Error'] = 'has-error';
-			}
+			}			
 		});
+
+		if (data.email !== '') {
+			if (!this.validateEmail(data.email)) {
+				this.emailError = 'has-error';
+				error = true;
+			}
+		}
+
+		if (data.phone !== '') {
+			if (!(data.phone.toString().match(/\d/g).length===10)) {
+				this.phoneError = 'has-error';
+				error = true;
+			}
+		}
 
 		if (!error) {
 			this.msg = '';
@@ -122,11 +136,16 @@ export class Registration implements AfterViewInit {
 				}
 			});
 		} else {
-			console.log('all fields are mandatory');
+			console.log('Missing or Invalid fields');
 			this.msg = this._ERROR_MSG;
 		}
 		
   	}
+
+  	public validateEmail(email:any) {
+	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	    return re.test(String(email).toLowerCase());
+	}
 
   	
 

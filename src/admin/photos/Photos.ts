@@ -145,7 +145,7 @@ export class Photos {
 
 
 	public getPhotosFromTable (albumId:string):Observable<any> {
-		console.log('getEventsFromTable...');
+		console.log('getPhotosFromTable...');
 		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
 		this.photoCollection.photos = new Array<PhotoModel>();
 		return this.apiService.fetch(url).flatMap(

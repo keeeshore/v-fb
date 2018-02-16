@@ -49,7 +49,7 @@
         <div class="col-sm-1">({{photos.photoCollection.photos.length}})</div>
         <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="photos.fromDate" name="fromDate">
         <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="photos.toDate" name="toDate">
-        <input type="button" class="col-sm-2" value="Update Photos" (click)="updateGallery(galleries[i])">
+        <input type="button" class="col-sm-2" value="Update Photos" (click)="onUpdateGallery(i)">
         <div style="clear: both;"></div>        
     </div>
     <pre>{{photosLog}}</pre>

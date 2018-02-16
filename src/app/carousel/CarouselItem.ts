@@ -78,12 +78,12 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
 
     setActive (active:boolean, startPos:string) {
         this.isActive = active;
-        console.log('setActive >>>>>>> ', active , ' : startPos >>>>>> ', startPos);
+        //console.log('setActive >>>>>>> ', active , ' : startPos >>>>>> ', startPos);
         this.startPos = startPos;
         ///console.log('setActive >>>>>>> ', active , ' : startPos >', startPos);
 
         if (this.isActive) {
-            console.log('ACTIVE: moving new elems state from -> ', this.state, ' : to -> active');        
+            //console.log('ACTIVE: moving new elems state from -> ', this.state, ' : to -> active');        
             this.state = 'active';            
         } else {
             //console.log('NOT ACTIVE: moving current elems state from -> ', this.state, ' : to -> ', startPos);
@@ -92,7 +92,7 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     }
 
     public animationStarted(event:Event) {
-        console.log('animation START for', this.state);
+       // console.log('animation START for', this.state);
         /*if (this.state !== 'active') {
             console.log('animation START setting startPos to show');
             this.startPos = 'show';
@@ -100,9 +100,9 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
     }
 
     public animationDone(event:Event) {
-        console.log('animation END for', this.state);
+       // console.log('animation END for', this.state);
         if (this.state !== 'active') {
-            console.log('animation END setting startPos to none');
+           // console.log('animation END setting startPos to none');
             this.startPos = 'none';
             //this.state = ''
         } else {

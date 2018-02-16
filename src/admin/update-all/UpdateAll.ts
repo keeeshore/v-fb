@@ -229,6 +229,20 @@ export class UpdateAll {
 		});
 	}
 
+	public onUpdateGallery (indexId:number):void {
+
+		this.updateGallery(indexId).subscribe(
+  			(response:any) => {
+  				console.log('SUCCESS>>>>>>>>>>>>>>>.Response:::::::::;;;', response); 				
+  				this.logInfo('photos', '____________________UPDATE GALLERIES COMPLETE________________________');
+  			},
+  			(err:any) => {
+  				this.logInfo('photos', '____________________UPDATE GALLERIES ERR________________________' + JSON.stringify(err));
+  				console.log('ERR.>>>>>>>>>>>>>>>>>>.Response:::::::::;;;', err);
+  			}
+  		);
+	}
+
 
 	public updateGalleries (indexId:number):void {
 
@@ -239,11 +253,12 @@ export class UpdateAll {
   				if (this.galleries[indexId]) {
   					this.updateGalleries(indexId);
   				} else {
-  					this.logInfo('photos', '____________________UPDATE GALLERIES COMPLETE________________________TOTAL:' + indexId);
+  					this.logInfo('photos', '____________________UPDATE GALLERIES COMPLETE________________________');
   				}
   			},
   			(err:any) => {
   				console.log('ERR.>>>>>>>>>>>>>>>>>>.Response:::::::::;;;', err);
+  				this.logInfo('photos', '____________________UPDATE GALLERIES ERR________________________' + JSON.stringify(err));
   			}
   		);
 	}
@@ -265,6 +280,7 @@ export class UpdateAll {
 		let photoParams:PhotoParams = new PhotoParams(albumId);
 		let photoLogName = albumId + 'Log';
 		photos.photoParams = photoParams;
+		photos.fbCollection.photos = new Array<PhotoModel>();
 
 		photos.accessToken = this.accessToken;
 

@@ -44,10 +44,10 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     ngOnInit () {
-       console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
+       //console.log('CarouselComponent::ngOnInit::>uid=', this.uid, 'items= ', this.carouselItems.length);
         this.carouselSubscription = this.carouselService.onEventBroadcast().subscribe(
             (carouselEvent:CarouselEvent) => {
-                console.log('onEventBroadcast------------------------------------------------------ items.length:', this.carouselItems.length);
+                //console.log('onEventBroadcast------------------------------------------------------ items.length:', this.carouselItems.length);
                 let items:Array<CarouselItem> = this.carouselItems.toArray();
                 if (items[this.activeIndex]) {
                     console.log('CarouselComponent:::>activeIndex=setActive()', items[this.activeIndex]);
@@ -79,7 +79,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
     }
 
     ngAfterViewInit () {
-        console.log('CarouselComponent::ngAfterViewInit::>carouselItems=',  this.carouselItems.length);
+        //console.log('CarouselComponent::ngAfterViewInit::>carouselItems=',  this.carouselItems.length);
         let items:Array<CarouselItem> = this.carouselItems.toArray();
         /*if (items[this.activeIndex]) {
             console.log('CarouselComponent::ngAfterContentChecked::>activeIndex=setActive()', items[this.activeIndex]);
@@ -128,7 +128,7 @@ export class CarouselComponent implements OnInit, OnChanges, AfterContentChecked
         let currIndex:number = this.currIndex;
         let newIndex:number = currIndex + 1 >= total ? 0 : currIndex + 1;
 
-        console.log('next called...currIndex =' + currIndex , ', newIndex=' + newIndex);
+        //console.log('next called...currIndex =' + currIndex , ', newIndex=' + newIndex);
 
         if (newIndex > currIndex) {
             items[currIndex].setActive(false, 'right');
