@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
 		if  (!this.isLoggedIn) {
 			console.log('canActivateChild state url is not /admin-> navigate to admin');
-			this.router.navigate(['/admin']);			
+			this.router.navigate(['/admin']);
 		}
 		return this.isLoggedIn;	
 	}

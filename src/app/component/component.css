@@ -1,1 +1,12 @@
+/*#main-content {
+    margin: 0px;
+    padding: 0px;
+}
 
+@media (max-width: 768px) {
+
+	#main-content {
+		padding-top: 50px;
+	}
+
+}*/

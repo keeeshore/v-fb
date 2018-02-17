@@ -1,27 +1,26 @@
 .slider-container {
 	position: fixed;
 	display: block;
-	overflow: hidden;
 	z-index: 10;
 	background: #FFF;
-	padding-top: 50px;
-	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	width: auto;
 }
 
 .slider-container .slider-content {
+	display: block;
 	overflow-y: scroll;
-	padding-bottom: 50px;
+	position: relative;
 	height: 100%;
-	overflow-x: hidden;
 }
 
 .slider-container .close-btn-container {
-	position: absolute;
-    bottom: 0px;
+	position: fixed;
     text-align: center;
-    width: 100%;
-    padding: 10px;
-    overflow: hidden;
+    left: 0px;
+    right: 0px;
+    bottom: 10px;
 }
 
 .slider-container .close-btn {
@@ -30,7 +29,13 @@
     padding: 15px;
     cursor: pointer;
     background: #CCC;
-    border: 2px solid #FFF;
     color: #CC0000;
     box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.8);
+    border: 1px solid #FFF;
+}
+
+@media (min-width: 768px) {
+	.slider-container .close-btn-container { 
+	    left: 190px;
+	}
 }

@@ -1,6 +1,14 @@
-#about-us-container {
+#contact-container {
 	background: #FFF;
 }
-.view-details-btn {
-	margin: 20px 0px 50px 0px;
+.highlight {
+	margin: 0px;
+    padding: 0px;
+    font-size: 25px;
+    color: gold;
+    font-weight: bold;
+}
+
+.exbs {
+	color: #a7932a;
 }

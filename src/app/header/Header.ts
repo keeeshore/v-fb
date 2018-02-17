@@ -22,10 +22,24 @@ export class MainHeader {
 
     public imageHostPath:string = ENV.HOST_API_URL;
 
+    isMenuActive:boolean = false;
+
+    activeClass:string = '';
+
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('<home-header> component init');
 	}
 
 	public ngOnInit(): void {}
+
+	setActive (active:boolean):void {
+		this.activeClass = active ? 'active' : '';
+	}
+
+	toggleMenu ():void {
+      this.isMenuActive = !this.isMenuActive;
+      this.setActive(this.isMenuActive);
+    }
+
 
 }

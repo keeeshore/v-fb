@@ -1,6 +1,6 @@
 
 #gallery-container {
-	margin: 20px 0px 50px 0px;
+	
 }
 
 #gallery-container dialog-component .modal-dialog.open .modal-container .model-content {
@@ -14,28 +14,31 @@ ul.album-container {
     padding: 0px;
 }
 
+
+ul.album-container {
+    margin: 56px auto;
+}
+
 ul.album-main-container li {
-	width: 15%;
+    width: 45%;
     margin: 5px;
     padding: 0px;
+    height: 200px;
+    border: 1px solid #CCC;
     vertical-align: top;
     cursor: pointer;
-    height: 200px;
-    border: 1px solid #f1dfae;
     overflow: hidden;
 }
 
 ul.album-container li {
-	width: 15%;
-    height: 118px;
+    width: 50%;
+    height: 200px;
     margin: 0px;
     padding: 0px;
     overflow: hidden;
     vertical-align: middle;
     cursor: pointer;
 }
-
-
 
 ul.album-container li {
     background: rgba(255,250,255,1);
@@ -81,21 +84,27 @@ h4.gallery-name {
 }
 
 
-@media screen and (max-width: 768px) {
-    
-    ul.album-main-container li {
-        width: 45%;
-        margin: 5px;
-        padding: 0px;
-        height: 200px;
-        border: 1px solid #CCC;
-        vertical-align: top;
-        cursor: pointer;
+@media (min-width: 768px) {
+
+    h4.gallery-name {
+        left: 192px;
     }
 
-    ul.album-container li {
-        width: 50%;
+    ul.album-main-container li {
+        width: 15%;
+        margin: 5px;
+        padding: 0px;
+        vertical-align: top;
+        cursor: pointer;
         height: 200px;
+        border: 1px solid #f1dfae;
+        overflow: hidden;
+    }
+
+
+    ul.album-container li {
+        width: 15%;
+        height: 118px;
         margin: 0px;
         padding: 0px;
         overflow: hidden;

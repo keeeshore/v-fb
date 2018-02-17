@@ -49,7 +49,7 @@ export class Registration implements AfterViewInit {
 
 	public _ERROR_MSG:String = 'Missing Required fields';
 
-	public _SUCCESS_MSG:String = 'Form submitted successfully!';
+	public _SUCCESS_MSG:String = 'SUCCESS';
 
 	public msg:String = '';
 

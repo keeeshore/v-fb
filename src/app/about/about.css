@@ -1,6 +1,6 @@
 #about-us-container {
 	background: #FFF;
-	color: #FFF;
+	color: #616161;
 	/*background: url('public/images/page-bg-gold.jpg');*/
 }
 .view-details-btn {
@@ -18,7 +18,7 @@
 .vimonisha-bg {
 	padding-top: 20px;
 	background: url('public/images/vimonisha-bg-1.jpg');
-	background-color: #b79886;
-	background-repeat: no-repeat;
+	background-color: #FFF;
+	background-repeat: repeat-y;
 	background-size: 100%;
 }

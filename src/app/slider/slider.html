@@ -3,10 +3,10 @@
 	(@directionState.start)="animationStarted($event)"
     (@directionState.done)="animationDone($event)" id="{{id}}">
 	<div class="slider-content">
-		<ng-content></ng-content>
+		<ng-content></ng-content>		
 	</div>
 	<div class="close-btn-container" >
-		<span class="glyphicon glyphicon-remove close-btn" (click)="close()" [@btnState]="btnState"></span>
-		<!-- <input type="button" class="btn btn-sm" value="Close" (click)="close()"> -->
-	</div>	
+			<span class="glyphicon glyphicon-remove close-btn" (click)="close()" [@btnState]="btnState"></span>
+			<!-- <input type="button" class="btn btn-sm" value="Close" (click)="close()"> -->
+		</div>	
 </div>

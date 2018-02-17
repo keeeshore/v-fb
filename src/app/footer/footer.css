@@ -2,6 +2,8 @@
 	background: #2b270e;
 	padding: 30px 10px;
 	color: #dadada;
+	display: block;
+	clear: both;
 }
 
 .footer {
