@@ -19,8 +19,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):boolean {
 		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
-		console.log('AuthGuard#--------#canActivate getCookie:', this.getCookie(this.loggedInCookieStr), ', state.url :', state.url, ' , this.isLoggedIn:', this.isLoggedIn);
-		
+		console.log('AuthGuard#--------#canActivate getCookie:', this.getCookie(this.loggedInCookieStr), ', state.url :', state.url, ' , this.isLoggedIn:', this.isLoggedIn);		
 		if  (state.url !== '/admin' && !this.isLoggedIn) {
 			console.log('state url is not /admin but a child');
 			this.router.navigate(['/admin']);
@@ -31,7 +30,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {		
 		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
 		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
-		if  (!this.isLoggedIn) {
+		if  (!this.isLoggedIn || !this.apiService.accessToken) {
 			console.log('canActivateChild state url is not /admin-> navigate to admin');
 			this.router.navigate(['/admin']);
 		}

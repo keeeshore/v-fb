@@ -1,3 +1,4 @@
+
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
@@ -9,6 +10,16 @@
         </div> 
         
         <form class="col-sm-12 form-horizontal" action="{{hostApi}}/authorize.php" method="post">
+
+             <div class="row">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">FB Login status</label>
+                    <div class="col-sm-5">
+                        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                        <label class="control-label" id="status"></label>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="form-group">

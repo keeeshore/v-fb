@@ -1,7 +1,7 @@
 /**
  * Created by balank on 8/09/2017.
  */
-import {Component,  ViewChildren, QueryList} from '@angular/core';
+import {Component,  ViewChildren, QueryList, OnInit} from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../../app/ApiService';
 import {PostCollection, PostModel, PostParams} from './PostCollection';
@@ -16,7 +16,7 @@ import {ENV} from '../../app/environments/environment';
     providers: []
 })
 
-export class Posts {
+export class Posts implements OnInit {
 
     //VimonishaExhibitions/posts?fields=events.since(1486984200).until(1504960500).limit(100);
 
@@ -34,20 +34,23 @@ export class Posts {
 
     public accessToken: string = '';
 
-    constructor(private apiService: ApiService) {
-        console.log('Post component init');
-        this.accessToken = this.apiService.accessToken 
+    constructor(private apiService: ApiService) {        
         this.getPostsFromTable().subscribe();
     }
 
+    public ngOnInit(): void {
+        console.log('Post component init');
+        this.accessToken = this.apiService.accessToken;
+    }
+
     public setPosts (collectionModel:PostCollection, postsArray:Array<any>):Boolean {
-        console.log('setPosts::-------------------------------------------------------------------------------------', postsArray);
+        //console.log('setPosts::-------------------------------------------------------------------------------------', postsArray);
         debugger;
         let posts:Array<PostModel> = postsArray.map((model:PostModel) => {
             model.createdTime = model.created_time || model.createdTime;
             delete model.created_time;    
             let postModel = new PostModel(model);
-            console.log(collectionModel.posts.length, ':setPosts:::-----------------------------------------------------NEW postModel->', postModel);
+            //console.log(collectionModel.posts.length, ':setPosts:::-----------------------------------------------------NEW postModel->', postModel);
             collectionModel.posts.push(postModel);
             return postModel;
         });
@@ -59,7 +62,7 @@ export class Posts {
         this.postParams = new PostParams();
         this.getPosts(this.postParams, posts).subscribe(
             (response:any) => { 
-                console.log('posts success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+                //console.log('posts success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
                 this.apiService.accessToken = this.accessToken;
                 this.fbCollection = new PostCollection();
                 this.setPosts(this.fbCollection, response.data);
@@ -72,24 +75,25 @@ export class Posts {
     private dialogSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
     public getPosts (postParams:PostParams, collection:Array<PostModel>): Observable<any> {
-        console.log('getPosts....called with postParams:', postParams);
+        //console.log('getPosts....called with postParams:', postParams);
         this.message = 'In progress...';
         
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
-            console.log('Invalid Date range!!!!');
+            //console.log('Invalid Date range!!!!');
             this.message = 'Invalid Date range......';
             return new Observable((observer:any) => {
                 observer.next(this.message);
             });
         }
 
-        console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
+        //console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
         let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
         let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 
-        let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/posts';
+        let url = ENV.FB_GRAPH_URL;
         let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 
+        params.append('type', 'posts');
         params.append('access_token', this.accessToken);
         params.append('since', since.toString());
         params.append('until', until.toString());
@@ -98,33 +102,33 @@ export class Posts {
         params.append('pretty', postParams.pretty);
 
         if (postParams.after !== '') {
-            console.log('after is present...ADDING after');
+            //console.log('after is present...ADDING after');
             params.append('after', postParams.after);
         }
 
         url = url + '?' + params.toString();
-        console.log('url->', url);        
+        //console.log('url->', url);        
 
         return this.apiService.fetch(url).flatMap(
             (response: any) => {
-                console.log('getPosts RESPONSE ->', response);
+                //console.log('getPosts RESPONSE ->', response);
                 if (response.data && response.data.length > 0) {
                     let pagingData:PagingData = new PagingData(response.paging);
                     //let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
                     response.data.filter((postModel:PostModel)=>{ collection.push(postModel) });
-                    console.log('getPosts RESPONSE collection->', collection);
+                    //console.log('getPosts RESPONSE collection->', collection);
 
                     if (pagingData.cursors.after !== '') {
-                        console.log('----------------------------------------------------pagingData.cursor.after PRESENT 1');                   
+                        //console.log('----------------------------------------------------pagingData.cursor.after PRESENT 1');                   
                         postParams.after = pagingData.cursors.after;
                         /*return new Observable((observer:any) => {
                             observer.next(this.getPosts(this.postParams, collection));
                         });*/
-                        console.log('----------------------------------------------------pagingData.cursor.after PRESENT 2', collection);
+                        //console.log('----------------------------------------------------pagingData.cursor.after PRESENT 2', collection);
                         return this.getPosts(postParams, collection);
                     } else {
                         this.postParams.after = '';
-                        console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!', collection);
+                        //console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!', collection);
                         return new Observable((observer:any) => {
                             observer.next({ data: collection });
                         });
@@ -132,7 +136,7 @@ export class Posts {
                     
                 } else {
                     this.message = 'Complete!';
-                    console.log('----------------------------------------------------ALL DONE!!');
+                    //console.log('----------------------------------------------------ALL DONE!!');
                     return new Observable((observer:any) => {
                         observer.next({ data: collection });
                     });
@@ -142,12 +146,12 @@ export class Posts {
     }
 
     public onGetPostsFromTable () {
-        console.log('SUBMIT onGetPostsFromTable...');
+        //console.log('SUBMIT onGetPostsFromTable...');
         this.getPostsFromTable().subscribe();
     }
 
     public doSubmitPosts () {
-        console.log('SUBMIT doSubmitPosts...');
+        //console.log('SUBMIT doSubmitPosts...');
         /*this.fbCollection = new PostCollection();
         let postModel = new PostModel({
             id: '111',
@@ -175,14 +179,14 @@ export class Posts {
         this.fbCollection.posts.push(postModel3);*/
 
         this.onSubmitPosts(0).subscribe((response:any)=>{
-            console.log('SUCCESS SUBMIT doSubmitPosts...');
+            //console.log('SUCCESS SUBMIT doSubmitPosts...');
             this.getPostsFromTable().subscribe();
         });
     }
 
     public onSubmitPosts (indexId:number):Observable<any> {
-        console.log('SUBMIT onSubmitPosts...', indexId);
-        console.log('SUBMIT onSubmitPosts...', this.fbCollection);
+        //console.log('SUBMIT onSubmitPosts...', indexId);
+        //console.log('SUBMIT onSubmitPosts...', this.fbCollection);
 
         if (!indexId) {
             indexId = 0;
@@ -192,13 +196,13 @@ export class Posts {
             this.message = 'In Progress.....';
             let postModel:PostModel = this.fbCollection.posts[indexId];
             return this.addPostModel(postModel).flatMap((response:any) => {
-                console.log('response---------------------DONE for:', indexId);
+                //console.log('response---------------------DONE for:', indexId);
                 indexId = indexId + 1;
                 return this.onSubmitPosts(indexId++);
             })
         } else {
             this.message = 'POSTS COMPLETE!!';
-            console.log('NO MORE POST TO SUBMIT.....');            
+            //console.log('NO MORE POST TO SUBMIT.....');            
             return new Observable((observer:any) => {
                 observer.next({success: true});
             });
@@ -207,10 +211,10 @@ export class Posts {
 
 
     public submitPosts (collection:PostCollection):Observable<any> {
-        console.log('SUBMIT postCollection...', collection);
+        //console.log('SUBMIT postCollection...', collection);
         let url = ENV.HOST_API_URL + '/posts_post.php';
         return this.apiService.post(url, collection).flatMap((response:any) => {
-            console.log('postModel POST response recieved....', response);
+            //console.log('postModel POST response recieved....', response);
             let success:boolean = false;
            if (response && response.success) {
                this.fbCollection = new PostCollection();
@@ -223,10 +227,10 @@ export class Posts {
     }
 
     public onAddPostModel(postModel:PostModel) {
-        console.log('onAddPOstModel..............................');
+        //console.log('onAddPOstModel..............................');
         this.addPostModel(postModel).subscribe(
             (s:any)=>{ 
-                console.log('SUCCESS:add post Model');
+                //console.log('SUCCESS:add post Model');
                  this.message = 'ADDED POST!';
             },
             (e:any)=>{ console.log('ERROR:add post Model') },
@@ -237,7 +241,7 @@ export class Posts {
     public addPostModel (postModel:PostModel):Observable<any> {
         let postCollection = new PostCollection();
         postCollection.posts.push(postModel);
-        console.log('SUBMIT addPostModel...', postCollection);
+        //console.log('SUBMIT addPostModel...', postCollection);
         return this.submitPosts(postCollection).flatMap((resp:any)=>{
             return new Observable((observer:any) => {
                 observer.next({success: true, data: resp});
@@ -247,13 +251,13 @@ export class Posts {
 
     public onDeletePosts (postModel:PostModel) {
         let url = ENV.HOST_API_URL + '/posts_delete.php';
-        console.log('DELETE postModel...', postModel);
+        //console.log('DELETE postModel...', postModel);
         this.apiService.post(url, postModel).subscribe((response:any) => {
-            console.log('postModel DELETE:POST response recieved....', response);
+            //console.log('postModel DELETE:POST response recieved....', response);
             if (response && response.success) {
-                console.log('Deleted successfully....');
+                //console.log('Deleted successfully....');
             } else {
-                console.log('Delete UNSUCCESSFUL');
+                //console.log('Delete UNSUCCESSFUL');
             }    
             this.getPostsFromTable().subscribe();        
         });
@@ -261,18 +265,18 @@ export class Posts {
 
     public onUpdatePosts (postModel:PostModel) {
         let url = ENV.HOST_API_URL +  '/posts_update.php';
-        console.log('UPDATE postModel...', postModel);
+        //console.log('UPDATE postModel...', postModel);
         /*this.apiService.post(url, postModel).subscribe((response:any) => {
-            console.log('postModel UPDATE:POST response recieved....', response);
+            //console.log('postModel UPDATE:POST response recieved....', response);
         });*/
     }
 
     public getPostsFromTable():Observable<PostCollection> {
-        console.log('getPostsFromTable...');
+        //console.log('getPostsFromTable...');
         let url = ENV.HOST_API_URL + '/posts_get.php';
         this.postCollection.posts = new Array<PostModel>();
         return this.apiService.fetch(url).flatMap((response: PostCollection) => {
-            console.log('getPostsFromTable response ->', response);
+            //console.log('getPostsFromTable response ->', response);
             this.setPosts(this.postCollection, response.posts);
             this.setLastEndTime();
             return new Observable((observer:any) => {
@@ -283,7 +287,7 @@ export class Posts {
 
     public setLastEndTime () {        
         let total = this.postCollection.posts.length;
-        console.log('setLastEndTime', total);
+        //console.log('setLastEndTime', total);
         if (total > 0) {
             let lastModel = this.postCollection.posts[0];
             let fDate = moment(lastModel.createdTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
@@ -294,7 +298,7 @@ export class Posts {
     public isValidDateRange (fromDate:string, toDate:string):Boolean {        
         if (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isValid() && moment(this.toDate, ENV.DATE_TIME_FORMAT).isValid()
             && (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isBefore(moment(this.toDate, ENV.DATE_TIME_FORMAT)))) {
-            console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
+            //console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
             return true;
         }
         return false;

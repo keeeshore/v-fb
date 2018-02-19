@@ -23,7 +23,7 @@ ul.album-main-container li {
     width: 45%;
     margin: 5px;
     padding: 0px;
-    height: 200px;
+    height: 150px;
     border: 1px solid #CCC;
     vertical-align: top;
     cursor: pointer;
@@ -32,7 +32,7 @@ ul.album-main-container li {
 
 ul.album-container li {
     width: 50%;
-    height: 200px;
+    height: 150px;
     margin: 0px;
     padding: 0px;
     overflow: hidden;

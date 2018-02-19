@@ -8,6 +8,7 @@ if (process.env.ENV === 'development') {
 	ENVIRONMENT = DEV;
 }
 console.log('ENVIRONMENT:: in env.ts', ENVIRONMENT);
+
 export const ENV = {
 
   	production: ENVIRONMENT.production,
@@ -20,7 +21,9 @@ export const ENV = {
 
   	DATE_TIME_FORMAT: 'DD-MM-YYYY HH:mm',
 
-  	FB_GRAPH_URL: 'https://graph.facebook.com/v2.10/',
+  	FB_GRAPH_URL_1: 'https://graph.facebook.com/v2.10/',
+
+  	FB_GRAPH_URL: 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/graphs',
 
   	FB_PROFILE_ID: '175166319269333'
 };

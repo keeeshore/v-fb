@@ -1,7 +1,7 @@
 /**
  * Created by balank on 8/09/2017.
  */
-import {Component,  ViewChildren, QueryList} from '@angular/core';
+import {Component,  ViewChildren, QueryList, OnInit} from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../../app/ApiService';
 import {EventsCollection, EventModel, EventParams} from './EventsCollection';
@@ -17,7 +17,7 @@ import {ENV} from '../../app/environments/environment';
 	providers: []
 })
 
-export class Events {
+export class Events implements OnInit {
 
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
 
@@ -42,9 +42,10 @@ export class Events {
     public accessToken: string = '';
 
 	constructor(private apiService: ApiService) {
-		console.log('Events component init');
+		//console.log('Events component init::', this.apiService.accessToken);
+		
 		this.getEventsFromTable().subscribe((response) => {
-			console.log('getEventsFromTable 111 :::flatMap::response', response);
+			//console.log('getEventsFromTable 111 :::flatMap::response', response);
 			//return response;
 			//return new Observable((observer:any) => {
 				//observer.next(response);
@@ -52,7 +53,7 @@ export class Events {
 		});
 		/*this.getEventsFromTable().flatMap(response => {
 			//return this.http.get(response)
-			console.log('getEventsFromTable::flatMap::response', response);
+			//console.log('getEventsFromTable::flatMap::response', response);
 			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 			//this.setLastEndTime();
 			return new Observable((observer:any) => {
@@ -60,27 +61,32 @@ export class Events {
 			});
 		}).subscribe(response => {
 			//return this.http.get(response)
-			console.log('getEventsFromTable:::subscribe::response', response);
+			//console.log('getEventsFromTable:::subscribe::response', response);
 			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 			this.setLastEndTime();
 			return response;
 		});*/
-		this.accessToken = this.apiService.accessToken;
 	}
 
+	public ngOnInit(): void {
+		this.accessToken = this.apiService.accessToken;
+        console.log('Events component init', this.accessToken);
+        
+    }
+
 	public setEvents (collectionModel:EventsCollection, eventsArray:Array<any>):Boolean {
-		console.log('setEvents:::-------------------------------------', eventsArray);
+		//console.log('setEvents:::-------------------------------------', eventsArray);
 		let events:Array<EventModel> = eventsArray.map((model:any) => {			
 			model.endTime = model.end_time || model.endTime;
 			model.startTime = model.start_time || model.startTime;
 			delete model.end_time;
 			delete model.start_time;
 			let eventModel = new EventModel(model);
-			//console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
+			////console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
 			collectionModel.events.push(eventModel);
 			return eventModel;
 		});
-		console.log('setEvents:::--------------------------------------collectionModel.events = ', collectionModel.events.length);
+		//console.log('setEvents:::--------------------------------------collectionModel.events = ', collectionModel.events.length);
 		return events.length > 0 ? true : false;
 	}
 
@@ -89,7 +95,7 @@ export class Events {
 		this.eventParams = new EventParams();
 		this.getEvents(this.eventParams, events).subscribe(
 			(response) => { 
-				console.log('getEvents success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+				//console.log('getEvents success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.setEvents(this.fbCollection, response.data);
 			},
 			(err) => { console.log('getEvents err:::', err) },
@@ -99,25 +105,28 @@ export class Events {
 	
 
 	public getEvents (eventParams:EventParams, collection:Array<any>):Observable<any> {
-		console.log('getEvents....called with eventParams:', eventParams);
-		console.log('this.fromDate:', this.fromDate);
-		console.log('this.toDate:', this.toDate);
+		//console.log('getEvents....called with eventParams:', eventParams);
+		//console.log('this.fromDate:', this.fromDate);
+		//console.log('this.toDate:', this.toDate);
 		this.message = 'In progress...';
 		
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
-        	console.log('Invalid Date range!!!!');
+        	//console.log('Invalid Date range!!!!');
             this.message = 'Invalid Date range......';
             return;
         }
 
-        console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
+        //console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
         let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
         let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
 
-		let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/events';
+		//let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/events';
+		let url = ENV.FB_GRAPH_URL;
+		//let url = 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/graphs';
 		//let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID;
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
-
+		debugger;
+		params.append('type', 'events');
 		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
@@ -129,33 +138,33 @@ export class Events {
 		params.append('pretty', eventParams.pretty);
 
 		if (eventParams.after !== '') {
-			console.log('after is present...ADDING after');
+			//console.log('after is present...ADDING after');
 			params.append('after', eventParams.after);
 		}
 
 		url = url + '?' + params.toString();
-		console.log('url->', url);		
+		//console.log('url->', url);		
 
 		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
-				console.log('getEvents RESPONSE ->', response);
+				//console.log('getEvents RESPONSE ->', response);
 				if (response.data && response.data.length > 0) {
 					
-					this.apiService.accessToken = this.accessToken;
+					//this.apiService.accessToken = this.accessToken;
 					let pagingData:PagingData = new PagingData(response.paging);
 					//let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
 					response.data.filter((dataModel:any)=>{ collection.push(dataModel)});
 
 					if (pagingData.cursors.after !== '') {
 						
-						console.log('pagingData.cursor.after PRESENT');
+						//console.log('pagingData.cursor.after PRESENT');
 						eventParams.after = pagingData.cursors.after;
 						return this.getEvents(eventParams, collection);
 					
 					} else {
 						
 						eventParams.after = '';
-						console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
+						//console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
 						//this.fbEventsSubject.next({data: collection});
 						return new Observable((observer:any) => {
 							observer.next({data: collection});
@@ -166,7 +175,7 @@ export class Events {
 				} else {
 					
 					this.message = 'Complete!';
-					console.log('-------------------------------------------ALL DONE!!');
+					//console.log('-------------------------------------------ALL DONE!!');
 					//this.fbEventsSubject.next({data: collection});
 					return new Observable((observer:any) => {
 						observer.next({data: collection});
@@ -179,15 +188,15 @@ export class Events {
 	}
 
 	public onSubmitEvents1 () {
-		console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
+		//console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
 		this.submitEvents(this.fbCollection).subscribe();
 	}
 
 	public submitEvents (collection:EventsCollection):Observable<any> {
-		console.log('submitEvents:: SUBMIT eventsCollection...', collection);
+		//console.log('submitEvents:: SUBMIT eventsCollection...', collection);
 		let url = ENV.HOST_API_URL + '/events_post.php';
 		return this.apiService.post(url, collection).flatMap((response:any) => {
-			console.log('submitEvents:: eventModel POST response received....', response);
+			//console.log('submitEvents:: eventModel POST response received....', response);
 			if (response && response.success) {
 				this.fbCollection = new EventsCollection();
 				return this.getEventsFromTable();
@@ -202,19 +211,19 @@ export class Events {
 	public addEventModel (eventModel:EventModel) {
 		let eventsCollection = new EventsCollection();
 		eventsCollection.events.push(eventModel);
-		console.log('SUBMIT addEventModel...', eventsCollection);
+		//console.log('SUBMIT addEventModel...', eventsCollection);
 		this.submitEvents(eventsCollection).subscribe();
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
 		let url = ENV.HOST_API_URL + '/events_delete.php';
-		console.log('DELETE eventModel...', eventModel);
+		//console.log('DELETE eventModel...', eventModel);
 		this.apiService.post(url, eventModel).subscribe((response:any) => {
-			console.log('eventModel DELETE:POST response recieved....', response);
+			//console.log('eventModel DELETE:POST response recieved....', response);
 			if (response && response.success) {
-				console.log('Deleted successfully....');
+				//console.log('Deleted successfully....');
 			} else {
-				console.log('Delete UNSUCCESSFUL');
+				//console.log('Delete UNSUCCESSFUL');
 			}	
 			this.getEventsFromTable().subscribe();
 		});
@@ -222,19 +231,19 @@ export class Events {
 
 	public onUpdateEvent (eventModel:EventModel) {
 		let url = ENV.HOST_API_URL +  '/events_update.php';
-		console.log('UPDATE eventModel...', eventModel);
+		//console.log('UPDATE eventModel...', eventModel);
 		/*this.apiService.post(url, eventModel).subscribe((response:any) => {
-			console.log('eventModel UPDATE:POST response recieved....', response);
+			//console.log('eventModel UPDATE:POST response recieved....', response);
 		});*/
 	}
 
 	public getEventsFromTable () {
-		console.log('getEventsFromTable...');
+		//console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
 		this.eventsCollection.events = new Array<EventModel>();
 		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
-				console.log('getEventsFromTable flatMap response ->', response);
+				//console.log('getEventsFromTable flatMap response ->', response);
 				let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 				this.setLastEndTime();
 				return new Observable((observer:any) => {
@@ -250,13 +259,13 @@ export class Events {
             .subscribe(res => this.contract = res);*/
 		/*return this.apiService.fetch(url).subscribe(
 			(response: any) => {
-				console.log('getEventsFromTable response ->', response);
+				//console.log('getEventsFromTable response ->', response);
 				//return response;
 				//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
 				//this.setLastEndTime();
 			},
 			(err) => { 
-				console.log('getEventsFromTable ERR ->', err);
+				//console.log('getEventsFromTable ERR ->', err);
 				this.message = JSON.stringify(err);
 			}
 		);*/
@@ -264,7 +273,7 @@ export class Events {
 
 	public setLastEndTime () {		
 		let total = this.eventsCollection.events.length;
-		console.log('setLastEndTime', total);
+		//console.log('setLastEndTime', total);
 		if (total > 0) {
 			let lastModel = this.eventsCollection.events[0];
 			let fDate = moment(lastModel.endTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
@@ -275,7 +284,7 @@ export class Events {
 	public isValidDateRange (fromDate:string, toDate:string):Boolean {		
         if (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isValid() && moment(this.toDate, ENV.DATE_TIME_FORMAT).isValid()
             && (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isBefore(moment(this.toDate, ENV.DATE_TIME_FORMAT)))) {
-            console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
+            //console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
             return true;
         }
 		return false;

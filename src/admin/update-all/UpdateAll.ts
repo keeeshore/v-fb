@@ -1,7 +1,7 @@
 /**
  * Created by balank on 8/09/2017.
  */
-import {Component,  ViewChildren, QueryList} from '@angular/core';
+import {Component,  ViewChildren, QueryList, OnInit} from '@angular/core';
 import {ApiService} from './../../app/ApiService';
 import {Events} from '../events/Events';
 import {Posts} from '../posts/Posts';
@@ -21,7 +21,7 @@ import {Subject, Observable} from "rxjs";
 	providers: []
 })
 
-export class UpdateAll {
+export class UpdateAll implements OnInit {
 
 	public status:string = '';
 
@@ -47,6 +47,7 @@ export class UpdateAll {
 
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('Update ALL component init');
+		this.accessToken = this.apiService.accessToken;
 		this.events = new Events(this.apiService);
 		this.posts = new Posts(this.apiService);
 		this.galleries = new Array<Photos>();
@@ -88,6 +89,11 @@ export class UpdateAll {
   		});*/
 		
 	}
+
+	public ngOnInit(): void {
+        console.log('Post component init');
+        this.accessToken = this.apiService.accessToken;
+    }
 
 	public update ():void {
 		console.log('update method called');

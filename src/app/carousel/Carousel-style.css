@@ -1,0 +1,27 @@
+@Component ({
+    selector: 'carousel-item',
+    templateUrl: './carousel-item.html',
+    animations: [
+      trigger('itemState', [
+        state('active', style({ position: 'relative', display: 'block' })),
+        state('right', style({  opacity: 1,  position: 'absolute', left: '100%', top: 0  })),
+        state('left', style({  opacity: 1,  position: 'absolute', right: '100%', top: 0 })),
+        transition('active => left', animate('250ms ease-out', keyframes([
+            style({opacity: 1, right: 0 }),
+            style({opacity: 1, right: '100%' })
+          ]))),
+        transition('left => active', animate('250ms ease-out', keyframes([
+            style({opacity: 1, right: '100%' }),
+            style({opacity: 1, right: 0 })
+          ]))),
+        transition('active => right', animate('250ms ease-out', keyframes([
+            style({opacity: 1, left: 0 }),
+            style({opacity: 1, left: '100%'})
+          ]))),
+        transition('right => active', animate('250ms ease-out', keyframes([
+            style({opacity: 1, left: '100%' }),
+            style({opacity: 1, left: 0 })
+          ])))
+      ])
+    ]
+})

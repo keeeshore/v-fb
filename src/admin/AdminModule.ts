@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule }  from '@angular/platform-browser';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AdminHeader } from './header/Header';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -74,7 +75,8 @@ const adminRoutes: Routes = [
 	],
 	exports: [ RouterModule ],
 	bootstrap: [ AdminComponent ],
-	providers: [ApiService, AuthGuard]
+	providers: [ApiService, AuthGuard],	
+	schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 
 export class AdminModule { }

@@ -6,6 +6,21 @@
 	clear: both;
 }
 
+#footer-container a {
+	color: #dadada;
+}
+
 .footer {
 	font-size: 11px;
+}
+
+ul.footer-list li.large {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+ul.footer-list {
+	list-style: none;
+	font-size: 80%;
+	line-height: 18px;
 }

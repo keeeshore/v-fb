@@ -9,10 +9,10 @@ export class ApiService {
 	constructor (private http: Http,
 		private route: ActivatedRoute,
     	private router: Router) {
-		console.log('APISERVICE CONSTRUCTOR---------------------------------------------------------');
+		console.log('APISERVICE CONSTRUCTOR---------------------------------------------------------ONCE');
 	}
 
-	public accessToken:string = '';
+	public accessToken:string = null;
 
 	public fetch (url: string):Observable<any> {
 		console.log('ApiService.fetch');
@@ -78,6 +78,20 @@ export class ApiService {
 			script.type = 'text/javascript';
 			script.id = 'google-captcha';
 			script.src = 'https://www.google.com/recaptcha/api.js';
+		head.appendChild(script);
+  	}
+
+  	public insertFBSDK(): void {
+  		let head:any = document.getElementsByTagName('head')[0];		
+		let scriptElem:any = document.getElementById('fb-sdk');
+
+		if (scriptElem) {
+			head.removeChild(scriptElem);
+		}
+		let script:any = document.createElement('script');
+			script.type = 'text/javascript';
+			script.id = 'fb-sdk';
+			script.src = '../../public/js/fb.js';
 		head.appendChild(script);
   	}
 

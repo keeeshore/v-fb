@@ -1,5 +1,26 @@
 
 var AWS = require("aws-sdk");
+const request = require('request-promise');
+
+const options = {
+    method: 'POST',
+    uri: 'https://requestedAPIsource.com/api',
+    body: req.body,
+    json: true,
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'bwejjr33333333333'
+    }
+}
+
+request(options).then(function (response){
+    res.status(200).json(response);
+})
+.catch(function (err) {
+    console.log(err);
+});
+
+
 
 exports.handler = function(event, context) {
     console.log('Received event:', JSON.stringify(event, null, 2));

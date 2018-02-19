@@ -18,8 +18,11 @@ export class Albums {
 
 	public albumCollection:AlbumCollection = new AlbumCollection();
 
+	public accessToken:string = ''
+
 	constructor(private apiService: ApiService) {
 		console.log('Albums component init');
+		this.accessToken = this.apiService.accessToken;
 	}
 	
 

@@ -1,7 +1,7 @@
 /**
  * Created by balank on 8/09/2017.
  */
-import {Component,  ViewChildren, QueryList} from '@angular/core';
+import {Component,  ViewChildren, QueryList, OnInit} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import {ApiService} from './../../app/ApiService';
@@ -17,7 +17,7 @@ import {ENV} from '../../app/environments/environment';
 	providers: []
 })
 
-export class Photos {
+export class Photos implements OnInit {
 
 	//VimonishaExhibitions?fields=events.since(1486984200).until(1504960500).limit(100);
 	//VimonishaExhibitions?fields=albums.id(178838325568799){photos}
@@ -52,9 +52,11 @@ export class Photos {
 	}
 
 	public ngOnInit(): void {
+		console.log('Events component init');
+		this.accessToken = this.apiService.accessToken;
 		let albumId:string = '';
 	    this.router.params.forEach((params: Params) => {
-	    	console.log('<Photos> component ngOnInit::', params['albumId']);
+	    	//console.log('<Photos> component ngOnInit::', params['albumId']);
 	      	this.albumId = params['albumId'];
 	    });
 	    this.albumsCollection.albums.forEach((album:AlbumModel)=> {
@@ -94,14 +96,14 @@ export class Photos {
 	}	
 
 	public setPhotos (photosArr:Array<PhotoModel>, dataArray:Array<any>):Boolean {
-		console.log('setPhotos:::-------------------------------------------------------------------------------------');
+		//console.log('setPhotos:::-------------------------------------------------------------------------------------');
 		let photos:Array<PhotoModel> = dataArray.map((model:any) => {
 			if (model.created_time)	{
 				model.createdTime = model.created_time;
 				delete model.created_time;
 			}
 			let photoModel = new PhotoModel(model);
-			console.log(photosArr.length, ':setPhotos:::------------------NEW photoModel->', photoModel);
+			//console.log(photosArr.length, ':setPhotos:::------------------NEW photoModel->', photoModel);
 			photosArr.push(photoModel);
 			return photoModel;
 		});
@@ -116,7 +118,7 @@ export class Photos {
 
 		this.getPhotos(this.photoParams, photos).subscribe(
 			(response) => {
-				console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+				//console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.apiService.accessToken = this.accessToken;
 				this.setPhotos(this.fbCollection.photos, response.data);
 			},
@@ -126,10 +128,10 @@ export class Photos {
 	}
 
 	public onGetPhotosFromTable (albumId:string) {
-		console.log('getPhotosFromTable...');
+		//console.log('getPhotosFromTable...');
 		this.getPhotosFromTable(albumId).subscribe(
 			(response: any) => {
-				console.log('getPhotosFromTable response ->', response);
+				//console.log('getPhotosFromTable response ->', response);
 				this.setPhotos(this.photoCollection.photos, response.photos);
 				this.setLastEndTime();
 				return new Observable((observer:any) => {
@@ -137,7 +139,7 @@ export class Photos {
             	});
 			},
 			(err:any) => {
-				console.log('ERR in gePhotosFromTable');
+				//console.log('ERR in gePhotosFromTable');
 
 			}
 		);
@@ -145,12 +147,12 @@ export class Photos {
 
 
 	public getPhotosFromTable (albumId:string):Observable<any> {
-		console.log('getPhotosFromTable...');
+		//console.log('getPhotosFromTable...');
 		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
 		this.photoCollection.photos = new Array<PhotoModel>();
 		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
-				console.log('getPhotosFromTable response ->', response);
+				//console.log('getPhotosFromTable response ->', response);
 				this.setPhotos(this.photoCollection.photos, response.photos);
 				this.setLastEndTime();
 				return new Observable((observer:any) => {
@@ -162,14 +164,14 @@ export class Photos {
 
 	public onDeletePhotoModel(photoModel:PhotoModel):void {
 		let url = ENV.HOST_API_URL + '/photos_delete.php';
-		console.log('onDeletePhotoModel POST ->', photoModel);
+		//console.log('onDeletePhotoModel POST ->', photoModel);
 		this.apiService.post(url, photoModel).subscribe(
 			(response: any) => {
-				console.log('onDeletePhotoModel response ->', response);
+				//console.log('onDeletePhotoModel response ->', response);
 				this.getPhotosFromTable(this.photoCollection.albumId).subscribe();
 			},
 			(err) => { 
-				console.log('onDeletePhotoModel ERR ->', err);
+				//console.log('onDeletePhotoModel ERR ->', err);
 				this.message = JSON.stringify(err);
 			}
 		);
@@ -184,13 +186,13 @@ export class Photos {
 	}
 
 	public doSubmitPhotos ():void {
-		console.log('doSubmitPhotos----=');
+		//console.log('doSubmitPhotos----=');
 		this.onSubmitPhotos(0, this.albumId).subscribe((response:any) => {
-			console.log('FINAL SUCCESS-----------##############----------DONE for:', response);
+			//console.log('FINAL SUCCESS-----------##############----------DONE for:', response);
 			this.getPhotosFromTable(this.albumId).subscribe();        
     	},
     	(err:any)=>{
-    		console.log('ERR-------------------#############--DONE for:', err);
+    		//console.log('ERR-------------------#############--DONE for:', err);
     		this.message = JSON.stringify(err);
 			//observer.next({success: false, data: err});
     	},
@@ -200,7 +202,7 @@ export class Photos {
 
 
 	public onSubmitPhotos (indexId:number, albumId:string):Observable<any> {
-		console.log('onSubmitPhotos--------------START----------------:indexId=', indexId);
+		//console.log('onSubmitPhotos--------------START----------------:indexId=', indexId);
 
 		return new Observable((observer:any) => {
 			if (!indexId) {
@@ -211,40 +213,40 @@ export class Photos {
 	            this.message = 'In Progress.....';
 
 	            let photoModel:PhotoModel = this.fbCollection.photos[indexId];	 			
-	 			console.log('onSubmitPhotos--------------in PROGRESS');	            
-	            console.log('onSubmitPhotos--------------in Observable');
+	 			//console.log('onSubmitPhotos--------------in PROGRESS');	            
+	            //console.log('onSubmitPhotos--------------in Observable');
 
 	            	this.submitPhoto(photoModel, albumId).subscribe(
 	            		(response:any) => {
-			                console.log('response---------------------DONE for:', indexId);
+			                //console.log('response---------------------DONE for:', indexId);
 			                indexId = indexId + 1;
 			                this.onSubmitPhotos(indexId, albumId).subscribe(
 			                	(response:any) => {
-					                console.log('response___________________________________', indexId);
+					                //console.log('response___________________________________', indexId);
 					                observer.next({success: response.success, data: response});
 				            	},
 			            		(err:any)=>{
-				            		console.log('response_______________________________r:', err);
+				            		//console.log('response_______________________________r:', err);
 									observer.next({success: false, data: err});
 			                	});
 		            	},
 		            	(err:any)=>{
-		            		console.log('ERR---------------------DONE for:', err);
+		            		//console.log('ERR---------------------DONE for:', err);
 							observer.next({success: false, data: err});
 	                });
 	        } else {
 	            this.message = 'POSTS UPDATE COMPLETE!!';
-	            console.log('NO MORE POST TO SUBMIT.....');            
+	            //console.log('NO MORE POST TO SUBMIT.....');            
 	            observer.next({success: true});
 	        }
         });
 	}
 
 	public submitPhotos (collection:PhotoCollection):Observable<any> {
-		console.log('SUBMIT PhotoCollection...', collection);
+		//console.log('SUBMIT PhotoCollection...', collection);
 		let url = ENV.HOST_API_URL + '/photos_post.php';
 		return this.apiService.post(url, collection).flatMap((response:any) => {
-			console.log('eventModel POST response recieved....', response);
+			//console.log('eventModel POST response recieved....', response);
 			if (response && response.success) {
 				return this.getPhotosFromTable(this.albumId).flatMap(()=>{
 					return new Observable((observer:any) => {
@@ -256,13 +258,13 @@ export class Photos {
 	}
 
 	public submitPhoto (photoModel:PhotoModel, albumId:string):Observable<any> {
-		console.log('SUBMIT photoModel...', photoModel);
+		//console.log('SUBMIT photoModel...', photoModel);
 		let photoCollection = new PhotoCollection(albumId);
 		photoCollection.photos.push(photoModel);
 
 		let url = ENV.HOST_API_URL + '/photos_post.php';
 		return this.apiService.post(url, photoCollection).flatMap((response:any) => {
-			console.log('eventModel POST response recieved....', response);
+			//console.log('eventModel POST response recieved....', response);
 			return new Observable((observer:any) => {
                 observer.next({ success: response.success, data: response});
             });
@@ -270,25 +272,26 @@ export class Photos {
 	}
 
 	public getPhotos (photoParams:PhotoParams, collection:Array<any>):Observable<any> {
-		console.log('getPhotos....called with photoParams:', photoParams, 'COLLETION:::', collection);
+		//console.log('getPhotos....called with photoParams:', photoParams, 'COLLETION:::', collection);
 		this.message = 'In progress...';
 		
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
-        	console.log('Invalid Date range!!!!');
+        	//console.log('Invalid Date range!!!!');
             this.message = 'Invalid Date range......';
             return new Observable((observer:any) => {
                 observer.next({success: false, data: this.message});
             });
         }
 
-        console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
+        //console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
         let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
         let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
-		console.log('is valid date range', since + ' : to : ' + until);
+		//console.log('is valid date range', since + ' : to : ' + until);
 
-		let url = ENV.FB_GRAPH_URL + photoParams.albumId + '/photos';
+		let url = ENV.FB_GRAPH_URL;
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 		
+		params.append('type', 'photos');
 		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
@@ -297,16 +300,16 @@ export class Photos {
 		params.append('pretty', photoParams.pretty);
 
 		if (photoParams.after !== '' && photoParams.nextUrl !== '') {
-			console.log('after is present...ADDING after');
+			//console.log('after is present...ADDING after');
 			params.append('after', photoParams.after);
 		}
 		url = url + '?' + params.toString();
 		
-		console.log('url->', url);
+		//console.log('url->', url);
 
 		return this.apiService.fetch(url).flatMap(
 			(response:any) => {
-				console.log('getPhotos RESPONSE ->', response);
+				//console.log('getPhotos RESPONSE ->', response);
 				debugger;
 				
 				if (response && response.data.length > 0) {
@@ -316,14 +319,14 @@ export class Photos {
 					data.filter((dataModel:any)=>{ collection.push(dataModel)});
 					
 					if (pagingData.next !== 'none') {
-						console.log(collection.length, ':::pagingData.NEXT PRESENT');
+						//console.log(collection.length, ':::pagingData.NEXT PRESENT');
 						this.photoParams.after = pagingData.cursors.after;
 						this.photoParams.nextUrl = pagingData.next;
 						return this.getPhotos(this.photoParams, collection);
 					} else {
 						this.photoParams.after = '';
 						this.photoParams.nextUrl = '';
-						console.log('---------------------------------------------------- pagingData complete--------ALL DONE!!', collection);
+						//console.log('---------------------------------------------------- pagingData complete--------ALL DONE!!', collection);
 						//this.dialogSubject.next({data: collection});
 						return new Observable((observer:any) => {
 			                observer.next({data: collection});
@@ -331,7 +334,7 @@ export class Photos {
 					}
 				} else {
 					this.message = 'Complete!';
-					console.log('-------------------------------------------ALL DONE!!', collection);
+					//console.log('-------------------------------------------ALL DONE!!', collection);
 					//this.dialogSubject.next({data: collection});
 					return new Observable((observer:any) => {
 		                observer.next({data: collection});
@@ -342,7 +345,7 @@ export class Photos {
 
 	public setLastEndTime () {
 		let total = this.photoCollection.photos.length;
-		console.log('setLastEndTime', total);
+		//console.log('setLastEndTime', total);
 		if (total > 0) {
 			let lastModel = this.photoCollection.photos[0];
 			let fDate = moment(lastModel.createdTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
@@ -353,7 +356,7 @@ export class Photos {
 	public isValidDateRange (fromDate:string, toDate:string):Boolean {		
         if (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isValid() && moment(this.toDate, ENV.DATE_TIME_FORMAT).isValid()
             && (moment(this.fromDate, ENV.DATE_TIME_FORMAT).isBefore(moment(this.toDate, ENV.DATE_TIME_FORMAT)))) {
-            console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
+            //console.log('IS VALID DATE RANGE:', this.fromDate + ' : to : ' + this.toDate);
             return true;
         }
 		return false;
