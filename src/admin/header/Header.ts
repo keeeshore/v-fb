@@ -11,12 +11,12 @@ export class AdminHeader {
 	public loggedIn:boolean = false;
 
 	constructor(private authGuard:AuthGuard) {
-
+		
 	}
 
 	public ngOnInit () {
 		//console.log('ADMIN HEADER ngOnint, isLoggedIn:', this.authGuard.isLoggedIn);
-		this.loggedIn = this.authGuard.isLoggedIn;
+		//this.loggedIn = this.authGuard.isLoggedIn;
 	}
 
 }

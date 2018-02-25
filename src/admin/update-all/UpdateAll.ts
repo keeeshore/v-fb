@@ -48,7 +48,7 @@ export class UpdateAll implements OnInit {
 	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
 		console.log('Update ALL component init');
 		this.accessToken = this.apiService.accessToken;
-		this.events = new Events(this.apiService);
+		this.events = new Events(this.apiService, this.router);
 		this.posts = new Posts(this.apiService);
 		this.galleries = new Array<Photos>();
 
@@ -178,10 +178,10 @@ export class UpdateAll implements OnInit {
 			this.logInfo('events', 'fbCollection done with' + fbCollection.events.length);
 			console.log('UPDATEALL:subscribe:: fbCollection', fbCollection);
 			this.logInfo('events', 'start submitEvents to DB (PLEASE WAIT.. IN PROGRESS!!!');
-			this.events.submitEvents(fbCollection).subscribe((response:any) => {
+			this.events.submitEvents(0, fbCollection).subscribe((response:any) => {
 				console.log('UPDATEALL:subscribe:: submitEvents', response);
 				this.logInfo('events', 'submitEvents to DB DONE>>COMPLETE');
-				this.events = new Events(this.apiService);
+				this.events = new Events(this.apiService, this.router);
 			});
 		},
 		(err:any) => {

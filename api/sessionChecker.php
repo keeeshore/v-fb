@@ -11,7 +11,7 @@ if ($_SERVER['SERVER_NAME'] != 'localhost') {
 	$httpStatusCode = 200;
 	$success = true;
 	
-	if(!$_SESSION['login_user']) {
+	/*if(!$_SESSION['login_user']) {
 		$httpStatusCode = 403;
 		$httpStatusMsg  = 'Unauthorized access!Please login again';
 		$phpSapiName    = substr(php_sapi_name(), 0, 3);
@@ -24,7 +24,7 @@ if ($_SERVER['SERVER_NAME'] != 'localhost') {
 		}
 		//echo json_encode(array( 'success' => $success, 'message' => $httpStatusMsg ));
 		//exit;
-	} 
+	} */
 
 	//echo json_encode(array( 'success' => $success, 'message' => $httpStatusMsg ));
 	//exit();

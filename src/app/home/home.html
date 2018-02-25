@@ -1,61 +1,114 @@
 <div id="home-container">
 	
 	<div class="container">
+		<div class="row">
+		<div class="col-sm-12 header">
+			<div class="vimonisha-logo">VIMONISHA EXHIBITIONS</div>
+		</div>
+	</div>
 
 		<div class="row" id="home">
 
-			<div class="col-sm-6" id="main-left"  [ngStyle]="{ 'height': viewPortHeight }">
-				<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
-				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="1">
-
-						<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
-						(onItemInit)="onItemLoaded()">
-
-							<div class="photo-model-container text-center" >
-								<!-- <h2>{{photoModel.name}} </h2>
-								<p>{{photoModel.description}} </p> -->
-								<!-- <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" [ngStyle]="{ 'height': viewPortHeight }" /> -->
-								<a [routerLink]="['/press']">
-									<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
-								</a>
-								
-							</div>
-
-						</carousel-item>
-
-				</carousel-component>
-			</div>
-
-			<div class="col-sm-6" id="main-right" [ngStyle]="{ 'height': viewPortHeight }">
-
-				<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
-					<div class="row">
-						<h2>{{eventModel.name}}</h2>
-						<div class="row">
-							<div class="col-xs-7">
-								<img class="img img-responsive exhibition-pic" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
-							</div>
-							<div class="col-xs-5 text-center">                
-								<div class="date-cover date-from">{{getDate(eventModel.startTime)}}</div>
-								<div class="date-cover date-to">{{getDate(eventModel.endTime)}}</div>
-								<div *ngIf="isUpcomingEvent(eventModel.startTime)">
-									<!-- <input type="button" class="btn btn-xs event-btn" value="Book Now" /> -->
-									<a class="btn btn-xs btn-click" style="margin: 10px 0px;" 
-										[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
-									</a>
-
-								</div>
-								<a class="btn btn-xs btn-click" 
-									[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
-								</a>
-							</div>
-						</div>
+			<div class="col-sm-5" id="main-left"  [ngStyle]="{ 'height1': viewPortHeight }">
+				
+				<div class="row">
+					<div class="col-sm-12">
+						<h3>Upcoming Exhibitions</h3>
 					</div>
+				</div>
+
+				<div class="exb-wrapper" *ngFor="let eventModel of eventsCollection.events;">
+					<table class="exb-table" *ngIf="isUpcomingEvent(eventModel.startTime)">
+						<thead>
+							<tr>
+								<th colspan="2">
+									<div class="exb-name">{{eventModel.name}}</div>
+									<img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td rowspan="2" class="exb-place">
+									<img class="img img-responsive" src="../../../public/images/hyatt_regency_chennai_logo.png"
+									alt="Hyatt Regency Chennai" />
+									<div class="exb-place-name">
+										HYATT REGENCY
+										<br/>
+										Chennai
+									</div>
+								</td>
+								<td class="exb-dates">
+									<div class="exb-dates-from">{{getDate(eventModel.startTime)}}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="exb-dates">
+									<div class="exb-dates-to">{{getDate(eventModel.endTime)}}</div>
+								</td>
+							</tr>
+							<tr class="exb-links">
+								<td colspan="2" >
+									<div class="row">
+										<div class="col-xs-6">
+											<a *ngIf="isUpcomingEvent(eventModel.startTime)" class="exb-btn"
+											[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
+										</a>
+									</div>
+									<div class="col-xs-6 text-right">
+											<a class="exb-btn" 
+												[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
+											</a>
+									</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h3>Past Exhibitions</h3>
+					</div>
+				</div>
+				<div class="row">
+					&nbsp;
+				</div>
+
+				<div class="row text-center">
+					<a class="btn btn-xs btn-click" [routerLink]="['/shows']">View More Exhibitions</a>
 				</div>
 
 			</div>
 
+			<div class="col-sm-7" id="main-right" [ngStyle]="{ 'height': viewPortHeight }">
+
+						<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
+				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="1">
+
+					<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
+					(onItemInit)="onItemLoaded()">
+
+					<div class="photo-model-container text-center" >
+										<!-- <h2>{{photoModel.name}} </h2>
+											<p>{{photoModel.description}} </p> -->
+											<!-- <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" [ngStyle]="{ 'height': viewPortHeight }" /> -->
+											<a [routerLink]="['/press']">
+												<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
+											</a>
+
+										</div>
+
+									</carousel-item>
+
+				</carousel-component>				
+
+			</div>
+
 		</div>
+		
 	</div>
 
 </div>
@@ -84,8 +137,8 @@
 				</carousel-item>
 
 			</carousel-component>
-</div> -->
+		</div> -->
 
 
-	
+
 

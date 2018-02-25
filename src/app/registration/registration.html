@@ -26,6 +26,13 @@
 
 				<form name="registration-form" id="registration-form">
 
+					<div class="form-group row">
+						<label for="name" class="col-sm-2 col-form-label"></label>
+						<label class="col-sm-10">
+							{{eventName}}
+						</label>
+					</div>
+
 					<div class="form-group row {{nameError}}">
 						<label for="name" class="col-sm-2 col-form-label">Name</label>
 						<div class="col-sm-10">
@@ -69,6 +76,16 @@
 					</div>
 
 				</form>
+
+			</div>
+			<div class="col-sm-9 col-sm-offset-1">				
+				<div *ngIf="msg !== '' && msg !== 'SUCCESS'" class="bg-info alert alert-danger" role="alert">
+				  {{msg}}
+				</div>
+
+				<div *ngIf="msg === 'SUCCESS'" class="bg-info alert alert-success" role="alert">
+				  	From submitted successfully, We will get back to you shortly!
+				</div>
 
 			</div>
 		</div>

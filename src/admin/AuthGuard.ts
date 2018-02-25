@@ -9,7 +9,7 @@ import { Subject, Observable} from "rxjs";
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
 
-	public isLoggedIn:boolean = false;
+	public isLoggedIn:string = '';
 
 	public loggedInCookieStr:string = 'PHPSESSID';
 
@@ -18,50 +18,35 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):boolean {
-		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
+		this.isLoggedIn = this.getCookie(this.loggedInCookieStr);
 		console.log('AuthGuard#--------#canActivate getCookie:', this.getCookie(this.loggedInCookieStr), ', state.url :', state.url, ' , this.isLoggedIn:', this.isLoggedIn);		
+		console.log('AuthGuard#--------#canActivate getCookie: RETURN:', this.isLoggedIn === '');		
 		if  (state.url !== '/admin' && !this.isLoggedIn) {
-			console.log('state url is not /admin but a child');
+			console.log('state url is not /admin but a child>navigate to LOGIN');
 			this.router.navigate(['/admin']);
+			return true;
 		}
+		//return this.isLoggedIn !== '';
 		return true;
 	}
 
 	canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {		
-		this.isLoggedIn = this.getCookie(this.loggedInCookieStr) !== '';
+		this.isLoggedIn = this.getCookie(this.loggedInCookieStr);
 		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn ,', this.isLoggedIn);
+		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn return::', this.isLoggedIn === '');
 		if  (!this.isLoggedIn || !this.apiService.accessToken) {
-			console.log('canActivateChild state url is not /admin-> navigate to admin');
+			console.log('canActivateChild state url is not /admin-> navigate to LOGIN');
 			this.router.navigate(['/admin']);
 		}
-		return this.isLoggedIn;	
+		return this.isLoggedIn !== '';
 	}
 
-	public doLogin(loginModel:LoginModel):void {
-		let url = ENV.HOST_API_URL + '/authorize.php';
-
-		this.apiService.post(url, loginModel).subscribe((response:any) => {
-			console.log('checkLoggedInsTate: response');
-			if (response.success) {
-				console.log('checkLoggedInsTate: this.isLoggedIn: before', this.isLoggedIn);
-				this.isLoggedIn = true;
-				document.cookie = this.loggedInCookieStr +'='+ this.isLoggedIn +';';
-				console.log('checkLoggedInsTate: this.isLoggedIn: after', this.isLoggedIn);
-				this.router.navigate(['/admin/events']);
-			} else {
-				this.reset();
-			}
-		},
-		(err:any) => {
-			console.log('err response:', err);
-			this.isLoggedIn = false;
-		});
-	}
 
 	public reset():void {
-		console.log('AuthGuard#reset before: ', this.isLoggedIn);
-		this.isLoggedIn = false;
-		document.cookie = this.loggedInCookieStr + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		console.log('AuthGuard#reset before: ', this.loggedInCookieStr);
+		this.isLoggedIn = '';
+		document.cookie = this.loggedInCookieStr + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path =/;';
+		this.isLoggedIn = this.getCookie(this.loggedInCookieStr);
 		console.log('AuthGuard#reset after: ', this.isLoggedIn);
 	}
 

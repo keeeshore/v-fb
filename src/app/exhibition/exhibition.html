@@ -8,42 +8,63 @@
 		</div>
 	</div>	
 
-	<div *ngFor="let eventModel of eventsCollection.events;" class="exhibition-list col-sm-12">
-		<div class="container">
-			<div class="row exhibition">
-				<div class="col-sm-4">
-					<img class="img img-responsive exhibition-pic " src="{{imageHostPath}}/{{eventModel.cover.source}}" />
-				</div>
-				<div class="col-sm-8"> 
-					<h2>{{eventModel.name}}</h2>
-					<div class="row">
-						<div class="col-sm-12">
-							<div class="dates-container">
-								<span class="glyphicon glyphicon-calendar"></span>
-								<span class="date">{{getDate(eventModel.startTime)}}</span>
-								<span class="glyphicon glyphicon-transfer"></span>
-								<span class="date">{{getDate(eventModel.endTime)}}</span>
-							</div>
+<div class="container">
+
+			<div class="row">
+				
+				<div *ngFor="let eventModel of eventsCollection.events;" class="col-sm-12">
+					
+					<div class="row exhibition">
+						
+						<div class="col-sm-4">
+							<table class="exb-table">
+								<thead>
+									<tr>
+										<th colspan="2">
+											<img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td rowspan="2" class="exb-place">
+											<img class="img img-responsive" src="../../../public/images/hyatt_regency_chennai_logo.png"
+											alt="Hyatt Regency Chennai" />
+											<div class="exb-place-name">
+												HYATT REGENCY
+												<br/>
+												Chennai
+											</div>
+										</td>
+										<td class="exb-dates">
+											<div class="exb-dates-from">{{getDate(eventModel.startTime)}}</div>
+										</td>
+									</tr>
+									<tr>
+										<td class="exb-dates">
+											<div class="exb-dates-to">{{getDate(eventModel.endTime)}}</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-						<div class="col-sm-12">
-							<p class="lead" style="margin: 20px 0px 0px 20px;">
-								<!-- <input type="button" class="btn btn-xs btn-click" value="View Details" (click)="showEventDescription(eventModel)" /> -->
-								<!-- <a class="btn btn-sm btn-click" href="/shows#{{eventModel.id}}">View Details</a>
-								<a class="btn btn-sm btn-click" [routerLink]="['/shows', eventModel.id]">View Details</a> -->
-								<a *ngIf="isUpcomingEvent(eventModel.startTime)"class="btn btn-xs btn-click" 
-										[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
-									</a>
-								<a class="btn btn-sm btn-click" [routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">View Details</a>
+						<div class="col-sm-8">
+							<h1>{{eventModel.name}}</h1>
+							<p class="lead-description">
+								{{eventModel.description}}
 							</p>
+							<a *ngIf="isUpcomingEvent(eventModel.startTime)" class="btn btn-sm btn-click"
+								[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
+							</a>
+							<a class="btn btn-sm btn-click"
+								[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
+							</a>
 						</div>
 					</div>
 					
-					<!-- <div class="row" *ngIf="isUpcomingEvent(eventModel.startTime)">
-						<input type="button" class="btn btn-xs btn-click" value="Book Now" />
-					</div> -->
 				</div>
-			</div>
 		</div>
+			
 	</div>
 </div>
 <slider direction="UP">
@@ -55,17 +76,56 @@
 				<p class="lead">{{selectedModel.description}}</p>
 				<p class="lead text-center"></p>
 			</div>
+
+			<div class="col-sm-12">
+				<p class="lead">
+					<a *ngIf="isUpcomingEvent(selectedModel.startTime)" class="btn btn-sm btn-click"
+						[routerLink]="['/register']" [queryParams]="{ id: selectedModel.id }">
+						Register Now
+					</a>
+					<a *ngIf="!isUpcomingEvent(selectedModel.startTime)" class="btn btn-sm btn-click"
+						[routerLink]="['/register']" [queryParams]="{ id: selectedModel.id }">
+						Enquire Now
+					</a>
+				</p>
+			</div>
+
 		</div>
 
-		<div class="row flex-row">
-			<div class="col-sm-6 flex-column">
-				<img class="img img-responsive" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
+		<div class="row">
+			<div class="col-sm-6">
+				<h3 style="color: red;">Press Releases</h3>
+				<ul class="list-inline exb-images">
+                    <li *ngFor="let photo of selectedModel.photos;">
+                        <img src="{{photo.source}}" class="img img-responsive" (click)="showExhibitionImage(photo)">
+                    </li>
+                </ul>
 			</div>
-			<div class="col-sm-6 flex-column text-center">
-				<a class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ name: selectedModel.name }">
-					Register Now
-				</a>
+			<div class="col-sm-6">
+				<img class="img img-responsive" style="margin: 0px auto;" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
+				<br/>
+				<br/>
+				<br/>
+				<p class="lead text-center">
+					<a *ngIf="isUpcomingEvent(selectedModel.startTime)" class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ id: selectedModel.id }">
+						Register Now
+					</a>
+					<a *ngIf="!isUpcomingEvent(selectedModel.startTime)" class="btn btn-sm btn-click" [routerLink]="['/register']" [queryParams]="{ id: selectedModel.id }">
+						Enquire Now
+					</a>
+				</p>
 			</div>
+
+		</div>
+		<div class="row" style="height: 100px;">
 		</div>
 	</div>	
 </slider>
+
+
+<dialog-component>
+    <pre class="text-center" style="border: none; background-color: none;" *ngIf="selectedPhotoModel">
+        <img src="{{selectedPhotoModel.source}}"/>
+        <div>{{selectedPhotoModel.name}}</div>
+    </pre>
+</dialog-component>

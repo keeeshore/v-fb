@@ -7,7 +7,7 @@ let ENVIRONMENT = PROD;
 if (process.env.ENV === 'development') {
 	ENVIRONMENT = DEV;
 }
-console.log('ENVIRONMENT:: in env.ts', ENVIRONMENT);
+console.log('ENVIRONMENT::', ENVIRONMENT);
 
 export const ENV = {
 
@@ -23,7 +23,7 @@ export const ENV = {
 
   	FB_GRAPH_URL_1: 'https://graph.facebook.com/v2.10/',
 
-  	FB_GRAPH_URL: 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/graphs',
+  	FB_GRAPH_URL: ENVIRONMENT.FB_GRAPH_URL,
 
   	FB_PROFILE_ID: '175166319269333'
 };

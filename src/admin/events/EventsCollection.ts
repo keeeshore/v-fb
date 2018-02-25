@@ -2,15 +2,16 @@
  * Created by balank on 8/09/2017.
  */
 import {PagingData} from '../model/PagingData';
+import {PhotoModel} from '../photos/PhotoCollection';
 import * as moment from 'moment';
 import {ENV} from '../../app/environments/environment';
 
 
 export class EventParams  {
 
-    public fields:string = 'cover{source},name,description,start_time,end_time,id';
+    public fields:string = 'cover{source},name,description,start_time,end_time,id,photos{images{source},created_time,id}';
 
-    public limit:string = '10';
+    public limit:string = '2';
 
     public pretty:string = '0';
     
@@ -63,11 +64,14 @@ export class EventModel  {
 
     public endTime:string;
 
+    public photos:Array<PhotoModel>;
+
     constructor (eventModel:any) {
         let desc = '';
         this.name = eventModel.name;
         this.id = eventModel.id;       
         this.uid = eventModel.uid;
+        this.photos = new Array<PhotoModel>();
 
         if (eventModel.description) {
             desc = eventModel.description.replace(/'/g, "");
@@ -82,7 +86,7 @@ export class EventModel  {
             this.cover = new Cover(eventModel.cover.source, eventModel.cover.id);
         } else {
             this.cover = new Cover('', '');
-        }        
+        }
     }
 
 }

@@ -56,20 +56,15 @@ export class Login implements OnInit {
 
 	public onLoginClick () {
 		console.log('onLoginClick::login to FB');
-		
-		//window.FB.login();
-		FB.getLoginStatus((response:any) => {
+		let global:any = window || {};
+		global.FB.getLoginStatus((response:any) => {
 			if (response.status === 'connected') {
-				// Logged into your app and Facebook.
 				this.apiService.accessToken = response.authResponse.accessToken;
 				console.log('Logged in, form submit()');
-				//document.forms[0].submit();
 				this.doLogin();
-
 			} else {
 				console.log('Not logged in..');
-				FB.login((response:any) => {
-					debugger;
+				global.FB.login((response:any) => {
 					console.log('Logged in during formSubmit::response::', response);
 					if (response.authResponse) {				    	
 				    	this.apiService.accessToken = response.authResponse.accessToken;				    	
@@ -77,20 +72,11 @@ export class Login implements OnInit {
 				    } else {
 				     	this.reason = 'User cancelled login or did not fully authorize.';
 				    }
-				}, {scope: 'publish_actions'});
+				}, { scope: 'publish_actions' });
 			}
 	    });
-		
-		//document.forms[0].submit();
-		//let loginModel = new LoginModel(this.userName, this.password);
-		//this.authGaurd.doLogin(loginModel);
 	}
 
-	public onLoginClick1 () {
-		//console.log('onLoginClick---------ajax');
-		let loginModel = new LoginModel(this.userName, this.password);
-		this.authGaurd.doLogin(loginModel);
-	}
 
 	public doLogin () {
 		debugger;
@@ -103,8 +89,10 @@ export class Login implements OnInit {
 		this.apiService.post(url, postData).subscribe((response:any) => {
 			console.log('LoginSubmit:: POST response SUCCESS....', response);
 			if (response && response.success) {
+				document.cookie = 'PHPSESSID=test';
 				this.route.navigate(['/admin/update-all']);
 			} else {
+				this.authGaurd.isLoggedIn = '';
 				this.reason = response.message;
 			}
 		},

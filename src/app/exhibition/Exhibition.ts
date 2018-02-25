@@ -43,11 +43,14 @@ export class Exhibition implements AfterViewInit {
 
 	public selectedModel:EventModel = new EventModel({});
 
+	public selectedPhotoModel:PhotoModel;
+
 	public imageHostPath:string = ENV.HOST_URL;
 
 	public detailSlider:Slider;
 
 	public eventsSubject:Subject<EventsCollection> = new Subject<EventsCollection>();
+
 
 	constructor(
 		private apiService: ApiService, 
@@ -55,7 +58,11 @@ export class Exhibition implements AfterViewInit {
 		private router:ActivatedRoute,
 		private route:Router,
 		private location:Location) {
-		console.log('Exhbition component init');
+		console.log('Exhbition component init##################################');
+		this.eventsCollection = new EventsCollection();
+		this.getExhibitionsFromTable().subscribe((eventsCollection:EventsCollection) => {
+			console.log('getExhibitionsFromTable::subscribe:showEventDescription():#######:', eventsCollection);
+		});
 	}
 
 	private routeChanged():void {
@@ -65,17 +72,10 @@ export class Exhibition implements AfterViewInit {
 
 	public ngAfterViewInit(): void {
 		console.log('Exhbition AfterViewInit::');
-		/*this.router.params.forEach((params: Params) => {
-	    	if (params['id']) {
-	    		console.log('ngOnInit::id:',params['id']);
-	    	}
-	    });*/
-
 		this.detailSlider = this.sliders.first;
 		this.detailSlider.sliderSubject.subscribe((stateIndex:State) => {
 				console.log('detailSlider observer', State[stateIndex]);
 				if ('CLOSE' === State[stateIndex].toString()) {
-
 					this.route.navigate(['/shows'], {});
 				}
 			},
@@ -84,47 +84,61 @@ export class Exhibition implements AfterViewInit {
 		});
 
 	    this.router.queryParams.subscribe((params:any) =>{ 
-	       console.log('ngOnInit::val------------------:', params);
-
+	       console.log('ngOnInit::val---------queryParams---------:', params);
 	       	if (!isNaN(params.id)) {
-	       		console.log('ngOnInit::val------------------:Valid param id', params);
-	       		this.eventsCollection = new EventsCollection();
-	       		this.getExhibitionsFromTable().subscribe((events:EventsCollection)=>{
-	       			console.log('getExhibitionsFromTable::subscribe:::', events);
+	       		console.log('ngOnInit::val-----#################################-------------:VALID PARAM ID:::', params);	       		
+	       		this.getExhibitionsFromTable().subscribe((eventsCollection:EventsCollection) => {
+	       			console.log('getExhibitionsFromTable::subscribe:showEventDescription()::', eventsCollection);
 	       			this.showEventDescription(params.id);
 	       		});
 	       	}
 	    });
 
-		this.getExhibitionsFromTable().subscribe();
+		//this.getExhibitionsFromTable().subscribe();
   	}
 
-  	public showDetails():void {
-  		console.log('showDetails');
+
+  	public showExhibitionImage(photoModel:PhotoModel):void {
+  		this.selectedPhotoModel = photoModel;
   		this.dialogComponents.first.open();
   	}
 
   	public getExhibitionsFromTable():Observable<EventsCollection> {
-		console.log('getEventsFromTable...');
+		console.log('getExhibitionsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
+		return this.apiService.fetch(url).flatMap((response: any) => {
+			console.log('getEventsFromTable response ->', response);				
+			if (response.events.length > 0 && this.eventsCollection.events.length === 0) {
+				return response.events.map((eModel:EventModel) => {
+					let eventModel:EventModel = new EventModel(eModel);
+					this.setExhibitionImages(eventModel);
+					this.eventsCollection.events.push(eventModel);
+					return this.eventsCollection;
+				});
+			} else {
+				return new Observable((observer:any) => {
+					observer.next(this.eventsCollection);
+				});
+			}
+		});
+	}
 
-		this.apiService.fetch(url).subscribe(
-			(response: any) => {
-				console.log('getEventsFromTable response ->', response);
-				if (response.events.length > 0) {
-					response.events.filter((event:any) => {
-						let eventModel:EventModel = new EventModel(event);
-						this.eventsCollection.events.push(eventModel);
-					});
-				}
-				this.eventsSubject.next(this.eventsCollection);						
-			},
-			(err) => { 
-				console.log('getEventsFromTable ERR ->', err);
+	public setExhibitionImages(eventModel:EventModel):void {
+		this.getExhibitionPhotosById(eventModel.uid.toString()).subscribe((response:any) => {
+			console.log('getExhibitionPhotosById...', eventModel.uid, '::response = ', response);
+			eventModel.photos = response.photos;
+		});
+	}
+
+	public getExhibitionPhotosById (albumId:string):Observable<any> {
+    	let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
+		return this.apiService.fetch(url).flatMap((response: any) => {
+				return new Observable((observer:any) => {
+					observer.next(response);
+				});
 			}
 		);
-		return this.eventsSubject.asObservable();
-	}
+    }
 
 	public isUpcomingEvent(startTime:string):boolean {
 		let eventDate:any = moment(startTime, ENV.DATE_TIME_FORMAT);
@@ -142,10 +156,12 @@ export class Exhibition implements AfterViewInit {
 	}
 
 	public showEventDescription (id:number):void {
-		console.log('showEentDescriton....', id);
+		console.log('showEventDescription....', id);
 		this.eventsCollection.events.filter((model:EventModel)=>{
 			if (model.id === id) {
+				console.log('showEventDescription..this.selectedModel..', model);
 				this.selectedModel = model;
+				//this.setExhibitionImages(this.selectedModel);
 			}
 		});		
 		this.detailSlider.open();

@@ -8,10 +8,11 @@
 nav#sidebar {
     z-index: 10;
     background-color: white;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1);
 }
 
 #sidebar {
-	border-right: 1px solid #CCC;
+	border-right: 1px solid #F1F1F1;
 }
 #sidebar .logo {
 	margin: 10px 7px 0px auto;
@@ -47,7 +48,7 @@ nav#sidebar {
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: gold;
     background: #fff;
 }
 
@@ -73,10 +74,19 @@ a[aria-expanded="true"]::before {
 }
 
 
-.navbar-btn {
+#sidebarCollapse {
     position: absolute;
     /*margin-left: 200px;*/
     z-index: 99;
-    top: 0px;
-    left: 200px;
+    top: 2px;
+    left: 190px;
+    height: 50px;
+    width: 12px;
+    border: none;
+    font-size: 9px;
+    padding: 0px 2px;
+    background: gold;
+    border-top: 1px solid #eac708;
+    border-right: 1px solid #eac708;
+    border-bottom: 1px solid #eac708;
 }

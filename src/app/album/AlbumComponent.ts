@@ -45,6 +45,8 @@ export class AlbumComponent {
 
 	public loaderTxt:string = 'Loading...';
 
+	public thumbnailSource:string = '';
+
 	public photos:Array<PhotoModel> = new Array<PhotoModel>();
 
 	constructor(
@@ -64,6 +66,7 @@ export class AlbumComponent {
 				this.loaderTxt = '';
 				this.total = response.photos.length;
 				this.photos = response.photos;
+				this.thumbnailSource = this.photos[this.getRandomInt(this.total)].source;
 			},
 			(err) => { 
 				this.loaderTxt = '';
@@ -77,5 +80,9 @@ export class AlbumComponent {
   		console.log('Album Component showPhotos::', this.albumModel);
   		this.sliders.first.open();
   	}
+
+  	public getRandomInt(max:number):number {
+	  return Math.floor(Math.random() * Math.floor(max));
+	}
 
 }

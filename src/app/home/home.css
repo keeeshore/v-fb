@@ -1,14 +1,21 @@
-
-
-
-#home-container {
-	padding: 10px 0px;
+#home-container1 {
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#bf392c+1,9d4188+100 */
 	background: #bf392c; /* Old browsers */
 	background: -moz-linear-gradient(left, #bf392c 1%, #9d4188 100%); /* FF3.6-15 */
 	background: -webkit-linear-gradient(left, #bf392c 1%,#9d4188 100%); /* Chrome10-25,Safari5.1-6 */
 	background: linear-gradient(to right, #bf392c 1%,#9d4188 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf392c', endColorstr='#9d4188',GradientType=1 ); /* IE6-9 */
+
+	background-color: #c5a44b;
+}
+
+#home-container {
+	padding: 0px;
+
+}
+
+#home-container h3 {
+	color: #FFF;
 }
 
 #home-container .container {
@@ -21,14 +28,27 @@
 	height: 100%;
 }
 
+#home #main-left {
+	overflow: auto;
+	background: url('public/images/page-bg-gold.jpg');
+	background-attachment: fixed;
+	background-repeat: repeat-y;
+	background-position: center;
+	background-size: 100%;
+	padding-bottom: 30px;
+}
+
 
 #home #main-left,
 #home #main-left #home-photo-component {
+
 	height: 100%;
 }
 
 #home #main-right {
-	overflow-y: scroll;
+	/*background: #FFF;*/
+	padding-top: 5px;
+
 }
 
 .exhibition-list {
@@ -102,3 +122,65 @@
 	height: 100%;
 }
 
+
+
+.exb-table {	
+	padding: 0px;
+	width: 100%;
+	margin: 5px auto;
+	box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.2);
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.exb-table tr th {
+	font-size: 17px;
+	padding: 5px;
+	background: rgba(255, 255, 255, 0.8);
+	color: #CC0000;
+}
+
+.exb-table tr th .exb-name {
+	padding: 4px 0px;
+}
+
+.exb-table tr th,
+.exb-table tr td {
+	border: 1px solid #FFF
+}
+
+.exb-table tr td.exb-place {
+	width: 35%;
+	text-align: center;
+	padding: 0px 0px 5px 0px;
+}
+
+.exb-table tr td.exb-place .exb-place-name {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFF;
+	font-family: Arial;
+	margin: 0px auto;
+	letter-spacing: 1px;
+}
+
+
+.exb-table tr td.exb-place img {
+	width: 50px;
+	margin: 10px auto;
+}
+
+.exb-table tr td.exb-dates {
+	font-size: 20px;
+	text-align: center;
+	color: #FFF;
+}
+
+.exb-table tr.exb-links td {
+	padding: 2px 10px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.exb-table tr td.exb-dates .exb-dates-from {
+}

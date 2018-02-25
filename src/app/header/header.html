@@ -41,9 +41,10 @@
       <li (click)="toggleMenu()"><a [routerLink]="['/register']">Register</a></li>
       <li (click)="toggleMenu()"><a [routerLink]="['/contact']">Contact us</a></li>
   </ul>
-  <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn" (click)="toggleMenu()">
-        <i class="glyphicon glyphicon-align-left"></i>
-        <span>Menu</span>
+  <button type="button" id="sidebarCollapse" (click)="toggleMenu()">
+    M E N U
+        <!-- <i class="glyphicon glyphicon-align-left"></i> 
+        <span>Menu</span>-->
     </button>
 </nav>
 

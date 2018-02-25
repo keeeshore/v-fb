@@ -5,7 +5,6 @@ html, body {
 	min-height: 100%;
 }
 
-
 #main-content {
 	margin-left: 190px;
 	transition: all 0.3s;
@@ -14,6 +13,20 @@ html, body {
 
 #main-content .container {
 	width: 100%;
+}
+
+#main-content .header {
+	background: #FFF;
+	padding: 5px 15px;
+	text-align: center;
+	border-bottom: 1px solid #f1f1f1;
+	box-shadow: 0px 0px 4px 1px rgba(0,0,0, 0.3);
+}	
+
+#main-content .vimonisha-logo {
+	letter-spacing: 10px;
+	font-size: 19px;
+	color: gold;
 }
 
 
@@ -32,14 +45,75 @@ main-header {
    	height: 100%;
 }
 
-#sidebar .navbar-btn {
+#sidebar #sidebarCollapse {
     display: none;
 }
 
-/*#sidebarCollapse {
-	display: none;
-}*/
+.ellipsis {
+  text-overflow: ellipsis;
 
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+
+.exb-table {	
+	padding: 0px;
+	width: 100%;
+	margin: 5px auto;
+	box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.2);
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.exb-table tr th {
+	font-size: 17px;
+	padding: 5px;
+	background: rgba(255, 255, 255, 0.8);
+	color: #CC0000;
+}
+
+.exb-table tr th .exb-name {
+	padding: 4px 0px;
+}
+
+.exb-table tr th,
+.exb-table tr td {
+	border: 1px solid #FFF
+}
+
+.exb-table tr td.exb-place {
+	width: 35%;
+	text-align: center;
+	padding: 0px 0px 5px 0px;
+}
+
+.exb-table tr td.exb-place .exb-place-name {
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFF;
+	font-family: Arial;
+	margin: 0px auto;
+	letter-spacing: 1px;
+}
+
+.exb-table tr td.exb-place img {
+	width: 50px;
+	margin: 10px auto;
+}
+
+.exb-table tr td.exb-dates {
+	font-size: 20px;
+	text-align: center;
+	color: #FFF;
+}
+
+.exb-table tr.exb-links td {
+	padding: 2px 10px;
+	font-size: 12px;
+	font-weight: bold;
+}
 
 
 /* ---------------------------------------------------
@@ -50,33 +124,43 @@ main-header {
 	#main-content {
 		margin-left: 0px;
 	}
+
+
+	#main-content {
+		margin-left: 0px;
+	}
     
     #sidebar {
         margin-left: -250px;
     }
 
-    #sidebar .navbar-btn {
-        margin-left: 55px;
+    #sidebar #sidebarCollapse {
+        margin-left: 60px;
+        display: block;
     }
-
 
     #sidebar.active {
         margin-left: 0;
     }
 
-    #sidebar.active .navbar-btn {
-        margin-left: 0px;
+    #sidebar.active #sidebarCollapse {
+       margin-left: 0px;
     }
+
 
 	/*#sidebarCollapse {
 		display: block;
-	}*/
+	}
     #sidebarCollapse span {
         display: none;
     }
 
     #sidebar .navbar-btn {
 	    display: block;
+	}
+	*/
+	.exb-table tr td.exb-dates {
+		font-size: 13px;
 	}
 
 }
@@ -141,7 +225,7 @@ h2 {
 }
 
 h3 {
-	border-bottom: 1px solid #CCC;
+	border-bottom: 1px solid rgba(0,0,0, 0.1);
     padding-bottom: 8px;
     font-weight: bold;
     color: #CC0000;

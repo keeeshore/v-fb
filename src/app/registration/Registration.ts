@@ -47,9 +47,13 @@ export class Registration implements AfterViewInit {
 	public recaptha:String = '';
 	public recapthaError:String = '';
 
+	public eventName:String = '';
+
 	public _ERROR_MSG:String = 'Missing Required fields';
 
 	public _SUCCESS_MSG:String = 'SUCCESS';
+
+	public _EVENT_NAME:String = 'General Enquiry';
 
 	public msg:String = '';
 
@@ -69,21 +73,45 @@ export class Registration implements AfterViewInit {
 
 	public ngAfterViewInit(): void {
 		console.log('Registration AfterViewInit::');
+		document.body.style.overflowY = 'auto';
 		this.apiService.insertGoogleCaptha();
 
 	    this.router.queryParams.subscribe((params:any) =>{ 
 	       console.log('ngOnInit::val------------------:', params);
 	       	if (!isNaN(params.id)) {
 	       		console.log('ngOnInit::val------------------:Valid param id', params);
+	       		this.getEventById(params.id).subscribe((eventModel:EventModel)=>{
+	       			this.eventName = eventModel.name || this._EVENT_NAME;
+	       		});
+	       	} else {
+	       		this.eventName = '';
 	       	}
 	    });
+  	}
+
+  	public getEventById(eventId:number):Observable<any> {
+  		let url = ENV.HOST_API_URL + '/events_get.php';
+		return this.apiService.fetch(url).flatMap((response: any) => {
+				if (response && response.events) {
+					let eventModel:EventModel;
+					response.events.map((eModel:EventModel)=>{
+						if (eModel.id === eventId) {
+							eventModel = eModel;
+						}
+					});
+					return new Observable((observer:any) => {
+						observer.next(eventModel);
+					});
+				}
+			}
+		);
   	}
 
   	public onFormSubmit(): void {
 		console.log('Registration onFormSubmit:');
 		let url_back = ENV.HOST_API_URL + 'registration.php';
 		let url = 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/contact';
-		let elem:any = document.getElementById('g-recaptcha-response');
+		let elem:any = document.forms[0].elements['g-recaptcha-response'];
 		let error = false;
 		let errors = [];
 		let hasErrorClass = 'has-error';
@@ -98,7 +126,8 @@ export class Registration implements AfterViewInit {
 			phone: this.phone,
 			email: this.email,
 			comments: this.comments,
-			recaptha: this.recaptha
+			recaptha: this.recaptha,
+			eventName: this.eventName
 		}
 
 		mandatoryFields.forEach((fieldName, indexId)=>{
@@ -126,7 +155,7 @@ export class Registration implements AfterViewInit {
 		}
 
 		if (!error) {
-			this.msg = '';
+			this.msg = 'In progress...';
 			this.apiService.post(url, data).subscribe((res:any)=>{
 				console.log('post response:', res);
 				if (res && res.success) {
@@ -134,6 +163,8 @@ export class Registration implements AfterViewInit {
 				} else {
 					this.msg = this._ERROR_MSG;
 				}
+			}, (err:any) => {
+				this.msg = 'Unknown error!';
 			});
 		} else {
 			console.log('Missing or Invalid fields');

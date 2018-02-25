@@ -1,14 +1,26 @@
+<style>
+ul.event-images li {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #CCC;
+    vertical-align: top;
+    overflow: hidden;
+}
+ul.event-images li img {
+    width: 100%;
+}
+</style>
 <section class="container">
     <div class="row">
         <form class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group hidden">
                <label class="col-sm-2 control-label">Access token</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="accessToken" [(ngModel)]="accessToken" name="accessToken">
                 </div>
             </div>
             <div class="form-group">
-               <label class="col-sm-2 control-label">From</label>
+               <label class="col-sm-1 control-label">From</label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control" id="fromDate" [(ngModel)]="fromDate" name="fromDate">
                 </div>
@@ -46,7 +58,15 @@
             <tbody >
             <tr *ngFor="let eventModel of fbCollection.events;">
                 <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
-                <td>{{eventModel.name}}</td>
+                <td>{{eventModel.name}}
+                    <br/>
+                    Event Images: {{eventModel.photos.length}}
+                    <ul class="list-inline event-images">
+                        <li *ngFor="let photo of eventModel.photos;" style="width:100px;">
+                            <img src="{{photo.source}}" class="img img-responsive">
+                        </li>
+                    </ul>
+                </td>
                 <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
                 <td class="text-center">
                     <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="addEventModel(eventModel)">
@@ -75,7 +95,12 @@
                 <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
                 <td>
                     <h4>{{eventModel.name}}</h4>
-                    <h4>{{eventModel.name}}</h4>
+                    Event Images: {{eventModel.photos.length}}
+                    <ul class="list-inline event-images">
+                        <li *ngFor="let photo of eventModel.photos;">
+                            <img src="{{photo.source}}" class="img img-responsive">
+                        </li>
+                    </ul>
                 </td>
                 <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
                 <td class="text-center">
