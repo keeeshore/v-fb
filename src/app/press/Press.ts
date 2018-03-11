@@ -51,6 +51,8 @@ export class Press {
 
 	public albumId:number = 808322362620389;
 
+	public imageHostPath:string = ENV.HOST_URL;
+
 	constructor(
 		private apiService: ApiService, 
 		private router: ActivatedRoute,

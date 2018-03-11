@@ -1,9 +1,11 @@
 <?php
 
-	$IMG_ROOT = $_SERVER['DOCUMENT_ROOT'];
-	$IMG_EVENTS_DIR = '../events-assets';
-	$IMG_POSTS_DIR = '../posts-assets';
-	$IMG_PHOTOS_DIR = '../photos-assets';
+	$IMG_ROOT = $_SERVER['DOCUMENT_ROOT'];	
+	
+	$IMG_EVENTS_DIR = 'events-assets';
+	$IMG_POSTS_DIR = 'posts-assets';
+	$IMG_PHOTOS_DIR = 'photos-assets';
+	$IMG_RELATIVE_PATH = '../';
 
 	//set_time_limit ( int 120 );
 

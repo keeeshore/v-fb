@@ -10,55 +10,58 @@
            <div class="bg-danger">
                 {{reason}}
             </div>
-        </div>  
+        </div>
 
-        <form class="col-sm-12 form-horizontal" action="{{hostApi}}/authorize.php" method="post">
-
-             <div class="row">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">FB Login status</label>
-                    <div class="col-sm-5">
-                        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-                        <label class="control-label" id="status"></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">User name</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="userName" [(ngModel)]="userName" name="userName">
-                    </div>
-                </div>
-            </div>
+        <div class="col-sm-12">
             
-            <div class="row">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
+            <form class="form-horizontal" action="{{hostApi}}/authorize.php" method="post">
+
+                 <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">FB Login status</label>
+                        <div class="col-sm-5">
+                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                            <label class="control-label" id="status"></label>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="form-group {{captchaError}}">
-                    <label for="email" class="col-sm-2 col-form-label"></label>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">User name</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="userName" [(ngModel)]="userName" name="userName">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group {{captchaError}}">
+                        <label for="email" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <div class="g-recaptcha" data-sitekey="6Lelvj8UAAAAALDtKIhd7Q_ov4TZYXNL0OQWuVFZ"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2"></div>
                     <div class="col-sm-10">
-                        <div class="g-recaptcha" data-sitekey="6Lelvj8UAAAAALDtKIhd7Q_ov4TZYXNL0OQWuVFZ"></div>
+                        <input type="button" class="btn btn-xs btn-warning" value="Login" (click)="onLoginClick()">
+                        <a class="btn btn-xs btn-info" href="{{hostUrl}}">Cancel</a>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-10">
-                    <input type="button" class="btn btn-xs btn-warning" value="Login" (click)="onLoginClick()">
-                    <a class="btn btn-xs btn-info" href="{{hostUrl}}">Cancel</a>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
 
     </div>
 </div>

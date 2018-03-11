@@ -15,6 +15,8 @@ import {DialogComponent} from "../dialog/DialogComponent";
 import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../../admin/photos/PhotoCollection';
 import {EventsCollection, EventModel} from '../../admin/events/EventsCollection';
 
+import {PostCollection, PostModel} from '../../admin/posts/PostCollection';
+
 import {
   trigger,
   state,
@@ -52,7 +54,11 @@ export class Home {
 
     public hero:any =  { state: 'active' };
 
-    public viewPortHeight:string = '100px';
+    public viewPortHeight:string = 'auto';
+
+    public dataModels:Array<DataModel> = new Array<DataModel>();
+
+    public _MAX_NO:number = 30;
 
     public toggleState():void {
     	this.hero.state = this.hero.state === 'inactive' ? 'active' : 'inactive';
@@ -62,17 +68,31 @@ export class Home {
 
     public eventsCollection:EventsCollection = new EventsCollection();
 
+    public postCollection:PostCollection = new PostCollection();
+
+    public carouselComponent:CarouselComponent;
+
+    public activePhotoSrc:string = '/public/images/loader-1.gif';
+
+    public albumIdArr1:Array<string> = [ 'POSTS', '808322362620389', '541765672609394', '178838325568799' ];
+
+    public albumIdArr:Array<string> = [ 'POSTS' ];
+
     @ViewChildren(CarouselComponent) carouselComponents:QueryList<CarouselComponent> =  new QueryList<CarouselComponent>();
 
     @ViewChildren(DialogComponent) dialogComponents:QueryList<DialogComponent> =  new QueryList<DialogComponent>();
+
+    @ContentChildren(Element) inputElems:QueryList<Element> = new QueryList<Element>();
 
 	constructor(
 		private apiService: ApiService,
 		private router: ActivatedRoute,
 		private scrollerService: ScrollerService) {
 		console.log('Home component init');
-		this.viewPortHeight = (window.innerHeight - 50) + 'px';
-        console.log('viewPortHeight', this.viewPortHeight);
+		this.viewPortHeight = window.innerHeight + 'px';
+		//this.viewPortHeight = '614px';
+		
+        //console.log('viewPortHeight', this.viewPortHeight);
 	}
 
 	public getDate (dateStr:string):string {
@@ -82,37 +102,93 @@ export class Home {
 
 	public ngOnInit():void {
 		console.log('ngOnInit::');
-		this.getPhotosFromTable(this.albumId);
-		this.getExhibitionsFromTable();
+		var self = this;		
+		//this.getPhotosFromTable(this.albumId);
+		var randomNo = Math.floor(Math.random() * Math.floor(this.albumIdArr.length));
+		this.getRandomCarouselData(this.albumIdArr[randomNo]).subscribe((response:any) => {
+			window.setTimeout(function () {
+				this.carouselComponent.setActiveIndex(0);
+			}.bind(this), 200);
+			window.setTimeout(function () {
+				this.startAutoPlay();
+			}.bind(this), 3500);
+		});
+
+		this.getExhibitionsFromTable().subscribe();
+  	}
+
+  	public getRandomCarouselData(albumId:string):Observable<any> {
+  		var self = this;
+  		console.log('############################getRandomCarouselData################', albumId);
+  		if (albumId === 'POSTS') {
+  			return this.getPostsFromTable();
+  		} else {
+  			return this.getPhotosFromTable(albumId);
+  		}
   	}
 
     ngAfterViewInit () {
-        //console.log('CarouselItem::ngAfterViewInit:::active', this.active);
+    	var self = this;
+        this.carouselComponent = this.carouselComponents.first;
+        this.carouselComponent.afterItemChange().subscribe((response:any)=>{
+	        	console.log('response in afterItemChange', response);
+	        	//this.activePhotoSrc = this.photoCollection.photos[response.currIndex].source;
+	        	let dataModel:DataModel =  self.dataModels[response.currIndex];
+	        	dataModel.defaultSrc = dataModel.imgSrc;
+	        },
+	        (err:any) => {
+	        	console.log('ERRR in afterItemChange');
+	        });
     }
 
-  	public getPhotosFromTable (albumId:string) {
+    public getPostsFromTable ():Observable<any> {
+		console.log('getPostsFromTable...');
+		let url = ENV.HOST_API_URL + '/posts_get.php';
+		let self = this;
+		return this.apiService.fetch(url).flatMap((response: any) => {
+				console.log('getPostsFromTable response ->', response);
+				this.postCollection.posts = [];
+				if (response.posts.length > 0) {
+					response.posts.filter((post:any, indexId:number) => {
+						let dataModel:DataModel = new DataModel();
+						dataModel.description = post.description;
+						dataModel.imgSrc = post.full_picture;
+						if (indexId === 0) {
+							dataModel.defaultSrc = dataModel.imgSrc;
+						}
+						self.dataModels.push(dataModel);
+					});
+				}
+				return new Observable((observer:any)=>{
+					observer.next(this.dataModels);
+				})
+			}
+		);
+	}
+
+  	public getPhotosFromTable (albumId:string):Observable<any> {
 		console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/photos_get.php?albumId=' + albumId;
 		let self = this;
-		return this.apiService.fetch(url).subscribe(
+		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
 				console.log('getPhotosFromTable response ->', response);
 				if (response.photos.length > 0) {
-					response.photos.filter((photo:any) => {
-						let photoModel:PhotoModel = new PhotoModel(photo);
-						this.photoCollection.photos.push(photoModel);
-												
+					response.photos.filter((photo:PhotoModel, indexId:number) => {
+						//console.log('>>>>>>>>>>>>>>>>indexId', indexId);
+						let dataModel:DataModel = new DataModel();
+						dataModel.description = photo.name;
+						dataModel.imgSrc = photo.source;
+						if (indexId === 0) {
+							dataModel.defaultSrc = photo.source;
+							console.log('>>>>>>>>>>>>>>>>indexId:0:', dataModel);
+						}
+						this.dataModels.push(dataModel);
 					});
-					window.setTimeout(function () {						
-						this.carouselComponents.first.setActiveIndex(0);
-					}.bind(this), 200);
-					window.setTimeout(function () {						
-						self.startAutoPlay();
-					}, 3500);
 				}
-			},
-			(err) => { 
-				console.log('getPhotosFromTable ERR ->', err);
+				return new Observable((observer:any)=>{
+					observer.next(this.dataModels);
+				})
 			}
 		);
 	}
@@ -120,27 +196,25 @@ export class Home {
 	public startAutoPlay () {
 		var self = this;
 		window.setInterval(function () {
-			self.carouselComponents.first.next();
+			self.carouselComponent.next().subscribe();
 		}, 6000);
 	}
 
 	public getExhibitionsFromTable () {
 		console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
-		let self = this;
-		return this.apiService.fetch(url).subscribe(
+		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
 				console.log('getEventsFromTable response ->', response);
 				if (response.events.length > 0) {
 					response.events.filter((event:any) => {
 						let eventModel:EventModel = new EventModel(event);
-						//console.log('set EventModel ->', eventModel);
 						this.eventsCollection.events.push(eventModel);
 					});
 				}
-			},
-			(err) => { 
-				console.log('getEventsFromTable ERR ->', err);
+				return new Observable((observer:any)=>{
+					observer.next(this.eventsCollection.events);
+				});
 			}
 		);
 	}
@@ -164,6 +238,22 @@ export class Home {
 		console.log('openDialog clicked....');
 		this.dialogComponents.first.open();
 	}
+
+
+}
+
+
+export class DataModel {
+
+	public description:string = '';
+
+	public id:string = '';
+
+	public imgSrc:string = '';
+
+	public defaultSrc:string = '';
+
+	constructor () {}
 
 
 }

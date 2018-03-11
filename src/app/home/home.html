@@ -51,15 +51,15 @@
 								<td colspan="2" >
 									<div class="row">
 										<div class="col-xs-6">
-											<a *ngIf="isUpcomingEvent(eventModel.startTime)" class="exb-btn"
-											[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
-										</a>
-									</div>
-									<div class="col-xs-6 text-right">
-											<a class="exb-btn" 
-												[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
+												<a *ngIf="isUpcomingEvent(eventModel.startTime)" class="exb-btn"
+												[routerLink]="['/register']" [queryParams]="{ id: eventModel.id }">Book Now
 											</a>
-									</div>
+										</div>
+										<div class="col-xs-6 text-right">
+												<a class="exb-btn" 
+													[routerLink]="['/shows']" [queryParams]="{ id: eventModel.id }">Details
+												</a>
+										</div>
 									</div>
 								</td>
 							</tr>
@@ -85,25 +85,25 @@
 
 			<div class="col-sm-7" id="main-right" [ngStyle]="{ 'height': viewPortHeight }">
 
-						<!-- <input type="button" name="showGallery" (click)="showGallery()" value="show Gallery()"> -->
-				<carousel-component id="home-photo-component" uid="photo-component" activeIndex="1">
+				<carousel-component 
+					id="home-photo-component"
+					uid="photo-component" 
+					navigation="false"
+					activeIndex="1">
 
-					<carousel-item *ngFor="let photoModel of photoCollection.photos; let myIndex = index;" 
+					<carousel-item *ngFor="let dataModel of dataModels; let myIndex = index;" 
 					(onItemInit)="onItemLoaded()">
+						<div class="photo-model-container text-center">
+							<!-- <input type="text" id="post-model-{{myIndex}}" value="{{dataModel.fullPicture}}" /> -->
+							<img *ngIf="dataModel.defaultSrc !== ''"
+								class="img img-responsive"
+								src="{{imageHostPath}}//{{dataModel.defaultSrc}}"/>
+						</div>
+					</carousel-item>
 
-					<div class="photo-model-container text-center" >
-										<!-- <h2>{{photoModel.name}} </h2>
-											<p>{{photoModel.description}} </p> -->
-											<!-- <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}" [ngStyle]="{ 'height': viewPortHeight }" /> -->
-											<a [routerLink]="['/press']">
-												<img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}"/>
-											</a>
+				</carousel-component>
 
-										</div>
-
-									</carousel-item>
-
-				</carousel-component>				
+								
 
 			</div>
 

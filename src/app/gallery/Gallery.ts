@@ -57,12 +57,15 @@ export class Gallery {
 
 	public photoIndexId:number = 0;
 
+	public imageHostPath:string = ENV.HOST_URL;
+
 	constructor(
 		private apiService: ApiService, 
 		private router: ActivatedRoute,
 		private scrollerService: ScrollerService,
 		private route:Router,
 		private location:Location) {
+		debugger;
 		console.log('Gallery component init');
 	}
 
@@ -72,16 +75,17 @@ export class Gallery {
 
   	public ngAfterViewInit(): void {
 		console.log('void AfterViewInit::');
+		debugger;
 		this.photoSlider = this.sliders.first;
 
 	    this.router.queryParams.subscribe((params:any) =>{ 
 	       console.log('ngAfterViewInit::router------------------:', params);
-	       if (params && params.albumId) {
-	       	this.showPhotos(params.albumId);
-	       }
+	       	if (params && params.albumId) {
+	       		this.showPhotos(params.albumId);
+	       	}
 	    });
 
-		this.photoSlider.sliderSubject.subscribe((stateIndex:State) => {
+		/*this.photoSlider.sliderSubject.subscribe((stateIndex:State) => {
 				console.log('detailSlider observer', State[stateIndex]);
 				if ('CLOSE' === State[stateIndex].toString()) {
 					this.route.navigate(['/gallery'], {});
@@ -89,24 +93,33 @@ export class Gallery {
 			},
 			(err:any) => { 
 				console.log('photoSlider err', err)
-		});
+		});*/
 
   	}
 
   	public showPhotos(albumId:string):void {
+  		debugger;
   		console.log('showPhotos', albumId);
   		console.log('showPhotos', this.albumComponents);
   		var self = this;
-  		this.albumComponents.find((album, indexId) => {
-  			console.log('filter::', album.albumModel.id, albumId);
-  			if (album.albumModel.id === albumId) {
-  				console.log('match found:::', album.photos);
-  				self.selectedAlbum = album.albumModel;
-  				self.albumPhotos = album.photos;
-  				return true;
-  			}
+  		this.selectedAlbum = new AlbumModel();
+  		this.selectedAlbum.name = 'loading...';
+  		this.albumPhotos = new Array<PhotoModel>();
+
+  		this.photoSlider.open().subscribe((state:string)=>{
+			if (state === 'open') {
+				this.albumComponents.find((album, indexId) => {
+		  			if (album.albumModel.id === albumId) {
+		  				console.log('match found:::', album.photos);
+		  				self.selectedAlbum = album.albumModel;
+		  				self.albumPhotos = album.photos;
+		  				return true;
+		  			}
+		  		});
+			} else if (state === 'close') {
+				this.route.navigate(['/gallery'], {});
+			}
   		});
-  		this.sliders.first.open();
   	}
 
   	public openDialog(photoModel:PhotoModel, indexId:number):void {

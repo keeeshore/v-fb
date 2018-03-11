@@ -44,10 +44,17 @@ if (is_array($result['events']) || is_object($result['events'])) {
 
 			
 			if ($value['cover'] && $value['cover']['source'] !== '') {
-				$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
-				if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
-					saveImage($value['cover']['source'], $eventImgName);
+				$eventImgName = $IMG_RELATIVE_PATH.$IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';
+				
+				if (file_exists($IMG_RELATIVE_PATH.$IMG_EVENTS_DIR)) {
+					//echo 'FILE IMG_EVENTS_DIR EXITS:ROOT>'.$IMG_EVENTS_DIR;
+				} else if (mkdir($IMG_RELATIVE_PATH.$IMG_EVENTS_DIR , 0777)) {
+					//echo 'MAKE IMG_EVENTS_DIR SUCCESSFUL:ROOT>'.$IMG_EVENTS_DIR;
 				}
+				saveImage($value['cover']['source'], $eventImgName);
+				/*if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
+					saveImage($value['cover']['source'], $eventImgName);
+				}*/
 			}
 
 			$sql = "UPDATE $DB_NAME.`events` SET `uid` = '$uid',`name` = '$name',`description` = '$description',`starttime` = '$startTime', `endtime` = '$endTime', `cover` = '$eventImgName' WHERE `events`.`uid` ='$uid' LIMIT 1";
@@ -59,10 +66,17 @@ if (is_array($result['events']) || is_object($result['events'])) {
 		} else {
 
 			if ($value['cover'] && $value['cover']['source'] !== '') {
-				$eventImgName = $IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';	
-				if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
-					saveImage($value['cover']['source'], $eventImgName);
+				$eventImgName = $IMG_RELATIVE_PATH.$IMG_EVENTS_DIR.'/event-'.$uid.'.jpg';
+				
+				if (file_exists($IMG_RELATIVE_PATH.$IMG_EVENTS_DIR)) {
+					//echo 'FILE IMG_EVENTS_DIR EXITS:ROOT>'.$IMG_EVENTS_DIR;
+				} else if (mkdir($IMG_RELATIVE_PATH.$IMG_EVENTS_DIR , 0777)) {
+					//echo 'MAKE IMG_EVENTS_DIR SUCCESSFUL:ROOT>'.$IMG_EVENTS_DIR;
 				}
+				saveImage($value['cover']['source'], $eventImgName);				
+				/*if (file_exists($IMG_EVENTS_DIR) || mkdir($IMG_EVENTS_DIR , 0777)) {
+					saveImage($value['cover']['source'], $eventImgName);
+				}*/
 			}
 		
 			$sql = "INSERT INTO $DB_NAME.`events` (`id`, `name`, `description`, `starttime`, `endtime`, `cover`, `uid`) VALUES ('', '$name', '$description', '$startTime', '$endTime', '$eventImgName', '$uid')";

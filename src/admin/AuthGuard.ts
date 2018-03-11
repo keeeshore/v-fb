@@ -26,7 +26,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 			this.router.navigate(['/admin']);
 			return true;
 		}
-		//return this.isLoggedIn !== '';
 		return true;
 	}
 
@@ -38,6 +37,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 			console.log('canActivateChild state url is not /admin-> navigate to LOGIN');
 			this.router.navigate(['/admin']);
 		}
+		//return true;//TEST ONLY
 		return this.isLoggedIn !== '';
 	}
 

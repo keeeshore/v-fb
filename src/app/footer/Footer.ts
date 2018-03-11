@@ -1,6 +1,7 @@
 import {Component,  ViewChildren, QueryList, ContentChildren} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
+import {ENV} from '../environments/environment';
 
 
 @Component({
@@ -12,8 +13,10 @@ import { URLSearchParams } from '@angular/http';
 
 export class Footer {
 
+	public adminUrlStr:string = ENV.ADMIN_URL;
+
 	constructor() {
-		console.log('Footer us component init');
+		console.log('Footer us component init', this.adminUrlStr);
 	}
 
 }

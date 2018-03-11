@@ -38,9 +38,9 @@
     <div class="row">
         <h4 class="text-danger">Events from Facebook</h4>
     </div>
-    <div class="row" *ngIf="fbCollection.photos">
+    <div class="row text-center" *ngIf="fbCollection.photos">
         Total: {{fbCollection.photos.length}}
-        <ul class="list-inline photo-container">
+        <ul class="list-inline photo-container text-center">
             <li *ngFor="let photoModel of fbCollection.photos;">
                 <h4>#{{photoModel.id}}</h4>
                 <div class="btn-container">
@@ -56,16 +56,16 @@
     <div class="row">
         <h4 class="text-danger">Photos from Table</h4>
     </div>
-    <div class="row" *ngIf="photoCollection.photos">
+    <div class="row text-center" *ngIf="photoCollection.photos">
         Total: {{photoCollection.photos.length}}
-        <ul class="list-inline photo-container">
+        <ul class="list-inline photo-container text-center">
           <li *ngFor="let photoModel of photoCollection.photos;">
             <h4>{{photoModel.uid}}</h4>
             <div class="btn-container">
                 <input type="button" class="btn btn-xs btn-warning" value="Delete" (click)="onDeletePhotoModel(photoModel)">
                 <input type="button" class="btn btn-xs btn-warning" value="Update" (click)="onUpdatePhotoModel(photoModel)">
             </div>
-            <img class="img img-responsive" src="{{imageHostPath}}{{photoModel.source}}">
+            <img class="img img-responsive" src="{{imageHostPath}}/{{photoModel.source}}">
             <div class="name">{{photoModel.name}}</div>            
           </li>
         </ul>

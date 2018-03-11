@@ -28,7 +28,7 @@
                     <h4 class="gallery-name" *ngIf="selectedAlbum">{{selectedAlbum.name}}</h4>
                     <ul class="list-inline album-container">
                         <li *ngFor="let photoModel of albumPhotos; let myIndex = index;" style="border: none;">
-                            <img class="img img-responsive" src="{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
+                            <img class="img img-responsive" src="{{imageHostPath}}//{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
                         </li>
                     </ul>
                 </div>
@@ -40,24 +40,11 @@
 
      <dialog-component>
         <pre class="text-center">
-            <img src="{{selectedPhoto.source}}"/>
+            <img src="{{imageHostPath}}//{{selectedPhoto.source}}" />
             <div>{{selectedPhoto.name}}</div>
         </pre>
     </dialog-component>
 
-   <!--  <dialog-component>
-        <carousel-component id="gallery-photo-component" uid="gallery-photo-component">
-
-                    <carousel-item *ngFor="let photoModel of albumPhotos; let myIndex = index;" active="{{myIndex === photoIndexId}}" >
-
-                        <div class="photo-model-container text-center" >
-                            <img class="img img-responsive" src="{{photoModel.source}}"/>
-                        </div>
-
-                    </carousel-item>
-
-            </carousel-component>
-    </dialog-component> -->
 
 
 </div>

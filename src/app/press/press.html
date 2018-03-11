@@ -14,7 +14,7 @@
                 <h3 *ngIf="selectedAlbum">{{selectedAlbum.name}}</h3>
                 <ul class="press-list">
                     <li *ngFor="let photoModel of albumPhotos; let myIndex = index;">
-                        <img class="img img-responsive" src="{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
+                        <img class="img img-responsive" src="{{imageHostPath}}//{{photoModel.source}}" (click)="openDialog(photoModel, myIndex)" />
                     </li> 
                 </ul>
             </div>
@@ -25,7 +25,7 @@
      <dialog-component>
         <h3>{{selectedPhoto.name}}</h3>
         <pre style="border: none; text-align: center;">
-            <img style="border: none; text-align: center; background-color: none;" src="{{selectedPhoto.source}}"/>            
+            <img style="border: none; text-align: center; background-color: none;" src="{{imageHostPath}}//{{selectedPhoto.source}}"/>            
         </pre>
     </dialog-component>
 

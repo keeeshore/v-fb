@@ -42,7 +42,11 @@ export class Slider {
 
 	public observer:Observable<State>;
 
+	public stateObserver:Observable<any>;
+
 	public sliderSubject:Subject<State> = new Subject<State>();
+
+	public stateSubject:Subject<string> = new Subject<string>();
 
 	constructor (private apiService:ApiService) {
 	}
@@ -51,6 +55,11 @@ export class Slider {
 		this.observer = Observable.create((observer:Subject<State>) => {
 		  	this.sliderSubject.next(State.NONE);
 		});
+
+		this.stateObserver = Observable.create((observer:Subject<string>) => {
+			console.log('stateObserver::Observable:::', observer);
+		  	//this.sliderSubject.next(State.NONE);
+		});
 	}
 
 	public _open():void {
@@ -58,20 +67,22 @@ export class Slider {
 		document.body.style.overflowY = 'hidden';
 	}
 
-	public open():void {
+	public open():Subject<string> {
 		this._open();
 		//this.observer = Observable.create((observer:Subject<Direction>) => {
-		  	this.sliderSubject.next(State.OPEN);
+		  	//this.sliderSubject.next(State.OPEN);
 		//});
 		//return this.observer;
+		return this.stateSubject;
 	}
 
-	public close():void {
+	public close():Subject<string> {
 		this._close();
 		//this.openObserver = Observable.create((observer:Subject<Direction>) => {
-		  	this.sliderSubject.next(State.CLOSE);
+		  	//this.sliderSubject.next(State.CLOSE);
 		//});
 		//return this.observer;
+		return this.stateSubject;
 	}
 
 	public _close():void {
@@ -89,7 +100,9 @@ export class Slider {
 	public animationDone(event:Event):void {
 		if (this.state === 'open') {
 			this.btnState = 'show';
-		}	
+		}
+		console.log('SLIDER animationDone>>>>>>>>>>>state>', this.state);
+		this.stateSubject.next(this.state);
 	}
 	
 }

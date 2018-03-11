@@ -51,6 +51,15 @@ module.exports = webpackMerge(commonConfig, {
           ignore: [ '*.jpg' ],
           copyUnmodified: true
         }
+    ]),
+
+    new CopyWebpackPlugin([{ 
+          from: helpers.root('public'),
+          to:  helpers.root('dist/public'),
+          ignore: [''],
+          copyUnmodified: true
+        }
     ])
+
   ]
 });

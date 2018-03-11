@@ -60,6 +60,11 @@ module.exports = {
             template: 'src/index.html'
         }),
 
+        new HtmlWebpackPlugin({
+            filename: '/admin/index.html',
+            template: 'src/index.html'
+        }),
+
         /*new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'src/index.html',

@@ -52,7 +52,7 @@ export class Photos implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		console.log('Events component init');
+		console.log('Photos component init');
 		this.accessToken = this.apiService.accessToken;
 		let albumId:string = '';
 	    this.router.params.forEach((params: Params) => {
@@ -110,6 +110,16 @@ export class Photos implements OnInit {
 		return photos.length > 0 ? true : false;
 	}
 
+	public setPhotosFromTable (photosArr:Array<PhotoModel>, dataArray:Array<any>):Boolean {
+		let photos:Array<PhotoModel> = dataArray.map((model:any) => {
+			model.images = [ {source: model.source }];
+			let photoModel = new PhotoModel(model);
+			photosArr.push(photoModel);
+			return photoModel;
+		});
+		return photos.length > 0 ? true : false;
+	}
+
 	public onGetPhotosClick():void {
 		this.fbCollection = new PhotoCollection(this.albumId);
 		let photos = new Array<PhotoModel>();
@@ -118,9 +128,11 @@ export class Photos implements OnInit {
 
 		this.getPhotos(this.photoParams, photos).subscribe(
 			(response) => {
+				debugger;
 				//console.log('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
 				this.apiService.accessToken = this.accessToken;
 				this.setPhotos(this.fbCollection.photos, response.data);
+				this.message = 'Facebook GET Complete..';
 			},
 			(err) => { console.log('getPhotos err:::', err)},
 			() => {console.log('getPhotos final:::')}
@@ -131,8 +143,8 @@ export class Photos implements OnInit {
 		//console.log('getPhotosFromTable...');
 		this.getPhotosFromTable(albumId).subscribe(
 			(response: any) => {
-				//console.log('getPhotosFromTable response ->', response);
-				this.setPhotos(this.photoCollection.photos, response.photos);
+				console.log('getPhotosFromTable response ->', response);
+				this.setPhotosFromTable(this.photoCollection.photos, response.photos);
 				this.setLastEndTime();
 				return new Observable((observer:any) => {
                 	observer.next(response);
@@ -153,7 +165,7 @@ export class Photos implements OnInit {
 		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
 				//console.log('getPhotosFromTable response ->', response);
-				this.setPhotos(this.photoCollection.photos, response.photos);
+				this.setPhotosFromTable(this.photoCollection.photos, response.photos);
 				this.setLastEndTime();
 				return new Observable((observer:any) => {
                 	observer.next(response);
@@ -273,6 +285,7 @@ export class Photos implements OnInit {
 
 	public getPhotos (photoParams:PhotoParams, collection:Array<any>):Observable<any> {
 		//console.log('getPhotos....called with photoParams:', photoParams, 'COLLETION:::', collection);
+		//curl -i -X GET \"https://graph.facebook.com/v2.10/213393798779918?fields=photos%7Bid%2Cname%2Ccreated_time%2Cimages%7D&since=1488710400&until=1520670720&limit=100&pretty=1&access_token=EAACEdEose0cBAK7IguI1fcZCy1rZCpGs0hxGtZBL3FTIZBeZBWZAVBVTkpcsD7PKZAoZCGZATVrFQPos7mhwqMqeetMFKI9AQOsYjB5ph8WFEVhOLzJBGXZCoJbdZBM55Y20YbpZAgKCxhdbfjFEXZBr2vmcYJaaqIuMTrSxh407UYcUUiOkBYJjtjqkC3GMj0Kt93j8ZD"
 		this.message = 'In progress...';
 		
         if (!this.isValidDateRange(this.fromDate, this.toDate)) {
@@ -291,7 +304,9 @@ export class Photos implements OnInit {
 		let url = ENV.FB_GRAPH_URL;
 		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
 		
+		//params.append('type', photoParams.albumId);
 		params.append('type', 'photos');
+		params.append('id', photoParams.albumId);
 		params.append('access_token', this.accessToken);
 		params.append('since', since.toString());
 		params.append('until', until.toString());
@@ -299,43 +314,48 @@ export class Photos implements OnInit {
 		params.append('limit', photoParams.limit);
 		params.append('pretty', photoParams.pretty);
 
-		if (photoParams.after !== '' && photoParams.nextUrl !== '') {
-			//console.log('after is present...ADDING after');
-			params.append('after', photoParams.after);
-		}
 		url = url + '?' + params.toString();
+
+		if (photoParams.after !== '' && photoParams.nextUrl !== '') {
+			console.log('after is present...ADDING after');
+			url = photoParams.nextUrl;
+			//params.append('after', photoParams.after);
+		}	
 		
-		//console.log('url->', url);
+		console.log('url->', url);
 
 		return this.apiService.fetch(url).flatMap(
 			(response:any) => {
-				//console.log('getPhotos RESPONSE ->', response);
+				console.log('>>>>>>>>>>>>>>>>>>>>>>getPhotos RESPONSE ->', response);
+				let responseData:any = response;
 				debugger;
-				
-				if (response && response.data.length > 0) {
-					let data = response.data;
-					let pagingData:PagingData = new PagingData(response.paging);
+				if (!response || response.error) {
+					return new Observable((observer:any) => {
+		                observer.next({error: response ? response.error : 'error'});
+		            });
+				}
+
+				if (responseData && responseData.data.length > 0) {
+
+					let pagingData:PagingData = new PagingData(responseData.paging);
 					
-					data.filter((dataModel:any)=>{ collection.push(dataModel)});
+					responseData.data.filter((dataModel:any)=>{ collection.push(dataModel)});
 					
 					if (pagingData.next !== 'none') {
-						//console.log(collection.length, ':::pagingData.NEXT PRESENT');
-						this.photoParams.after = pagingData.cursors.after;
-						this.photoParams.nextUrl = pagingData.next;
-						return this.getPhotos(this.photoParams, collection);
+						console.log(collection.length, ':::pagingData.NEXT PRESENT');
+						photoParams.after = pagingData.cursors.after;
+						photoParams.nextUrl = pagingData.next;
+						return this.getPhotos(photoParams, collection);
 					} else {
-						this.photoParams.after = '';
-						this.photoParams.nextUrl = '';
-						//console.log('---------------------------------------------------- pagingData complete--------ALL DONE!!', collection);
-						//this.dialogSubject.next({data: collection});
+						photoParams.after = '';
+						photoParams.nextUrl = '';
 						return new Observable((observer:any) => {
 			                observer.next({data: collection});
 			            });
 					}
+
 				} else {
 					this.message = 'Complete!';
-					//console.log('-------------------------------------------ALL DONE!!', collection);
-					//this.dialogSubject.next({data: collection});
 					return new Observable((observer:any) => {
 		                observer.next({data: collection});
 		            });

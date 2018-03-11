@@ -7,9 +7,11 @@ import {ENV} from '../../app/environments/environment';
 
 export class PhotoParams  {
 
-    public fields:string = 'id,name,created_time,source';
+    public fields_orig:string = 'id,name,created_time,source';
 
-    public limit:string = '100';
+    public fields:string = 'id,name,created_time,images';
+
+    public limit:string = '5';
 
     public pretty:string = '1';
     
@@ -64,7 +66,7 @@ export class PhotoModel  {
         this.name = photoModel.name || '';      
         this.uid = photoModel.uid || '';
         this.id = photoModel.id;
-        this.source = photoModel.source;
+        this.source = photoModel.images ? photoModel.images[0].source : '';
         this.createdTime = moment(photoModel.createdTime || '').format(ENV.DATE_TIME_FORMAT);
     }
 

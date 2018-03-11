@@ -2,3 +2,21 @@ label {
 	font-size: 11px;
 	color: black;
 }
+
+.ready {
+	/*background: url('/public/images/loader-1.gif') no-repeat top left;
+	background-size: 34px;
+	height: 35px;*/
+}
+
+.in-progress {
+	background: url('/public/images/loader-1.gif') no-repeat top left;
+	background-size: 34px;
+	height: 35px;
+}
+
+.done {
+	background: url('/public/images/success.png') no-repeat top left;
+	background-size: 34px;
+	height: 35px;
+}

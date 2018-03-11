@@ -42,6 +42,8 @@ export class CarouselItem implements OnInit, AfterViewInit, DoCheck  {
 
     public animCss:any = 'inactive';
 
+    public indexNo:number = 0;
+
     constructor (private carouselService:CarouselService) {
         //console.log('CarouselItem:::constructor', carouselService.id);
         this.carouselService = carouselService;

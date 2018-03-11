@@ -40,7 +40,7 @@
 	}
 	//echo json_encode(array( 'result' => $result->success ));
 	//exit;
-
+ 
 	//if ($value && $value['userName'] && $value['password']) {
 	if ($userName && $password && $success) {
 

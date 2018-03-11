@@ -6,6 +6,8 @@
 	padding: 0px;
 	margin: 0px;
 	width: auto;
+	left: 0px;
+	right: 0px;
 }
 
 .slider-container .slider-content {
@@ -13,6 +15,7 @@
 	overflow-y: scroll;
 	position: relative;
 	height: 100%;
+	/*width: 100%;*/
 }
 
 .slider-container .close-btn-container {
@@ -35,6 +38,10 @@
 }
 
 @media (min-width: 768px) {
+	.slider-container {
+		left: 190px;
+	}
+
 	.slider-container .close-btn-container { 
 	    left: 190px;
 	}

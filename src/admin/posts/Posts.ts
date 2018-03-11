@@ -112,6 +112,12 @@ export class Posts implements OnInit {
         return this.apiService.fetch(url).flatMap(
             (response: any) => {
                 //console.log('getPosts RESPONSE ->', response);
+                if (!response || response.error) {
+                    return new Observable((observer:any) => {
+                        observer.next({error: response ? response.error : 'error'});
+                    });
+                }
+                
                 if (response.data && response.data.length > 0) {
                     let pagingData:PagingData = new PagingData(response.paging);
                     //let isSet:Boolean = this.setEvents(this.fbCollection, response.data);

@@ -14,6 +14,10 @@
 
 }
 
+#home {
+	background: #e6da62;
+}
+
 #home-container h3 {
 	color: #FFF;
 }
@@ -28,6 +32,8 @@
 	height: 100%;
 }
 
+
+
 #home #main-left {
 	overflow: auto;
 	background: url('public/images/page-bg-gold.jpg');
@@ -36,19 +42,21 @@
 	background-position: center;
 	background-size: 100%;
 	padding-bottom: 30px;
+	height: 100%;
+	min-height: 100%;
 }
 
 
 #home #main-left,
 #home #main-left #home-photo-component {
-
 	height: 100%;
 }
 
-#home #main-right {
-	/*background: #FFF;*/
-	padding-top: 5px;
 
+#home #main-right {
+	padding-top: 5px;
+	background: #e6da62;
+	max-height: 614px;
 }
 
 .exhibition-list {
@@ -76,12 +84,20 @@
 
 #home-photo-component /deep/ #photo-component.carousel-container #navigation-photo-component {
 	position: absolute;
-	bottom: 0;
+	top: 0;
 	left: 40%;
 }
 
 #home-photo-component /deep/ #photo-component.carousel-container .photo-model-container {
 	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	text-align: center;
+	background: url('/public/images/loader-1.gif') no-repeat center;
 }
 
 #home-photo-component /deep/ #photo-component.carousel-container .carousel-item.show {
@@ -91,13 +107,6 @@
 #home-photo-component /deep/ #photo-component.carousel-container .photo-model-container .photo-name,
 #home-photo-component /deep/ #photo-component.carousel-container .photo-model-container .photo-desc {
 	position: absolute;
-}
-
-.photo-model-container {
-	height: 100%;
-	overflow: hidden;
-	position: relative;
-	text-align: center;
 }
 
 .photo-model-container h2 {
@@ -119,7 +128,7 @@
 
 .photo-model-container img {
 	margin: 0px auto;
-	height: 100%;
+	height: 100%;	
 }
 
 

@@ -47,6 +47,8 @@ export class AlbumComponent {
 
 	public thumbnailSource:string = '';
 
+	public imageHostPath:string = ENV.HOST_URL;
+
 	public photos:Array<PhotoModel> = new Array<PhotoModel>();
 
 	constructor(

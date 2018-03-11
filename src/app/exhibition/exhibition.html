@@ -11,6 +11,10 @@
 <div class="container">
 
 			<div class="row">
+
+				<div class="text-center" *ngIf="!isEventsLoaded">
+					<img src="/public/images/loader-1.gif" />
+				</div>
 				
 				<div *ngFor="let eventModel of eventsCollection.events;" class="col-sm-12">
 					
@@ -21,7 +25,7 @@
 								<thead>
 									<tr>
 										<th colspan="2">
-											<img class="img img-responsive" src="{{imageHostPath}}/{{eventModel.cover.source}}" />
+											<img class="img img-responsive" src="{{imageHostPath}}//{{eventModel.cover.source}}" />
 										</th>
 									</tr>
 								</thead>
@@ -68,12 +72,12 @@
 	</div>
 </div>
 <slider direction="UP">
-	<div class="container">
+	<div class="container" id="exhibition-container-slider">
 		<div class="row">
 			
 			<div class="col-sm-12">
 				<h3  style="color: red;">{{selectedModel.name}}</h3>
-				<p class="lead">{{selectedModel.description}}</p>
+				<p class="lead desc">{{selectedModel.description}}</p>
 				<p class="lead text-center"></p>
 			</div>
 
@@ -97,12 +101,13 @@
 				<h3 style="color: red;">Press Releases</h3>
 				<ul class="list-inline exb-images">
                     <li *ngFor="let photo of selectedModel.photos;">
-                        <img src="{{photo.source}}" class="img img-responsive" (click)="showExhibitionImage(photo)">
+                        <img src="{{imageHostPath}}//{{photo.source}}" class="img img-responsive" (click)="showExhibitionImage(photo)">
                     </li>
                 </ul>
 			</div>
 			<div class="col-sm-6">
-				<img class="img img-responsive" style="margin: 0px auto;" src="{{imageHostPath}}/{{selectedModel.cover.source}}" />
+				<h3 style="color: red;">Press Banner</h3>
+				<img class="img img-responsive" style="margin: 0px auto;" src="{{imageHostPath}}//{{selectedModel.cover.source}}" />
 				<br/>
 				<br/>
 				<br/>
@@ -125,7 +130,7 @@
 
 <dialog-component>
     <pre class="text-center" style="border: none; background-color: none;" *ngIf="selectedPhotoModel">
-        <img src="{{selectedPhotoModel.source}}"/>
+        <img src="{{imageHostPath}}//{{selectedPhotoModel.source}}"/>
         <div>{{selectedPhotoModel.name}}</div>
     </pre>
 </dialog-component>

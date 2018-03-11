@@ -115,7 +115,7 @@ export class Events implements OnInit {
 						name: pModel.name || '',
 				        uid: pModel.id,
 				        id: pModel.id,
-				       	source: pModel.images[1].source,
+				       	images: pModel.images,
 				        createdTime: pModel.created_time
 					});
 					return photoModel;
@@ -190,6 +190,13 @@ export class Events implements OnInit {
 			(response: any) => {
 				debugger;
 				console.log('getEvents RESPONSE ->', response);
+				
+				if (!response || response.error) {
+					return new Observable((observer:any) => {
+		                observer.next({error: response ? response.error : 'error'});
+		            });
+				}
+
 				if (response.data && response.data.length > 0) {
 					
 					//this.apiService.accessToken = this.accessToken;
