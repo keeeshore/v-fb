@@ -19,7 +19,9 @@ export const ENV = {
 
   	USER_DATE_FORMAT: 'Do  ddd, MMM  YY',
 
-  	DATE_TIME_FORMAT: 'DD-MM-YYYY HH:mm',
+	DATE_TIME_FORMAT1: 'DD-MM-YYYY HH:mm',
+	  
+  	DATE_TIME_FORMAT: 'YYYY-MM-DD HH:mm:ss',
 
   	FB_GRAPH_URL: ENVIRONMENT.FB_GRAPH_URL,
 

@@ -25,6 +25,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { CommonService } from '../services/CommonService';
 
 @Component({
 	selector: 'exhibition-component',
@@ -57,6 +58,7 @@ export class Exhibition implements AfterViewInit {
 	constructor(
 		private apiService: ApiService, 
 		private scrollerService: ScrollerService,
+		private commonService: CommonService,
 		private router:ActivatedRoute,
 		private route:Router,
 		private location:Location) {
@@ -155,8 +157,7 @@ export class Exhibition implements AfterViewInit {
 	}
 
 	public getDate (dateStr:string):string {
-		let date:string = moment(dateStr, ENV.DATE_TIME_FORMAT).format(ENV.USER_DATE_FORMAT);
-		return date;
+		return this.commonService.getDate(dateStr);
 	}
 
 	public showEventDescription (id:number):void {

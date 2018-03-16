@@ -30,6 +30,7 @@ import { ScrollerService} from "../app/services/ScrollerService";
 import { ScrollerComponent} from "../app/common/ScrollerComponent";
 import { AutoPositionDirective} from "../app/directives/AutoPositionDirective";
 import { ApiService} from "../app/ApiService";
+import { CommonService } from '../app/services/CommonService';
 
 const mainRoutes: Routes = [
     /*{
@@ -85,7 +86,7 @@ const mainRoutes: Routes = [
         ErrorComponent
 	],
 	bootstrap: [ MainComponent ],
-	providers: [ApiService, ScrollerService]
+	providers: [ApiService, ScrollerService, CommonService]
 })
 
 export class MainModule { }

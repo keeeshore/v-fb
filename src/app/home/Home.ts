@@ -24,6 +24,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { CommonService } from '../services/CommonService';
 
 @Component({
 	selector: 'app-home',
@@ -87,17 +88,17 @@ export class Home {
 	constructor(
 		private apiService: ApiService,
 		private router: ActivatedRoute,
+		private commonService: CommonService,
 		private scrollerService: ScrollerService) {
 		console.log('Home component init');
 		this.viewPortHeight = window.innerHeight + 'px';
-		//this.viewPortHeight = '614px';
-		
+		//this.viewPortHeight = '614px';		
         //console.log('viewPortHeight', this.viewPortHeight);
 	}
 
 	public getDate (dateStr:string):string {
-		let date:string = moment(dateStr, ENV.DATE_TIME_FORMAT).format(ENV.USER_DATE_FORMAT);
-		return date;
+		debugger;
+		return this.commonService.getDate(dateStr);
 	}
 
 	public ngOnInit():void {
@@ -111,7 +112,7 @@ export class Home {
 			}.bind(this), 200);
 			window.setTimeout(function () {
 				this.startAutoPlay();
-			}.bind(this), 3500);
+			}.bind(this), 5000);
 		});
 
 		this.getExhibitionsFromTable().subscribe();
