@@ -92,9 +92,13 @@
 					activeIndex="1">
 
 					<carousel-item *ngFor="let dataModel of dataModels; let myIndex = index;" 
-					(onItemInit)="onItemLoaded()">
+						(onItemInit)="onItemLoaded()">
+						<div *ngIf="dataModel.description !== ''" class="text-center post-desc">
+							{{dataModel.description}}
+						</div>
 						<div class="photo-model-container text-center">
 							<!-- <input type="text" id="post-model-{{myIndex}}" value="{{dataModel.fullPicture}}" /> -->
+							
 							<img *ngIf="dataModel.defaultSrc !== ''"
 								class="img img-responsive"
 								src="{{imageHostPath}}//{{dataModel.defaultSrc}}"/>

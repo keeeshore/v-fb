@@ -79,6 +79,20 @@
 	height: 100%;
 }
 
+#home-photo-component /deep/ #photo-component.carousel-container .post-desc {
+	font-weight: bold;
+	color: #333333;
+    font-size: 15px;
+    font-weight: 100;
+    /* position: relative; */
+    top: 0px;
+    /* border: 1px solid red; */
+    z-index: 10;
+    /* background: rgba(0, 0, 0, 0.5); */
+    padding: 10px 12px;
+    font-style: italic;
+}
+
 #home-photo-component /deep/ #photo-component.carousel-container .carousel {
 	height: 100%;
 }
@@ -109,6 +123,8 @@
 #home-photo-component /deep/ #photo-component.carousel-container .photo-model-container .photo-desc {
 	position: absolute;
 }
+
+
 
 .photo-model-container h2 {
 	position: absolute;
