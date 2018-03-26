@@ -7,17 +7,18 @@ import { ActivatedRoute, Params } from '@angular/router';
 import {ApiService} from './../../app/ApiService';
 import {EventsCollection, EventModel, EventParams} from './EventsCollection';
 import {Photos} from '../photos/Photos';
-import {PhotoCollection, PhotoModel} from '../photos/PhotoCollection';
+import {PhotoCollection, PhotoModel, PhotoParams} from '../photos/PhotoCollection';
 import {PagingData, Cursors} from '../model/PagingData';
 import { Http, Response } from '@angular/http';
 import * as moment from 'moment';
 import {Subject, Observable} from "rxjs";
 import {ENV} from '../../app/environments/environment';
+import { GraphService } from '../services/GraphService';
 
 @Component({
 	selector: 'app-events',
 	templateUrl: './events.html',
-	providers: []
+	providers: [GraphService]
 })
 
 export class Events implements OnInit {
@@ -42,49 +43,58 @@ export class Events implements OnInit {
 
     public eventsSubject: Subject<DataEvent> =  new Subject<DataEvent>();
 
-    public accessToken: string = '';
+	public accessToken: string = '';
+	
+	public photoService: GraphService;
 
-	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
-		//console.log('Events component init::', this.apiService.accessToken);
-		
-		this.getEventsFromTable().subscribe((response:any) => {
-			console.log('getEventsFromTable >>>>>>>>>>>> flatMap::response', response);
-			if (response && response.events) {
-				response.events.map((eventModel:EventModel, indexId:number) => {
+	public photoFromDate:string = '';	
+
+	public photoToDate:string = '';	
+
+	constructor(
+		private apiService: ApiService,
+		private graphService: GraphService,
+		private router: ActivatedRoute) {
+		//console.log(('Events component init::', this.graphService);		
+		this.photoService = graphService;
+		this.doGetEventsFromTable();
+	}
+
+	public doGetEventsFromTable():void {
+		this.initGetEventsFromTable().subscribe((events:Array<EventModel>) => {
+			//console.log(('initGetEventsFromTable >>>>>>>>>>>> subscribe >>>> ', events);
+			this.fromDate = this.setLastEndTime(events);
+		});
+	}
+
+	public initGetEventsFromTable():Observable<any> {
+		var totalEvents:number = 0;		
+		return new Observable((observer:any) => {
+			this.getEventsFromTable().subscribe((events:Array<EventModel>) => {
+				totalEvents = events.length;
+				if (totalEvents === 0) {
+					observer.next(events);
+					return;
+				}
+				events.forEach((eventModel:EventModel, indexId:number) => {
+					console.log('getEventsFromTable >>>>>>>>>>>> events.forEach >>>>>>>>>>>> eventModel >>> ', eventModel);
 					this.getEventPhotosById(eventModel.uid.toString()).subscribe((response:any)=>{
-						console.log('::::::::::::::::::::::;PHOTO::', response);
-						this.eventsCollection.events[indexId].photos = response.photos;
+						//console.log((':::::::::::::::::::::::PHOTO::', response);
+						eventModel.photos = response.photos;
+						eventModel.photoEndTime = moment().add(1, 'm').format(ENV.DATE_TIME_FORMAT);
+						eventModel.photoStartTime = this.getEventPhotoLastEndTime(response.photos);
+						if (indexId === totalEvents - 1) {
+							observer.next(events);
+						}
 					});
 				});
-			} else {
-				this.message = 'ERROR in getting EVENTS';
-			}
-			
-			//return response;
-			//return new Observable((observer:any) => {
-				//observer.next(response);
-			//});
-		});
-		/*this.getEventsFromTable().flatMap(response => {
-			//return this.http.get(response)
-			//console.log('getEventsFromTable::flatMap::response', response);
-			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
-			//this.setLastEndTime();
-			return new Observable((observer:any) => {
-				observer.next(response);
 			});
-		}).subscribe(response => {
-			//return this.http.get(response)
-			//console.log('getEventsFromTable:::subscribe::response', response);
-			//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
-			this.setLastEndTime();
-			return response;
-		});*/
+		});		
 	}
 
 	public ngOnInit(): void {
 		this.accessToken = this.apiService.accessToken;
-        console.log('Events component init', this.accessToken);
+        //console.log(('Events component init', this.accessToken);
     }
 
     public getEventPhotosById (albumId:string):Observable<any> {
@@ -95,212 +105,184 @@ export class Events implements OnInit {
 				});
 			}
 		);
-    }
+	}
 
-	public setEvents (collectionModel:EventsCollection, eventsArray:Array<any>):Boolean {
-		//console.log('setEvents:::-------------------------------------', eventsArray);
-		let events:Array<EventModel> = eventsArray.map((model:any) => {			
-			model.endTime = model.end_time || model.endTime;
-			model.startTime = model.start_time || model.startTime;
+	public setEventsFromFacebook (eventsArray:Array<any>):Array<EventModel> {			
+		let events:Array<EventModel>;
+		events = eventsArray.map((model:any, indexId:number) => {
+			model.endTime = model.end_time;
+			model.startTime = model.start_time;
+			model.uid = model.id;
 			delete model.end_time;
 			delete model.start_time;
 			let eventModel = new EventModel(model);
-			let photos:Array<PhotoModel> = new Array<PhotoModel>();
-			
-			if (model.photos && model.photos.data) {
-				let photo = new Photos(this.apiService, this.router);
-				eventModel.photos = model.photos.data.map((pModel:any)=>{
-					debugger;
-					let photoModel:PhotoModel = new PhotoModel({
-						name: pModel.name || '',
-				        uid: pModel.id,
-				        id: pModel.id,
-				       	images: pModel.images,
-				        createdTime: pModel.created_time
-					});
-					return photoModel;
-				});
-			}
-			////console.log(collectionModel.events.length, ':setEvents:::-----------------------------------------------------NEW eventModel->', eventModel);
-			collectionModel.events.push(eventModel);
+			eventModel.photoStartTime = '2012-04-06 15:30:00';
+			eventModel.photoEndTime = moment().add(1, 'm').format(ENV.DATE_TIME_FORMAT);
+			console.log('setEventsFromFacebook:::------------------------------------eventModel-', eventModel);
 			return eventModel;
 		});
-		//console.log('setEvents:::--------------------------------------collectionModel.events = ', collectionModel.events.length);
-		return events.length > 0 ? true : false;
+		return events;
+	}
+
+	public setPhotosFromFB (photosArr:Array<any>):Array<PhotoModel> {
+		console.log('setPhotos:::-------------------------------------------------------------------------------------', photosArr);
+		let photos:Array<PhotoModel> = photosArr.map((model:any) => {
+			model.createdTime = model.created_time;
+			let photoModel = new PhotoModel(model);
+			return photoModel;
+		});
+		return photos;
+	}
+	
+	public setEvents (eventsArray:Array<any>):Array<EventModel> {
+		//console.log(('setEvents:::-------------------------------------', eventsArray);	
+		let events:Array<EventModel>;
+		events = eventsArray.map((model:any, indexId:number) => {
+			model.endTime = model.endTime;
+			model.startTime = model.startTime;
+			let eventModel = new EventModel(model);
+			return eventModel;
+		});
+		return events;
 	}
 
 	public onGetEventClick ():void {
-		let events = new Array<EventModel>();
+		this.graphService.accessToken = this.accessToken;
+		this.graphService.fromDate = this.fromDate;
+		this.graphService.toDate = this.toDate;
 		this.eventParams = new EventParams();
-		this.getEvents(this.eventParams, events).subscribe(
-			(response) => { 
-				console.log('getEvents success::::::::::::::::::::::::::::::::INIT::::::::::::::::::::', response);
-				this.setEvents(this.fbCollection, response.data);
-				console.log('getEvents success:::::::::::::::::::::::::::::::::AFTER::::::::::::::::::this.fbCollection:', this.fbCollection);
-			},
-			(err) => { console.log('getEvents err:::', err) },
-			() => { console.log('getEvents final:::') }
-		);
-	}
-	
-
-	public getEvents (eventParams:EventParams, collection:Array<any>):Observable<any> {
-		//console.log('getEvents....called with eventParams:', eventParams);
-		//console.log('this.fromDate:', this.fromDate);
-		//console.log('this.toDate:', this.toDate);
-		this.message = 'In progress...';
-		
-        if (!this.isValidDateRange(this.fromDate, this.toDate)) {
-        	//console.log('Invalid Date range!!!!');
-            this.message = 'Invalid Date range......';
-            return;
-        }
-
-        //console.log('is valid date range', this.fromDate + ' : to : ' + this.toDate);
-        let since = moment(this.fromDate, ENV.DATE_TIME_FORMAT).unix();
-        let until = moment(this.toDate, ENV.DATE_TIME_FORMAT).unix();
-
-		//let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID + '/events';
-		let url = ENV.FB_GRAPH_URL;
-		//let url = 'https://ux0ta12z3a.execute-api.ap-southeast-2.amazonaws.com/prod/graphs';
-		//let url = ENV.FB_GRAPH_URL + ENV.FB_PROFILE_ID;
-		let params  = new URLSearchParams(); //TODO: IE fix, polyfill
-		debugger;
-		params.append('type', 'events');
-		params.append('access_token', this.accessToken);
-		params.append('since', since.toString());
-		params.append('until', until.toString());
-		//fields=events&since=1513866660&until=1518172140
-		params.append('fields', eventParams.fields);
-		//params.append('fields', 'events');
-		//params.append('fields', 'events&since='+since+'&until='+until);
-		params.append('limit', eventParams.limit);
-		params.append('pretty', eventParams.pretty);
-
-		if (eventParams.after !== '') {
-			//console.log('after is present...ADDING after');
-			params.append('after', eventParams.after);
-		}
-
-		url = url + '?' + params.toString();
-			
-		console.log('url->', url);
-
-		return this.apiService.fetch(url).flatMap(
-			(response: any) => {
-				debugger;
-				console.log('getEvents RESPONSE ->', response);
-				
-				if (!response || response.error) {
-					return new Observable((observer:any) => {
-		                observer.next({error: response ? response.error : 'error'});
-		            });
+		this.getEventsFromFB(this.eventParams, this.graphService).subscribe((events:Array<EventModel>) => { 
+			//console.log(('getEventsFromFB success::::::::::::::::::::::::::::::::INIT::::::::::::::::::::', events);			
+			this.fromDate = this.setLastEndTime(events);	
+			this.getEventPhotosFromFB(0, events).subscribe(
+				(response:any) => {
+					//console.log(('getPhotos success::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+				},
+				(err:any) => { 
+					//console.log(('getPhotos err:::', err)
 				}
-
-				if (response.data && response.data.length > 0) {
-					
-					//this.apiService.accessToken = this.accessToken;
-					let pagingData:PagingData = new PagingData(response.paging);
-					//let isSet:Boolean = this.setEvents(this.fbCollection, response.data);
-					response.data.filter((dataModel:any)=>{ collection.push(dataModel)});
-
-					if (pagingData.cursors.after && pagingData.cursors.after !== '') {
-						
-						console.log('pagingData.cursor.after PRESENT');
-						eventParams.after = pagingData.cursors.after;
-						return this.getEvents(eventParams, collection);
-					
-					} else {
-
-						eventParams.after = '';
-						console.log('---------------------------------------------------- NOT PRESENT--------ALL DONE!!');
-						//this.fbEventsSubject.next({data: collection});
-						return new Observable((observer:any) => {
-							observer.next({data: collection});
-						});
-
-					}
-
-				} else {
-					
-					this.message = 'Complete!';
-					console.log('-------------------------------------------ALL DONE!!');
-					//this.fbEventsSubject.next({data: collection});
-					return new Observable((observer:any) => {
-						observer.next({data: collection});
-					});
-
-				}
-
-
-			});
-	}
-
-	public onSubmitEvents1 () {
-		//console.log('SUBMIT onSubmitEvents1...', this.fbCollection);
-		this.submitEvents(0, this.fbCollection).subscribe(()=>{
-			console.log('submitEvents::DONE:in subscribe()');
-			this.fbCollection = new EventsCollection();
-			this.getEventsFromTable();
+			);
+		},
+		(err) => {
+			this.message = 'ERROR' + err;
 		});
 	}
 
-	public submitEvents (indexId:number, collection:EventsCollection):Observable<any> {
-		console.log('submitEvents::[', indexId, '] SUBMIT eventsCollection...', collection);
-		let url = ENV.HOST_API_URL + '/events_post.php';
-
-		if (collection.events[indexId]) {
-			let eventsCollection = new EventsCollection();
-			console.log('submitEvents:: SUBMIT eventsCollection...', collection.events[indexId]);
-			let eventModel =  collection.events[indexId];
-			eventsCollection.events.push(eventModel);
-
-			return this.apiService.post(url, eventsCollection).flatMap((response:any) => {
-				if (response && response.success) {
-					console.log('submitEvents::response.success>> init submitEventPhotos');
-					let photos:Array<PhotoModel> = eventsCollection.events[0].photos;
-					let albumId:string = eventsCollection.events[0].id.toString();
-					if (photos.length > 0) {
-						return new Observable((observer:any) => {
-							this.submitEventPhotos(0, albumId, photos).subscribe((response:any) => {
-								console.log('submitEventPhotos::FINAL response::', response);
-								indexId = indexId + 1;
-								this.submitEvents(indexId, collection).subscribe((res:any)=>{
-									console.log('submitEvents::INNER FINAL response::', response);
-									observer.next({success: true});
-								});
-							}, (err:any) => {
-								console.log('submitEventPhotos::FINAL err::', err);
-								observer.next(null);
-							});							
-						});						
-					} else {
-						indexId = indexId + 1;
-						return this.submitEvents(indexId, collection);
-					}					
-				} else {
-					console.log('submitEvents::response.fail on', indexId+1);	
-					return this.submitEvents(collection.events.length, collection);
-				}
-			});
-
-
-		} else {
-			console.log('submitEvents::NO eventModel on ', indexId);
+	public getEventPhotosFromFB (indexId:number, events:Array<EventModel>):Observable<any> {
+		console.log('getEventPhotosFromFB 1 >>>>>>>>>>>>', indexId ,'>>>>>>>>>>>>');
+		if (indexId === events.length) {
 			return new Observable((observer:any) => {
-				observer.next(null);
-			});
+				observer.next({data: events, success: true});
+			});							
+		} else {
+			let eventModel:EventModel = events[indexId];
+			eventModel.status = 'loading...';
+			let photos = new Array<PhotoModel>();
+			let photoParams:PhotoParams = new PhotoParams(eventModel.uid.toString());
+			this.graphService.fromDate = eventModel.photoStartTime;
+			this.graphService.toDate = eventModel.photoEndTime;
+			this.graphService.accessToken = this.accessToken;
+			this.message = 'Get PHOTOS from FB in Progress for [' + indexId + ']';
+
+			return this.graphService.getCollection(photoParams, photos).flatMap(
+				(response:any) => {
+					console.log('getEventPhotosFromFB graphService flatMap response::::::::::::::::::::::::::::::::::::::::::::::::::::', response);
+					if (response.error) {
+						console.log('getEventPhotosFromFB  graphService ERROR::::::::::::::::::::::::::::::::::::::::::::::::::::', response.error);
+						return new Observable((observer:any) => {
+							observer.next({err: response.error, success: false});
+						});	
+					}
+					eventModel.photos = this.setPhotosFromFB(response.data);
+					eventModel.photoStartTime = this.getEventPhotoLastEndTime(eventModel.photos);
+					eventModel.status = 'DONE';
+					this.message = 'Get PHOTOS from FB COMPLETE for ' + indexId + ']';
+					indexId = indexId + 1;
+					return this.getEventPhotosFromFB(indexId, events);
+				}
+			);
 		}
 	}
 
-	public submitEventPhotos(indexId:number, albumId:string, photos:Array<PhotoModel>):Observable<any> {
+	public getEventsFromFB (eventParams:EventParams, graphService:GraphService):Observable<any> {
+		let eventsArr = new Array<any>();
+		return graphService.getCollection(eventParams, eventsArr).flatMap((response:any) => { 
+			//console.log(('getEvents success::::::::::::::::::::::::::::::::INIT::::::::::::::::::::', response);			
+			return new Observable((observer:any) => {
+				if (response.error) {
+					observer.error(response.error);
+					return;
+				}
+				this.fbCollection.events = this.setEventsFromFacebook(response.data);				
+				//console.log(('getEvents success:::::::::::::::::::::::::::::::::AFTER::::::::::::::::::this.fbCollection:', this.fbCollection);
+				observer.next(this.fbCollection.events);										
+			});
+		});
+	}
 
+	public doSubmitEvents () {
+		//console.log('SUBMIT doSubmitEvents...', this.fbCollection);
+		this.submitEvents(0, this.fbCollection).subscribe((response:any)=>{
+			//console.log(('doSubmitEvents@@@@@@@@@@@@@@@@@@@@@@@@@@@:DONE:in subscribe()::', response);
+			this.fbCollection = new EventsCollection();
+			this.getEventsFromTable();
+		},(err:any) => {
+			//console.log(('doSubmitEvents:@@@@@@@@@@@@@@@@@@@@@@@@@@@>>ERR', err);
+			return new Observable((observer:any) => {
+				observer.next({success: false, data: err});	
+			});	
+		});
+	}
+
+	public submitEvents (indexId:number, collection:EventsCollection):Observable<any> {		
+		let url = ENV.HOST_API_URL + '/events_post.php';
+		if (collection.events[indexId]) {
+			console.log('submitEvents:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: [', indexId, '] SUBMIT eventsCollection...', collection);
+			let eventModel =  collection.events[indexId];
+			let eventsCollection = new EventsCollection();
+			eventsCollection.events.push(eventModel);
+			console.log('submitEvents::1::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ', eventModel);
+			return this.apiService.post(url, eventsCollection).flatMap((response:any) => {
+				console.log('submitEvents::2:', response);
+				if (response && response.success) {
+					console.log('submitEvents::3::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: submitEventPhotos');
+					return this.submitEventPhotos(0, eventModel.uid.toString(), eventModel.photos);
+				} else {
+					return new Observable((observer:any) => {
+						observer.next({success: false, data: response});	
+					});
+				}
+			}).flatMap(
+				(response:any) => {
+					console.log('submitEvents::4::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:', response);
+					if (response && response.success) {
+						indexId = indexId + 1;
+						console.log('submitEvents::5::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:', response);						
+						return this.submitEvents(indexId, collection);
+					} else {
+						console.log('submitEvents::5.1::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: err', response);
+						return new Observable((observer:any) => {
+							observer.next({success: false, data: response});	
+						});					
+					}
+				}
+			);
+		} else {
+			this.message = 'EVENTS UPDATE COMPLETE!!';
+			return new Observable((observer:any) => {
+				observer.next({success: true, data: collection});	
+			});
+		}
+
+		
+	}
+
+	public submitEventPhotos(indexId:number, albumId:string, photos:Array<PhotoModel>):Observable<any> {
 		let url = ENV.HOST_API_URL + '/photos_post.php';		
 		let photoCollection:PhotoCollection = new PhotoCollection(albumId);
 		console.log('>>>>>>>>>>>>>>>>>.submitEventPhotos POST START...indexId.', indexId, ':::albumId:::', albumId);
 
 		if (photos[indexId]) {
-
 			photoCollection.photos.push(photos[indexId]);
 			return this.apiService.post(url, photoCollection).flatMap((response:any) => {
 				console.log('>>>>>>>>>>>>>>>>>.submitEventPhotos POST response recieved....', response);
@@ -315,28 +297,24 @@ export class Events implements OnInit {
 					});
 				}
 			});
-
 		} else {
-
 			console.log('>>>>>>>>>>>>>>>>>.submitEventPhotos::NO photoModel on ', indexId);
 			return new Observable((observer:any) => {
 				observer.next({success: true});
 			});
-
-		}
-		
+		}		
 	}
 
 	public addEventModel (eventModel:EventModel) {
 		let eventsCollection = new EventsCollection();
 		eventsCollection.events.push(eventModel);
-		//console.log('SUBMIT addEventModel...', eventsCollection);
+		////console.log('SUBMIT addEventModel...', eventsCollection);
 		this.submitEvents(0, eventsCollection).subscribe();
 	}
 
 	public onDeleteEvent (eventModel:EventModel) {
 		let url = ENV.HOST_API_URL + '/events_delete.php';
-		//console.log('DELETE eventModel...', eventModel);
+		////console.log('DELETE eventModel...', eventModel);
 		this.apiService.post(url, eventModel).subscribe((response:any) => {
 			//console.log('eventModel DELETE:POST response recieved....', response);
 			if (response && response.success) {
@@ -350,54 +328,43 @@ export class Events implements OnInit {
 
 	public onUpdateEvent (eventModel:EventModel) {
 		let url = ENV.HOST_API_URL +  '/events_update.php';
-		//console.log('UPDATE eventModel...', eventModel);
-		/*this.apiService.post(url, eventModel).subscribe((response:any) => {
-			//console.log('eventModel UPDATE:POST response recieved....', response);
-		});*/
 	}
 
-	public getEventsFromTable () {
+	public getEventsFromTable ():Observable<any> {
 		//console.log('getEventsFromTable...');
 		let url = ENV.HOST_API_URL + '/events_get.php';
 		this.eventsCollection.events = new Array<EventModel>();
 		return this.apiService.fetch(url).flatMap(
 			(response: any) => {
-				//console.log('getEventsFromTable flatMap response ->', response);
-				let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
-				this.setLastEndTime();
+				this.eventsCollection.events = this.setEvents(response.events);
 				return new Observable((observer:any) => {
-					observer.next(response);
+					observer.next(this.eventsCollection.events );
 				});
 			}
 		);
-		//return this.http.get(url).map((res: Response) => res.json());
-		/*this.http.get(url)
-            .map((res: Response) => res.json())
-            .mergeMap(customer => this.http.get(customer.contractUrl))
-            .map((res: Response) => res.json())
-            .subscribe(res => this.contract = res);*/
-		/*return this.apiService.fetch(url).subscribe(
-			(response: any) => {
-				//console.log('getEventsFromTable response ->', response);
-				//return response;
-				//let isSet:Boolean = this.setEvents(this.eventsCollection, response.events);
-				//this.setLastEndTime();
-			},
-			(err) => { 
-				//console.log('getEventsFromTable ERR ->', err);
-				this.message = JSON.stringify(err);
-			}
-		);*/
 	}
 
-	public setLastEndTime () {		
-		let total = this.eventsCollection.events.length;
-		//console.log('setLastEndTime', total);
+	public setLastEndTime (events:Array<EventModel>) {		
+		let total = events.length;
+		let fromDate = '2012-01-01 00:00:00';
+		debugger;
 		if (total > 0) {
-			let lastModel = this.eventsCollection.events[0];
+			let lastModel = events[0];
 			let fDate = moment(lastModel.endTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
-			this.fromDate = fDate.format(ENV.DATE_TIME_FORMAT);
+			fromDate = fDate.format(ENV.DATE_TIME_FORMAT);
 		}
+		return fromDate;
+	}
+
+	public getEventPhotoLastEndTime (photos:Array<PhotoModel>):string {
+		let total = photos.length;
+		let lastDate = '2012-01-01 00:00:00';
+		if (total > 0) {
+			let lastModel = photos[0];
+			let fDate = moment(lastModel.createdTime, ENV.DATE_TIME_FORMAT).add(1, 'm');
+			lastDate = fDate.format(ENV.DATE_TIME_FORMAT);			
+		}
+		return lastDate;
 	}
 
 	public isValidDateRange (fromDate:string, toDate:string):Boolean {		

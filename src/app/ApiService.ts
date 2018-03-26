@@ -9,16 +9,13 @@ export class ApiService {
 	constructor (private http: Http,
 		private route: ActivatedRoute,
     	private router: Router) {
-		console.log('APISERVICE CONSTRUCTOR---------------------------------------------------------ONCE');
 	}
 
 	public accessToken:string = null;
 
 	public fetch (url: string):Observable<any> {
-		console.log('ApiService.fetch');
 		return this.http.get(url)
 			.map(res => {
-				console.log('this.http.get::res from get service:');
 				return res.json();
 			})
 			.catch(this.handleError.bind(this));
@@ -50,9 +47,9 @@ export class ApiService {
 
 	private handleError (error: Response | any) {
 		// In a real world app, we might use a remote logging infrastructure
-		console.log('handleError:::Error caught', error);
+		console.log('API SERVICE::handleError:::Error caught', error);
 		if (error.status === 403) {
-			console.log('Error caught and redirecting to Login page');
+			console.log('API SERVICE::Error caught and redirecting to Login page');
 			this.router.navigate(['/admin/login', 'expired']);
 		}
 		let errMsg: string;
@@ -63,7 +60,7 @@ export class ApiService {
 		} else {
 			errMsg = error.message ? error.message : error.toString();
 		}
-		console.error('handleError:::', errMsg);
+		console.error('API SERVICE::handleError:::', errMsg);
 		return Observable.throw(errMsg);
 	}
 

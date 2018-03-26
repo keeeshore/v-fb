@@ -12,20 +12,23 @@ import {PostCollection, PostModel, PostParams} from '../posts/PostCollection';
 import {PhotoCollection, PhotoModel, PhotoParams, AlbumModel, AlbumCollection} from '../photos/PhotoCollection';
 import {ENV} from '../../app/environments/environment';
 import * as moment from 'moment';
-import {Subject, Observable} from "rxjs";
+import {Subject, Observable, Observer} from "rxjs";
+import { GraphService } from '../services/GraphService';
 
 @Component({
 	selector: 'app-update-all',
 	templateUrl: './update-all.html',
 	styleUrls: ['./update-all.css'],
-	providers: []
+	providers: [GraphService]
 })
 
 export class UpdateAll implements OnInit {
 
 	public status:string = '';
 
-	public events:Events;
+	public eventsComp:Events;
+
+	public eventsArr:Array<EventModel> = new Array<EventModel>();
 
 	public posts:Posts;
 
@@ -35,13 +38,15 @@ export class UpdateAll implements OnInit {
 
 	public accessToken:string = 'mandatory';
 
-	public eventsLog:string = '';
+	public eventLog:string = '';
 
 	public postsLog:string = '';
 
 	public albumsLog:string = '';
 
 	public photosLog:any = {};
+
+	public eventsLog:any = {};
 
 	public statusMsg:string = '';
 
@@ -51,48 +56,35 @@ export class UpdateAll implements OnInit {
 
 	public toDate:string = '01-06-2015 00:00';
 
-	constructor(private apiService: ApiService,  private router: ActivatedRoute) {
+	constructor(private apiService: ApiService, private graphService: GraphService, private router: ActivatedRoute) {
 		console.log('Update ALL component init');
 		this.accessToken = this.apiService.accessToken;
-		this.events = new Events(this.apiService, this.router);
+		this.eventsComp = new Events(this.apiService, this.graphService, this.router);
 		this.posts = new Posts(this.apiService);
 		this.galleries = new Array<Photos>();
 
 		let albumCollection = new AlbumCollection();
 		let albumSource = Observable.from(albumCollection.albums);
 
-		albumCollection.albums.forEach((x:AlbumModel)=>{
+		this.eventsComp.initGetEventsFromTable().subscribe(
+			(eventsArr:Array<EventModel>) => {
+				this.eventsArr = eventsArr;
+			},
+			(err:any) => {}
+		);
+
+		albumCollection.albums.forEach((albumModel:AlbumModel)=>{
 			this.apiService.accessToken = this.accessToken;
-			let photos =  new Photos(this.apiService, this.router);
+			let photos =  new Photos(this.apiService, this.graphService, this.router);
 				photos.accessToken = this.accessToken;
-				photos.albumId = x.id;
-				photos.albumName = x.name;
-				photos.photoCollection = new PhotoCollection(x.id);
-				photos.fbCollection = new PhotoCollection(x.id);
+				photos.albumId = albumModel.id;
+				photos.albumName = albumModel.name;
+				photos.photoCollection = new PhotoCollection(albumModel.id);
+				photos.fbCollection = new PhotoCollection(albumModel.id);
 				photos.accessToken = this.accessToken;
 				photos.getPhotosFromTable(photos.albumId).subscribe();
 			this.galleries.push(photos);
 		});
-
-
-		// Prints out each item
-		/*var albumSubscription = albumSource.subscribe(
-  			function (x:AlbumModel) { 
-  				console.log('onNext: %s', x);
-  				this.apiService.accessToken = this.accessToken;
-  				let photos =  new Photos(this.apiService, this.router);
-  				photos.accessToken = this.accessToken;
-  				photos.albumId = x.id;
-				photos.photoCollection = new PhotoCollection(x.id);
-				photos.fbCollection = new PhotoCollection(x.id);
-				photos.accessToken = this.accessToken;
-  				this.galleries.push(photos);
-  			},
-  			function (e) { 
-  				console.log('onError: %s', e); 
-  			},
-  			function () { console.log('onCompleted'); 
-  		});*/
 		
 	}
 
@@ -112,53 +104,156 @@ export class UpdateAll implements OnInit {
 		this.updateGalleries(0);
 	}
 
-	public updateEvents (){
-		console.log('updateEvents start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.events.fromDate);
-		let eventParams = new EventParams();
-		this.events.eventParams = new EventParams();
-		this.events.accessToken = this.accessToken;
-		this.logInfo('events', 'start');
-
-		this.events.getEventsFromTable().flatMap((response) => {
-			if (!moment(this.events.fromDate, ENV.DATE_TIME_FORMAT).isValid()) {
-				this.logInfo('events', 'getEventsFromTable done, no fromDate found, using default date');
-				this.events.fromDate = this.fromDate;
-			}
-			console.log('UPDATEALL:getEventsFromTable ::flatMap:: response', response);
-			this.logInfo('events', 'getEventsFromTable done, last fetched date = ' + this.events.fromDate);
-			this.logInfo('events', 'starting getEvents from FB...');
-			return this.events.getEvents(eventParams, new Array<EventModel>());
-		}).flatMap((response:any) => {
-			if (response.error) {
-				this.logInfo('events', '<<<ERROR>>>>' + JSON.stringify(response.error));
-				return new Observable((observer:any) => {
-					observer.next(this.events.fbCollection);
-				});
-			}
-			this.logInfo('events', 'getEvents done with ' + response.data.length);
-			this.logInfo('events', 'starting setEvents ');
-			this.events.setEvents(this.events.fbCollection, response.data);
-			this.logInfo('events', 'setEvents done with ' + this.events.fbCollection.events.length);
-			return new Observable((observer:any) => {
-				observer.next(this.events.fbCollection);
+	public doUpdateEventPhoto(eventModel:EventModel, indexId:number) {
+		this.logEventsInfo(indexId, 'doUpdateEventPhoto:: updateEventPhoto START for ' + eventModel.name);
+		debugger;
+		this.updateEventPhoto(eventModel, indexId).subscribe((response:any)=>{
+			this.logEventsInfo(indexId, 'doUpdateEventPhoto:: updateEventPhoto COMPLETE for ' + eventModel.name);
+			this.eventsComp.getEventPhotosById(eventModel.uid.toString()).subscribe((response:any)=>{
+				console.log(':::::::::::::::::::::::PHOTO::', response);
+				eventModel.photos = response.photos;
+				eventModel.photoEndTime = moment().add(1, 'm').format(ENV.DATE_TIME_FORMAT);
+				eventModel.photoStartTime = this.eventsComp.getEventPhotoLastEndTime(response.photos);
 			});
-		}).subscribe((fbCollection:EventsCollection) => {
-			this.logInfo('events', 'fbCollection done with' + fbCollection.events.length);
-			console.log('UPDATEALL:subscribe:: fbCollection', fbCollection);
-			this.logInfo('events', 'start submitEvents to DB (PLEASE WAIT.. IN PROGRESS!!!');
-			this.events.submitEvents(0, fbCollection).subscribe((response:any) => {
-				console.log('UPDATEALL:subscribe:: submitEvents', response);
-				this.logInfo('events', '___________________COMPLETE_______________________ COMPLETED TOTAL:' + fbCollection.events.length);
-				this.events = new Events(this.apiService, this.router);
-			});
-		},
-		(err:any) => {
-			this.logInfo('events', 'ERROR::' + err);
 		});
 	}
 
+	public updateEventPhoto (eventModel:EventModel, indexId:number):Observable<any> {
+		this.clearLog('events');
+		debugger;
+		let eventsArr:Array<EventModel> = new Array<EventModel>();
+		this.eventsComp.accessToken = this.accessToken;
+		this.logEventsInfo(indexId, 'updateEventPhoto:: updateEventPhoto START for ' + eventModel.name);
+		eventsArr.push(eventModel);
+		return this.eventsComp.getEventPhotosFromFB(0, eventsArr)
+			.flatMap((response:any)=>{
+				debugger;
+				if (response.err) {
+					this.logEventsInfo(indexId, 'updateEventPhoto:: getEventPhotosFromFB ERROR ' + JSON.stringify(response.err));
+					return new Observable((observer:any)=>{
+						observer.next({success: false, data: eventModel});
+					});
+				} else {
+					let model:EventModel = response.data.filter((eModel:EventModel, indexId:number)=>{
+						return eModel.uid === eventModel.uid;
+					})[0];
+					if (!model) {
+						this.logEventsInfo(indexId, '___________________ COMPLETE ERROR _______________________ NO EVENT FOUND FOr photos!');
+						return new Observable((observer:any)=>{
+							observer.next({success: false, data: eventModel});
+						});
+					}
+					if (model.photos.length === 0) {
+						eventModel.photoStartTime = this.eventsComp.getEventPhotoLastEndTime(eventModel.photos);
+						this.logEventsInfo(indexId, '___________________ COMPLETE _______________________ No Photos to UPDATE');
+						return new Observable((observer:any)=>{
+							observer.next({success: true, data: eventModel});
+						});
+					}
+					this.logEventsInfo(indexId, 'updateEventPhoto:: getEventPhotosFromFB Update_START completed with ' + model.photos.length);
+					this.logEventsInfo(indexId, 'updateEventPhoto:: getEventPhotosFromFB SUBMIT PHOTOs ' + model.photos.length);					
+					this.logEventsInfo(indexId, 'updateEventPhoto:: EXISTING eventPhotos:::::::::::::::: ' + eventModel.photos.length);
+					debugger;
+					//let photos:Array<PhotoModel> = this.eventsComp.setPhotosFromFB(model.photos);
+					this.logEventsInfo(indexId, 'updateEventPhoto:: MERGE with existing eventPhotos :::::::::::::::: ' + eventModel.photos.length);
+					//eventModel.photoStartTime = this.eventsComp.getEventPhotoLastEndTime(model.photos);
+					return this.eventsComp.submitEventPhotos(0, model.uid.toString(), model.photos);
+				}
+			});
+	}
+
+	public updateEvents () {
+		this.clearLog('events');
+		this.eventsComp.eventParams = new EventParams();
+		this.eventsComp.accessToken = this.accessToken;
+		this.logInfo('event', 'start');
+		let customFromDate:string = this.eventsComp.fromDate;
+		let customToDate:string = this.eventsComp.toDate;
+		let existingEvents:Array<EventModel> = new Array<EventModel>();
+
+		if (!moment(this.eventsComp.fromDate, ENV.DATE_TIME_FORMAT).isValid()) {
+			this.logInfo('event', 'getEventsFromTable done, no fromDate found, using default date');
+			this.eventsComp.fromDate = this.fromDate;
+		}
+		let eventsService = new GraphService(this.apiService);
+		let eventParams = new EventParams();			
+		eventsService.accessToken = this.accessToken;
+
+		if (moment(customFromDate, ENV.DATE_TIME_FORMAT).isValid()) {
+			this.logInfo('event', 'getEventsFromTable CUSTOM fromDate found');
+			this.eventsComp.fromDate = customFromDate;
+		}
+		if (moment(customToDate, ENV.DATE_TIME_FORMAT).isValid()) {
+			this.logInfo('event', 'getEventsFromTable CUSTOM toDate found');
+			this.eventsComp.toDate = customToDate;
+		}
+
+		eventsService.fromDate = this.eventsComp.fromDate;
+		eventsService.toDate = this.eventsComp.toDate;
+		console.log('UPDATEALL:getEventsFromTable ::flatMap:: START:');
+		this.logInfo('event', 'getEventsFromTable done, last fetched date = ' + this.eventsComp.fromDate);
+		this.logInfo('event', 'starting getEvents from FB...');
+
+		this.eventsComp.getEventsFromFB(eventParams, eventsService).flatMap((eventsArr:Array<EventModel>)=>{
+			debugger;
+			this.logInfo('event', 'getEventsFromFB done with ' + eventsArr.length);
+			this.logInfo('event', 'submitEvents to DB _____________ PLEASE WAIT.. IN PROGRESS!');
+			let eventsCollection:EventsCollection = new EventsCollection();
+			eventsCollection.events = eventsArr;
+			return this.eventsComp.submitEvents(0, eventsCollection);
+		}).flatMap((response:any)=>{
+			this.logInfo('event', 'START submitEvents to DB _____________ DONE!');
+			this.logInfo('event', 'initGetEventsFromTable FROM DB _____________ PLEASE WAIT.. IN PROGRESS!');
+			if (response.success) {
+				return this.eventsComp.initGetEventsFromTable();
+			} else {
+				return new Observable((observer:any)=>{
+					observer.error(response);
+				});
+			}			
+		}).flatMap((response:any)=>{
+			this.logInfo('event', 'Start Updating Photos for Each Events::::::::; ');
+			return this.updateAllEventPhotos(0, response);
+		}).subscribe((events:Array<EventModel>) => {
+			debugger;
+			this.logInfo('event', 'updateAllEventPhotos DONE Total: ' + events.length);
+			this.logInfo('event', '_____________UPDATE ALL EVENTS AND PHOTOS COMPLETE _____________ ');
+		},
+		(err:any) => {
+			debugger;
+			this.logInfo('event', 'ERROR::' + JSON.stringify(err));
+		});
+	}
+
+	public updateAllEventPhotos(indexId:number, events:Array<EventModel>):Observable<any> {
+		debugger;
+		if (events[indexId]) {
+			let eventModel:EventModel = events[indexId];
+			this.logInfo('event', 'Update EventPhoto: ' + '[' + indexId + ']' + eventModel.name);
+			return this.updateEventPhoto(eventModel, 0).flatMap((response:any) => {			
+				if (response.success) {
+					this.logInfo('event', 'Update EventPhoto_________________ DONE ___________________' + eventModel.photos.length);
+					indexId = indexId + 1;
+					return this.updateAllEventPhotos(indexId, events);
+				} else {
+					this.logInfo('event', 'Update EventPhoto_________________ ERROR ___________________' + eventModel.name);
+					return new Observable((observer:any)=>{
+						observer.error({success: false, data: events});
+					});
+				}				
+			});
+		} else {
+			this.logInfo('event', 'Update EventPhoto_________________ ALL COMPLETED ______________________' + indexId);
+			return new Observable((observer:any)=>{
+				observer.next({success: true, data: events});
+			});
+		}
+	}
+
+	
+
 	public updatePosts () {
-		console.log('updatePosts start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.events.fromDate);
+		console.log('updatePosts start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.eventsComp.fromDate);
 		let postParams = new PostParams();
 		this.posts.accessToken = this.accessToken;
 		this.clearLog('posts');
@@ -222,7 +317,6 @@ export class UpdateAll implements OnInit {
   		);
 	}
 
-
 	public updateGalleries (indexId:number):void {
 		debugger;
 		this.updateGallery(indexId).subscribe(
@@ -245,9 +339,8 @@ export class UpdateAll implements OnInit {
   		);
 	}
 
-
 	public updateGallery (indexId:number):Observable<any> {
-		console.log('updateGallery start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.events.fromDate);
+		console.log('updateGallery start::::::::::::::::::::::::::::::::::::::::::::::::::::', this.eventsComp.fromDate);
 		
 		//let albumModel:AlbumModel = albums[indexId];
 		let photos = this.galleries[indexId];		
@@ -283,7 +376,12 @@ export class UpdateAll implements OnInit {
 				}
 				this.logPhotoInfo(indexId, 'getPhotosFromTable done, LAST/CUSTOM FETCHED DATE = ' + photos.fromDate);
 				this.logPhotoInfo(indexId, 'starting getPhotos from FB...' + photos.albumName + '(' + albumId + ')');
-				return photos.getPhotos(photoParams, new Array<PhotoModel>());
+				let photoService = new GraphService(this.apiService);
+					photoService.fromDate = photos.fromDate;
+					photoService.toDate = photos.toDate;
+					photoService.accessToken = this.accessToken;
+				return photoService.getCollection(photos.photoParams, new Array<EventModel>());
+				//return photos.getPhotos(photoParams, new Array<PhotoModel>());
 			}).flatMap((response:any) => {
 				console.log('UPDATEALL:getPhotos:: response', response);
 				if (response.error) {
@@ -327,9 +425,8 @@ export class UpdateAll implements OnInit {
 				});
 
 			});
-	}	
+	}
 	
-
 	public logInfo(updateType:string, message:string):void {
 		let logType = updateType + 'Log';
 		this[logType] +=  message + ' \n '
@@ -338,6 +435,20 @@ export class UpdateAll implements OnInit {
 	public clearLog(updateType:string):void {
 		let logType = updateType + 'Log';
 		this[logType] = '';
+	}
+
+	public logEventsInfo(indexId:number, message:string):void {
+		this.eventsLog = this.eventsLog === '' ? {} : this.eventsLog;
+		if (!this.eventsLog[indexId]) {
+			this.eventsLog[indexId] = '';
+		}
+		this.eventsLog[indexId] =  this.eventsLog[indexId] + message + ' \n ';
+	}
+
+	public clearEventsInfo(indexId:number):void {
+		if (this.eventsLog[indexId]) {
+			this.eventsLog[indexId] = '';
+		}		
 	}
 
 	public logPhotoInfo(indexId:number, message:string):void {
@@ -352,6 +463,5 @@ export class UpdateAll implements OnInit {
 			this.photosLog[indexId] = '';
 		}		
 	}
-
 
 }

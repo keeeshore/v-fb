@@ -4,14 +4,15 @@
 import {PagingData} from '../model/PagingData';
 import * as moment from 'moment';
 import {ENV} from '../../app/environments/environment';
+import { GraphParams } from '../services/GraphParams';
 
-export class PhotoParams  {
+export class PhotoParams implements GraphParams  {
 
     public fields_orig:string = 'id,name,created_time,source';
 
     public fields:string = 'id,name,created_time,images';
 
-    public limit:string = '5';
+    public limit:string = '100';
 
     public pretty:string = '1';
     
@@ -19,9 +20,11 @@ export class PhotoParams  {
 
     public after:string = '';
 
-    public albumId:string = '';
+    public id:string = '';
 
     public nextUrl:string = '';
+
+    public type:string = 'photos';
 
     constructor (albumId:string) {
         //VimonishaExhibitions?fields=albums.id(178838325568799){photos}
@@ -31,7 +34,7 @@ export class PhotoParams  {
         //178838325568799/photos?pretty=0&fields=id,name,created_time&limit=2&after=MTM1ODYzNTczNzU4OTA0NgZDZD
         //correct:178838325568799/photos?fields=id,name,created_time,source&limit=100&since=1500221700&until=1505578500
 
-        this.albumId = albumId;
+        this.id = albumId;
     }
 
 }

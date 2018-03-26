@@ -2,7 +2,7 @@
 ul.event-images li {
     width: 80px;
     height: 80px;
-    border: 1px solid #CCC;
+    border: 1px solid rgba(155, 153, 153, 0.1);
     vertical-align: top;
     overflow: hidden;
 }
@@ -12,8 +12,8 @@ ul.event-images li img {
 </style>
 <section class="container">
     <div class="row">
-        <form class="form-horizontal-1">
-            <div class="form-group hidden">
+        <form class="form-horizontal">
+            <div class="form-group">
                <label class="col-sm-2 control-label">Access token</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="accessToken" [(ngModel)]="accessToken" name="accessToken">
@@ -32,21 +32,25 @@ ul.event-images li img {
             <div class="form-group">
                 <div class="col-sm-12">
                     <input type="button" class="btn btn-xs btn-success" value="Get Events from Facebook" (click)="onGetEventClick()">
-                    <input type="button" class="btn btn-xs btn-warning" value="Add Events to DB" (click)="onSubmitEvents1()">
-                    <input type="button" class="btn btn-xs btn-warning" value="Get Events from DB" (click)="getEventsFromTable()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Add Events to DB" (click)="doSubmitEvents()">
+                    <input type="button" class="btn btn-xs btn-warning" value="Get Events from DB" (click)="doGetEventsFromTable()">
                 </div>
             </div>
         </form>
     </div>
+
+
     <div class="row">
-        <h2 class="text-danger">{{message}}</h2>
+        <div class="bg-info alert alert-danger" role="alert">
+            <h4 class="text-danger">{{graphService.message}}</h4>     
+        </div>              
     </div>
 
     <div class="row">
         <h4 class="text-danger">Events from Facebook</h4>
     </div>
     <div class="row">
-        <table class="table table-responsive table-striped">
+        <table class="table table-responsive">
             <thead>
             <tr>
                 <th class="col-sm-2">Start Time <br/> End Time</th>
@@ -55,23 +59,40 @@ ul.event-images li img {
                 <th class="col-sm-2">Actions</th>
             </tr>
             </thead>
-            <tbody >
-            <tr *ngFor="let eventModel of fbCollection.events;">
-                <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
-                <td>{{eventModel.name}}
-                    <br/>
-                    Event Images: {{eventModel.photos.length}}
-                    <ul class="list-inline event-images">
-                        <li *ngFor="let photo of eventModel.photos;" style="width:100px;">
-                            <img src="{{photo.source}}" class="img img-responsive">
-                        </li>
-                    </ul>
-                </td>
-                <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
-                <td class="text-center">
-                    <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="addEventModel(eventModel)">
-                </td>
-            </tr>
+            <tbody *ngFor="let eventModel of fbCollection.events; index as i;">
+                <tr>
+                    <td>
+                        {{eventModel.startTime}} 
+                        <br/>
+                        {{eventModel.endTime}}
+                    </td>
+                    <td>
+                        <code>#{{eventModel.uid}}</code>
+                        <br/>
+                        {{eventModel.name}}
+                    </td>
+                    <td>
+                        <img class="img img-responsive" src="{{eventModel.cover.source}}">
+                    </td>
+                    <td class="text-center">
+                        <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="addEventModel(eventModel)">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="border-bottom:1px solid red; border-top: none;">
+                        Status:<code>{{eventModel.status}}</code>
+                        <br/>
+                        Event Images: {{eventModel.photos.length}}
+                        <br/> 
+                        Last update on: <code>{{eventModel.photoStartTime}}</code> To Date:  <code>{{eventModel.photoEndTime}}</code>
+                        <ul class="list-inline event-images">
+                            <li *ngFor="let photo of eventModel.photos;" style="width:100px;">
+                                <!-- <span>{{photo.source}}</span> -->
+                                <img src="{{photo.source}}" class="img img-responsive">
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -81,7 +102,7 @@ ul.event-images li img {
         <h4 class="text-danger">Events from Table</h4>
     </div>
     <div class="row">
-        <table class="table table-responsive table-striped">
+        <table class="table table-responsive">
             <thead>
             <tr>
                 <th class="col-sm-2">Start Time <br/> End Time</th>
@@ -90,24 +111,40 @@ ul.event-images li img {
                 <th class="col-sm-2">Actions</th>
             </tr>
             </thead>
-            <tbody >
-            <tr *ngFor="let eventModel of eventsCollection.events;">
-                <td>{{eventModel.startTime}} <br/> {{eventModel.endTime}}</td>
-                <td>
-                    <h4>{{eventModel.name}}</h4>
-                    Event Images: {{eventModel.photos.length}}
-                    <ul class="list-inline event-images">
-                        <li *ngFor="let photo of eventModel.photos;">
-                            <img src="{{photo.source}}" class="img img-responsive">
-                        </li>
-                    </ul>
-                </td>
-                <td><img class="img img-responsive" src="{{eventModel.cover.source}}"></td>
-                <td class="text-center">
-                    <input type="button" class="btn btn-xs btn-warning" value="Update" (click)="onUpdateEvent(eventModel)">
-                    <input type="button" class="btn btn-xs btn-warning" value="Delete" (click)="onDeleteEvent(eventModel)">
-                </td>
-            </tr>
+            <tbody *ngFor="let eventModel of eventsCollection.events; index as i;">
+                    <tr>
+                        <td>
+                            {{eventModel.startTime}} 
+                            <br/>
+                            {{eventModel.endTime}}
+                        </td>
+                        <td>
+                            <code>#{{eventModel.uid}}</code>
+                            <br/>
+                            {{eventModel.name}}
+                        </td>
+                        <td>
+                            <img class="img img-responsive" src="{{eventModel.cover.source}}">
+                        </td>
+                        <td class="text-center">
+                            <input type="button" class="btn btn-xs btn-warning" value="Add" (click)="addEventModel(eventModel)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border-bottom:1px solid red; border-top: none;">
+                            Status:<code>{{eventModel.status}}</code>
+                            <br/>
+                            Event Images: {{eventModel.photos.length}}
+                            <br/>
+                            Last update on: <code>{{eventModel.photoStartTime}}</code> To Date:  <code>{{eventModel.photoEndTime}}</code>
+                            <ul class="list-inline event-images">
+                                <li *ngFor="let photo of eventModel.photos;" style="width:100px;">
+                                    <!-- <span>{{photo.source}}</span> -->
+                                    <img src="{{photo.source}}" class="img img-responsive">
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
             </tbody>
         </table>
     </div>

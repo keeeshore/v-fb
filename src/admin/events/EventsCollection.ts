@@ -5,11 +5,13 @@ import {PagingData} from '../model/PagingData';
 import {PhotoModel} from '../photos/PhotoCollection';
 import * as moment from 'moment';
 import {ENV} from '../../app/environments/environment';
+import { GraphParams } from '../services/GraphParams';
 
+export class EventParams implements GraphParams  {
 
-export class EventParams  {
-
-    public fields:string = 'cover{source},name,description,start_time,end_time,id,photos{images{source},created_time,id}';
+    public fields1:string = 'cover{source},name,description,start_time,end_time,id,photos{images{source},created_time,id}';
+    
+    public fields:string = 'cover{source},name,description,start_time,end_time,id';
 
     public limit:string = '2';
 
@@ -18,6 +20,10 @@ export class EventParams  {
     public before:string = '';
 
     public after:string = '';
+
+    public type:string = 'events';
+
+    public id:string = '';
 
     constructor () { }
 
@@ -62,9 +68,17 @@ export class EventModel  {
 
     public startTime:string;
 
+    public photoStartTime:string;
+
     public endTime:string;
 
+    public photoEndTime:string;
+
     public photos:Array<PhotoModel>;
+
+    public totalPhotos:string = 'NONE';
+
+    public status:string = '-';
 
     constructor (eventModel:any) {
         let desc = '';

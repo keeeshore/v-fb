@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 		if  (state.url !== '/admin' && !this.isLoggedIn) {
 			console.log('state url is not /admin but a child>navigate to LOGIN');
 			this.router.navigate(['/admin']);
-			return true;
+			//return true;//TEST ONLY
 		}
 		return true;
 	}
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 		console.log('AuthGuard#--------#canActivateChild called:this.isLoggedIn return::', this.isLoggedIn === '');
 		if  (!this.isLoggedIn || !this.apiService.accessToken) {
 			console.log('canActivateChild state url is not /admin-> navigate to LOGIN');
-			this.router.navigate(['/admin']);
+			this.router.navigate(['/admin']);//TeST ONLY //comment when testing. 
 		}
 		//return true;//TEST ONLY
 		return this.isLoggedIn !== '';

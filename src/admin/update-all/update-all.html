@@ -1,8 +1,8 @@
 <section class="container">
     
-    <div class="row hidden">
+    <div class="row">
         <form class="col-sm-12">
-            <div class="form-group hidden">
+            <div class="form-group">
                <label class="col-sm-2 control-label">Access token</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="accessToken" [(ngModel)]="accessToken" name="accessToken">
@@ -41,19 +41,45 @@
 
     <div class="row">
         <h3>Logs</h3>
-    </div>
+    </div> 
 
-    <div class="row">
-        <div class="col-sm-6">Events</div>
-        <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="events.fromDate" name="fromDate">
-        <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="events.toDate" name="toDate">
-        <input type="button" class="col-sm-2" value="Update Events" (click)="updateEvents()">
+    <div class="row" style="border-bottom: 1px solid #CCC;">
+        <h4 class="col-sm-6">All Events</h4>
+        <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="eventsComp.fromDate" name="fromDate">
+        <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="eventsComp.toDate" name="toDate">
+        <input type="button" class="col-sm-2" value="Update All Events" (click)="updateEvents()">
         <div style="clear: both;"></div>
-        <pre>{{eventsLog}}</pre>
+        <pre>{{eventLog}}</pre>
     </div>
 
     <div class="row">
-        <div class="col-sm-6">Posts</div>
+        <h3>Events</h3>
+    </div>
+    <div *ngFor="let eventModel of eventsArr; index as i;" style="margin: 10px 0px;">
+        <div class="row">
+            <div class="col-sm-6">{{i}}. {{eventModel.name}} <code>{{eventModel.uid}}</code></div>
+            <!-- <input type="text" readonly class="col-sm-2" id="fromDate" [(ngModel)]="eventModel.startTime" name="fromDate">
+            <input type="text" readonly class="col-sm-2" id="toDate" [(ngModel)]="eventModel.endTime" name="toDate"> -->
+            <!-- <input type="button" class="col-sm-2" value="Update Event" (click)="updateEvent(eventModel, i)">  -->
+            <div style="clear: both;"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">&nbsp;&nbsp;&nbsp;&nbsp;- Event Photos: {{eventModel.photos.length}}</div>
+            <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="eventModel.photoStartTime" name="fromDate">
+            <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="eventModel.photoEndTime" name="toDate">
+            <input type="button" class="col-sm-2" value="Update Event Photo" (click)="doUpdateEventPhoto(eventModel, i)">
+        </div>
+        <div class="row">
+           <pre>{{eventsLog[i]}}</pre>
+        </div>
+    </div>
+
+    <div class="row">
+        <h3>Posts</h3>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6"></div>
         <input type="text" class="col-sm-2" id="fromDate" [(ngModel)]="posts.fromDate" name="fromDate">
         <input type="text" class="col-sm-2" id="toDate" [(ngModel)]="posts.toDate" name="toDate">
         <input type="button" class="col-sm-2" value="Update Posts" (click)="updatePosts()">
